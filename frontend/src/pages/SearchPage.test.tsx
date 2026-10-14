@@ -442,7 +442,7 @@ describe('SearchPage', () => {
     expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 1 of 2']);
     expect(cardRanks()[0]).toBe('No. 1');
 
-    // Page 2 arrives late and is read, then the refetch lands (page 1's first two real rows).
+    // Page 2 arrives late and is read, and is ignored: page 1 stays, before the refetch lands.
     const late = jsonResponse(searchResponsePage2);
     act(() => {
       page2.resolve(late);
@@ -450,6 +450,12 @@ describe('SearchPage', () => {
     await waitFor(() => {
       expect(late.bodyUsed).toBe(true);
     });
+    await act(async () => {});
+    expect(cardRanks()[0]).toBe('No. 1');
+    expect(screen.queryByText('No. 11')).not.toBeInTheDocument();
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 1 of 2']);
+
+    // Then the refetch lands (page 1's first two real rows).
     const refetched: SearchResponse = { ...searchResponse, items: [listingA1, listingB7] };
     act(() => {
       refetch.resolve(jsonResponse(refetched));
@@ -506,12 +512,18 @@ describe('SearchPage', () => {
 
   // T11
   it('wires search and Clear to the URL: page reset, pageSize kept, keyword emphasis', async () => {
+    // The real `page=2&pageSize=5` (ranks 6 to 10, SPEC section 6.4), trimmed to its first two.
     reply({
       ...newestFirstResponse,
+      items: [
+        { ...listingA1, rank: 6, relevance: { score: 0.3536, budgetFit: null, recency: 0.3536 } },
+        { ...listingB7, rank: 7, relevance: { score: 0.3376, budgetFit: null, recency: 0.3376 } },
+      ],
       page: { page: 2, pageSize: 5, totalItems: 12, totalPages: 3 },
     });
     const { user, container } = renderAt('/?page=2&pageSize=5');
     await waitForStatus('12 results · newest first', 'Page 2 of 3');
+    expect(cardRanks()).toEqual(['No. 6', 'No. 7']);
     expect(searchUrls()).toEqual([`${SEARCH_PATH}?page=2&pageSize=5`]);
     expect(pageButton(2)).toHaveAttribute('aria-current', 'page');
 
