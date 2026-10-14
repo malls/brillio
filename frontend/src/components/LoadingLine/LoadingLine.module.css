@@ -17,7 +17,10 @@
   background: var(--line);
 }
 
-/* Section 2.2: the loading segment is one of oxblood's jobs; the only oxblood in this file. */
+/*
+ * Sections 5.9 and 6 make the loading segment oxblood; section 2.2's five jobs do not list it
+ * (owner question, BC-14). The only oxblood in this file.
+ */
 .segment {
   position: absolute;
   inset-block: 0;

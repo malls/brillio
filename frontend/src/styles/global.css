@@ -20,6 +20,8 @@ body {
 
 html {
   color-scheme: light;
+  /* No translucent, rounded tap flash on touch (BRANDING.md sections 4.3 and 8). */
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
