@@ -1,18 +1,33 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-3-domain-ranking",
+      "linked_at": "2026-10-14T01:48:12Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:18",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
+  "comment_count": 2,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Implement the ranking core as pure Go with no I/O: budget fit, recency, score, deterministic ordering, pagination with global ranks. Spec: docs/SPEC.md \u00a76.2, \u00a76.3, \u00a76.4, \u00a78 (domain list). Clock is injected; never call time.Now() in this package.\n\nWhy: this is the logic the interviewer will probe hardest (\"why this formula?\"). It must be small, readable and exhaustively tested, and it must not depend on the store (BC-4) so both can land in parallel.\n\nScope (package internal/domain, building on the types from BC-2):\n- Exported constants `BudgetWeight = 0.6`, `RecencyWeight = 0.4`, `RecencyHalfLifeDays = 30`.\n- `BudgetFit(price, target float64) float64` asymmetric per \u00a76.2 (under: price/target; over: max(0, 1 - 2*pctOver)).\n- `AgeDays(listedDate, now time.Time) int` whole calendar days in UTC, clamped at 0 for future dates.\n- `Recency(listedDate, now time.Time) float64` = 0.5^(ageDays/30).\n- `Score(budgetFit *float64, recency float64) float64`: with budget 0.6*fit + 0.4*recency; without budget, recency alone.\n- `Rank(listings []Listing, in RankInput) []Scored` where `RankInput{TargetBudget *float64; Now time.Time}` and `Scored{Listing; Relevance{Score float64; BudgetFit *float64; Recency float64}}`. Sort per \u00a76.3 on unrounded score desc, then listedDate desc, price asc, source asc, id asc. Use slices.SortStableFunc.\n- `Paginate(ranked []Scored, page, pageSize int) (Page, error)` returning `Page{Items []RankedItem; Page, PageSize, TotalItems, TotalPages int}` where RankedItem adds `Rank int` = 1-based index in the whole set. Invalid page (<1) or pageSize (outside 1..100) returns a typed error the handler can map to \u00a75.5 codes; page past end returns an empty Items with correct metadata.\n- Full precision kept here; rounding to four decimals is the handler's job (BC-5).\n- Tests, table-driven, per \u00a78: worked values from \u00a76.2 (450000/405000/495000/562500/675000; ages 0/30/60/90), asymmetry at equal percentages, future dates, no budget, tied scores with the exact tiebreak order asserted on a crafted fixture, no matches, every pagination boundary including rank continuity across pages (page 2 of pageSize 10 starts at 11), pageSize 1 and 100, zero items giving totalPages 0.\n\nAcceptance:\n- `go test -race ./internal/domain/...` green with every \u00a78 domain case present by name.\n- Package imports nothing outside the standard library.\n- golangci-lint clean.\n- A short doc comment at the top of scoring.go states the formula in words; BC-15 will quote it.\n\nValidation: N/A (pure library, no running surface). Record a one-line justification with --role validation and cite the test output.",
   "done_at": null,
-  "evidence_refs": [],
+  "evidence_refs": [
+    {
+      "id": "art_01M4W2GSCK5ZH6F3NFEK578VKW",
+      "role": "plan-review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK25Y5H07PWF6BX0PMFG1",
-  "last_event_id": "ev_01M4VXK4H1PAF6TH1Q11B8GP61",
-  "last_status_changed_at": "2026-10-14T00:39:25Z",
+  "last_event_id": "ev_01M4W2HSYWSF719SPH480A9G7Z",
+  "last_status_changed_at": "2026-10-14T02:06:07Z",
   "linked_files": [],
   "priority": "critical",
   "relationships_out": [
@@ -27,12 +42,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-3",
-  "status": "backlog",
+  "status": "in_progress",
   "tags": [
     "backend"
   ],
   "title": "Domain: relevance scoring, deterministic ordering, pagination with ranks (pure Go)",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:28Z",
+  "updated_at": "2026-10-14T02:06:07Z",
   "urgency": null
 }

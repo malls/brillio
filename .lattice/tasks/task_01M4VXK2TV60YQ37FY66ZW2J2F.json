@@ -1,7 +1,16 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-8-frontend-core",
+      "linked_at": "2026-10-14T02:08:35Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:20",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
   "comment_count": 0,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
@@ -11,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK2TV60YQ37FY66ZW2J2F",
-  "last_event_id": "ev_01M4VXK5A0K3HTRRQZCJB7P60R",
-  "last_status_changed_at": "2026-10-14T00:39:26Z",
+  "last_event_id": "ev_01M4W2PAT445AEETWZQ4DEPTZ7",
+  "last_status_changed_at": "2026-10-14T02:08:35Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -27,12 +36,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-8",
-  "status": "backlog",
+  "status": "in_planning",
   "tags": [
     "frontend"
   ],
   "title": "Frontend core: API client and types, URL state and search hooks, BRANDING formatters",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:28Z",
+  "updated_at": "2026-10-14T02:08:35Z",
   "urgency": null
 }
