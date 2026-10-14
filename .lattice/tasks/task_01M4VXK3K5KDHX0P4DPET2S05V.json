@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:37",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 7,
+  "comment_count": 9,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:27Z",
   "created_by": "agent:fable-planner",
@@ -23,11 +23,86 @@
       "id": "art_01M4WDQP79JFKTS1PVSDWKGBMY",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WECVGZXJ47GFW8H8RSZ3K7",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7QGZ00YPVXSFZ5E4N5FT",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7QMHFTQ7CDC2RB9D7D5Q",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7QR1MBHJFMXC1PJP4BXQ",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7QVD8DWFF054XEJT3ZW2",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7QYVYDH2V91M2M5TZWK4",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7R2D6DC4WDPQB0TH5AXX",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7R5WWYBR1EJY80ZB38A4",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7R9PMJDG5JQ1B7GDWD21",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7RDFC398BD5R0RTEP6J2",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7RH7EGQS4BH7TTKAJKHE",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7RN121RWZWQNNWCCDK4S",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7RSE3EZS2BWDGC969WZ8",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WF7RXM817VM9HFM1T66JPB",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "ev_01M4WFA51XH4EQCJCF92K392DK",
+      "role": "validation",
+      "source_type": "comment"
     }
   ],
   "id": "task_01M4VXK3K5KDHX0P4DPET2S05V",
-  "last_event_id": "ev_01M4WE3P5A99JFGD8A7CM9VCM0",
-  "last_status_changed_at": "2026-10-14T05:28:07Z",
+  "last_event_id": "ev_01M4WFA51XH4EQCJCF92K392DK",
+  "last_status_changed_at": "2026-10-14T05:33:08Z",
   "linked_files": [],
   "needs_human": {
     "flagged_by": "agent:opus-5.5-delegator",
@@ -47,13 +122,13 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-14",
-  "status": "review",
+  "status": "in_validation",
   "tags": [
     "frontend",
     "design"
   ],
   "title": "Branding conformance pass: audit UI against BRANDING.md and the demo, fix deviations",
   "type": "task",
-  "updated_at": "2026-10-14T05:28:07Z",
+  "updated_at": "2026-10-14T05:49:08Z",
   "urgency": null
 }

@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:47:50Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WF7RXM817VM9HFM1T66JPB",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WF7RXM817VM9HFM1T66JPB.png",
+    "size_bytes": 114024
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "BC-14-c11-panel-763x430.png",
+  "token_usage": null,
+  "type": "file"
+}

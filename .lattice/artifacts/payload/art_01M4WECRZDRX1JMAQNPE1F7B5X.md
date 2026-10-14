@@ -1,0 +1,17 @@
+Verdict: PASS
+Reviewed HEAD: 3fc1aa41a59100e9ac99f08d0a665392c13da6df
+Reviewer: fable sub-agent (decision 04:02Z), fresh context, whole diff master...HEAD (merge-base 0b24829)
+Prior findings (art_01M4WDRNDWH1M3J2MZYAKY4Q5R @ f4b6c77):
+  1. fixed — line 192 "On the 12 listings, without dedupe, ... A3 (0.68) is No. 1 and A1 (0.74) is No. 4"; recomputed price-ascending on the 12: A3, B9, A6, A1 (A3 0.6836, A1 0.7414).
+  2. fixed — lines 130-131 and 167-168 share "an index on (latitude, longitude); its leading column makes the (geo) box a range scan".
+  3. fixed — line 199 "`filterKey` must drop it beside `page` and `pageSize`" (filterBarModel.ts:137-142 deletes only page and pageSize today).
+  4. fixed — `asOf` backticked at 153, 192, 211.
+Findings:
+- [Nit] docs/EXTENSIONS.md:10 — "`Store.Search`" names the stage; the handler calls a.deps.Searcher.Search through the Searcher interface that *store.Store implements (search.go:15-17, 31). Line 171 names Searcher; one hop short, not wrong. Optional; not worth a commit on its own.
+- [Nit, informational] 221 lines, below the plan's 240-280 soft target; every required section present; cap <300 met. No action.
+- [Nit, informational] master is now c8837b5 (BC-15: README.md + .lattice only; 0b24829..master touches no code file). Intro's "checked against commit 0b24829" is the merge-base; every named symbol exists on master tip. No action.
+Symbol check: 157 unique backticked tokens; all accounted for. All 38 plan symbol-table grep lines (36 + 2 Review Cycle 1 additions) return expected counts on HEAD. Each token is an existing symbol/path, a "new `X`" proposal at first use, a SPEC contract name, or UI copy. No unbackticked code-like identifiers.
+Facts checked (all verified, none unverified): pipeline order in search.go:22-54; relevance order of the 12 matches TestSearchRankedAll; A1 45 days / 0.3536 / 0.7414 at asOf 2026-10-13; dedupe winners A1, A2, A3, A5; 8 survivors, totalItems 12 to 8, 1 page; survivor order A1, A5, A3, A6, A2, A7, B10, A4; zips 22150/22151; Ct/Court; 4 decimals ~11 m; maxPrice=451000 drops B7; haversine 1.16 / 12.104 km, 2 km gives A1, B7, A2, B8; price-sort ranks on the 12; byRelevance ends at (Source, ID); 0001 has 4 indexes, migrate.go applies sorted migrations so 0002 slots in; modernc.org/sqlite v1.60.1 SQLITE_ENABLE_FTS5; FIELDS status seventh; BRANDING §5.2 stale "seventh"; SPEC §7.1/§5.3; FilterBar kind==='status'; StatusLine single role=status; Pager renders all pages; test assertions (TestSearchQueryParams, TestOpenAPISearchParamsMatchHandler, TestSearchRankedAll, TestOpenAPIExamplesMatchSPEC, TestOpenAPIErrorCodeEnums, assertItemsMatchSeed, TestSearchPaging/TestSearchStatusFilter totals, permutations reachable); seed Load per-file check, DisallowUnknownFields, Upsert never deletes, main.go single seed.Load, compose LISTINGS_FILE; nonNegative halves, minBedrooms whole, ZIP+4 10 chars.
+Coverage: 8 §9 entries each with Requirement/Touch/API/UI/Tests/Estimate; awk counts 12-14 (<25); rehearsal 21/21/23 lines (dedupe, geo radius, sort); What I would say 9/8 lines (weights, SQL versus Go); 221 lines.
+Voice/format: emoji check empty; voice grep empty; sentence case, plain product voice; renders cleanly.
+Scope: git diff --name-only master...HEAD is only docs/EXTENSIONS.md.

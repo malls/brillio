@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:37:26Z",
+  "created_by": "agent:opus-5.5-plan-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WEMR2QYGFJGWXE9M1KYK3E",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WEMR2QYGFJGWXE9M1KYK3E.md",
+    "size_bytes": 3217
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Plan review cycle 1 (reviewer: fable sub-agent (decision 04:02Z))",
+  "token_usage": null,
+  "type": "note"
+}

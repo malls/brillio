@@ -11,13 +11,13 @@
   ],
   "c11_surface": "panel:34",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 2,
+  "comment_count": 4,
   "complexity": "low",
   "created_at": "2026-10-14T00:39:27Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Spike: write docs/EXTENSIONS.md, the playbook for the requirements the interviewer is likely to add live. Spec: docs/SPEC.md \u00a79. Design hooks: BRANDING.md \u00a75 (\"where a new requirement goes\" notes in each component) and \u00a710.\n\nWhy: the live session is explicitly about extending a design already built, narrating the reasoning. A rehearsed playbook with the exact seams turns a surprise into a demo. This is also where the owner rehearses before the session.\n\nScope (docs/EXTENSIONS.md):\n- One entry per \u00a79 item: the requirement in one line; the exact files and functions to touch (verified to exist by grep at writing time); the API change (params, response fields) and the UI change (which BRANDING \u00a75 slot); the tests to add; a minutes estimate. Keep each entry under 25 lines.\n- A rehearsal section working three of them through as mini-plans the owner can narrate aloud: cross-source dedupe (stage in the \u00a76 pipeline, key choice, which record wins, the `2 sources` meta item), geo radius (bounding box in SQL, haversine in Go, two new params and validation), sort options (one change in domain ordering, a select in the status line per BRANDING \u00a75.7's precedent).\n- A short \"what I would say\" paragraph for the two trade-offs most likely to be questioned: scoring weights and SQL-versus-Go ranking.\n\nAcceptance:\n- Every referenced symbol exists in the code (a reviewer greps each one).\n- Plain product voice, no emoji, under 300 lines.\n\nValidation: N/A (documentation). Record a one-line justification with --role validation.",
-  "done_at": null,
+  "done_at": "2026-10-14T05:49:41Z",
   "evidence_refs": [
     {
       "id": "art_01M4WCKXJV38BKNP5MAJCS9MBY",
@@ -28,11 +28,21 @@
       "id": "art_01M4WDRNDWH1M3J2MZYAKY4Q5R",
       "role": "review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WECRZDRX1JMAQNPE1F7B5X",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WESGCGK6X6QP4Q4DWYFFN5",
+      "role": "validation",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK3WPPJA1GVM0NZRW4GGD",
-  "last_event_id": "ev_01M4WDRTY1W2N72KA30F0ABFH4",
-  "last_status_changed_at": "2026-10-14T05:14:49Z",
+  "last_event_id": "ev_01M4WFB5DD7KPVMMZ8TYKDY0XG",
+  "last_status_changed_at": "2026-10-14T05:49:41Z",
   "linked_files": [],
   "priority": "low",
   "relationships_out": [
@@ -47,12 +57,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-16",
-  "status": "review",
+  "status": "done",
   "tags": [
     "docs"
   ],
   "title": "Extension playbook: how each likely live-session requirement lands (docs/EXTENSIONS.md)",
   "type": "spike",
-  "updated_at": "2026-10-14T05:22:12Z",
+  "updated_at": "2026-10-14T05:49:41Z",
   "urgency": null
 }

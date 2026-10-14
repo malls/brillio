@@ -11,18 +11,25 @@
   ],
   "c11_surface": "panel:38",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 0,
+  "comment_count": 3,
   "complexity": "low",
   "created_at": "2026-10-14T00:39:27Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Produce the zip the recruiter receives and prove it works from a fresh directory using only the README. Spec: docs/SPEC.md \u00a712; Instructions.pdf (\"send us a zip of your project, code plus a short README\").\n\nWhy: the last mile. The zip must run on a machine that has only Docker, and the README must be sufficient on its own.\n\nScope:\n- `make dist`: builds dist/brillio-listings-YYYYMMDD.zip from a clean tree excluding .git, node_modules, *.db, .lattice, dist, the two handout PDFs, and OS cruft. Prints the size and the file list summary.\n- scripts/verify-dist.sh: extracts the zip into a fresh temporary directory, runs `docker compose up -d`, waits for health, runs the smoke checks from BC-13, runs `make check` (natively if Go and Node are present, otherwise inside the containers), tears down, and cleans up. Fails on any emoji codepoint in the extracted tree.\n- Fix whatever the fresh-directory run surfaces (a missing file in the zip, a README step that assumes local state, a path that only worked in the original checkout).\n\nAcceptance:\n- `make dist` then `scripts/verify-dist.sh dist/<zip>` passes end to end.\n- The README in the zip is sufficient: the verifier follows only its commands.\n- Zip contains no .lattice, .git, node_modules, databases or PDFs.\n\nValidation: the verify-dist output is the evidence; attach with --role validation along with the zip size.",
   "done_at": null,
-  "evidence_refs": [],
+  "evidence_refs": [
+    {
+      "id": "art_01M4WEMR2QYGFJGWXE9M1KYK3E",
+      "role": "plan-review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK4113A6VE5JQHFW73ERX",
-  "last_event_id": "ev_01M4WE3646JMXVDPXV8ZJTRCQ8",
-  "last_status_changed_at": "2026-10-14T05:27:51Z",
+  "last_event_id": "ev_01M4WFAJZPFKT6ZBSSJFRAZW4X",
+  "last_status_changed_at": "2026-10-14T05:37:58Z",
   "linked_files": [],
+  "needs_human": null,
   "priority": "medium",
   "relationships_out": [
     {
@@ -50,13 +57,13 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-17",
-  "status": "planned",
+  "status": "in_progress",
   "tags": [
     "infra",
     "docs"
   ],
   "title": "Release packaging: make dist zip and fresh-directory verification",
   "type": "chore",
-  "updated_at": "2026-10-14T05:27:51Z",
+  "updated_at": "2026-10-14T05:49:22Z",
   "urgency": null
 }

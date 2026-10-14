@@ -127,8 +127,8 @@ A new field error code also goes in the SPEC §5.5 list, a code const in `query.
 - **Requirement.** Hold up at many more listings (SPEC §9.8). A talk item, not a build.
 - **Touch.** Score in SQL (What I would say, below). Keyset pagination needs a cursor on the full sort key, and still a
   count for `totalPages` and `rank`. FTS5 turns substring matching into token matching, which changes SPEC §5.3 and §6.1;
-  the driver, modernc.org/sqlite v1.60.1, is compiled with FTS5. A new `0002_*.sql` migration adds a latitude and
-  longitude index next to the 4 in `0001_listings.sql`.
+  the driver, modernc.org/sqlite v1.60.1, is compiled with FTS5. A new `0002_*.sql` migration adds an index on
+  (latitude, longitude) next to the 4 in `0001_listings.sql`; its leading column makes the geo box a range scan.
 - **API.** `keyword` matches whole tokens under FTS5. Everything else keeps its shape.
 - **UI.** Pager windowing. `Pager` renders every page number. A gap marker needs a glyph that BRANDING §5.10 forbids, so
   it starts as a BRANDING change. SPEC §7.4 points here for this.
@@ -150,7 +150,7 @@ A new field error code also goes in the SPEC §5.5 list, a code const in `query.
 6. The record with the newest `listedDate` wins: A1, A2, A3 and A5. Ties go to source, then id. The whole record wins,
    not a field-by-field merge, so a card never mixes two feeds' prices.
 7. A new `sources` field lists every feed in the group, so A1's meta line ends `MLS A · 2 sources`.
-8. At `targetBudget=450000` and asOf 2026-10-13 (the SPEC §5.4 date), the 8 survivors run A1, A5, A3, A6, A2, A7, B10, A4.
+8. At `targetBudget=450000` and `asOf` 2026-10-13 (the SPEC §5.4 date), the 8 survivors run A1, A5, A3, A6, A2, A7, B10, A4.
    Recency moves with the date, so the order can change day to day.
 9. One caveat: the stage sees only what the filter kept. `maxPrice=451000` drops B7 ($452,000) first, so A1 shows one
    source.
@@ -164,8 +164,8 @@ Ask: should a new `dedupe=false` toggle bring the duplicates back?
 2. A missing one gets the new `missing_param` code on its own name, so the user sees which one. A value out of range
    reuses `out_of_range`, and a radius of 0 or less reuses `not_positive`.
 3. SQL first. New `BoundingBox` turns the point and radius into two BETWEEN clauses in `buildSearch`: dLat = km / 111.32,
-   and dLng = km / (111.32 × cos lat). The box is a superset of the circle and cheap. A latitude index in the new 0002
-   migration makes it a range scan.
+   and dLng = km / (111.32 × cos lat). The box is a superset of the circle and cheap. The new 0002 migration adds an
+   index on (latitude, longitude); its leading column makes the box a range scan.
 4. Go second. New `HaversineKm`, with an Earth radius of 6371.0088 km, runs in a new `WithinRadius` stage in
    `searchListings`, after search and before dedupe. It trims the box's corners to the circle.
 5. The `Searcher` comment then says the store returns the box, not the final set.
@@ -189,13 +189,14 @@ Ask: where does the point come from: a typed address, the city's center, or the 
 4. Price is price ascending, then `byRelevance`. Newest is `listedDate` descending, then `byRelevance`. The order stays
    total because `byRelevance` ends at (source, id), so pages never shift.
 5. `rank` still means position (BRANDING §5.6). Under price order the scores do not descend, and the UI shows that as it
-   is. At `targetBudget=450000` and asOf 2026-10-13, A3 (0.68) is No. 1 and A1 (0.74) is No. 4.
+   is. On the 12 listings, without dedupe, at `targetBudget=450000` and `asOf` 2026-10-13, A3 (0.68) is No. 1 and
+   A1 (0.74) is No. 4.
 6. The response echoes the order as new `scoring.sort`. `formatOrdering` gains the new string `lowest price first`;
    newest reuses `newest first`.
 7. The control is a select on the status line's right side, by BRANDING §5.7's page-size precedent, outside
    `role="status"`. BRANDING has no slot for sort, so the branding owner gets a note.
 8. `setSearch` and `clear` keep the new `sort` param the way they keep `pageSize`. A new `setSort` writes it and drops
-   `page`. `filterKey` drops it, so a sort change keeps the drafts.
+   `page`. `filterKey` must drop it beside `page` and `pageSize`, so a sort change keeps the drafts.
 
 Ask: is high-to-low price wanted too?
 
@@ -207,7 +208,7 @@ I score 0.6 budget fit plus 0.4 recency (SPEC §6.2). Budget leads because it is
 budget costs twice as much as coming in under: budget fit is 0.9 at 10% under, 0.8 at 10% over and 0 at 50% over. Recency
 halves every 30 days, so a month-old listing counts half. With no budget the score is recency alone, which is newest first.
 The weights are constants, `BudgetWeight` and `RecencyWeight`, not config, and the `scoring` block echoes them.
-At asOf 2026-10-13, A1 scores 0.6 × 1.0 + 0.4 × 0.3536 = 0.7414; recency moves that day to day.
+At `asOf` 2026-10-13, A1 scores 0.6 × 1.0 + 0.4 × 0.3536 = 0.7414; recency moves that day to day.
 To tune them I would move them into `RankInput`, add `TestScore` rows, and fit them to click data.
 
 ### SQL versus Go ranking
