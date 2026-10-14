@@ -1,0 +1,36 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-10-14T03:54:48Z",
+  "created_by": "agent:opus-5.5-delegator",
+  "custom_fields": {},
+  "description": "From BC-9 code review (art_01M4W8RJEX9PZGNYXK1279SVG3, nit 5): messages revealed by an invalid Enter or a server 400 are linked via aria-describedby but are not in a live region, so a screen-reader user who presses Enter on an invalid bar gets no feedback. SPEC \u00a77.6 does not require it (out of BC-9 scope). Candidate fix: on an invalid submit, move focus to the first invalid field (its aria-describedby message is then read); or a polite live summary. Keep BRANDING \u00a75.2 visuals unchanged.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4W8RTMGZF45E4ZCWN4X1E72",
+  "last_event_id": "ev_01M4W8RTRHTW2KCCMYKPAHR3GH",
+  "last_status_changed_at": "2026-10-14T03:54:48Z",
+  "linked_files": [],
+  "priority": "low",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T03:54:48Z",
+      "created_by": "agent:opus-5.5-delegator",
+      "note": null,
+      "target_task_id": "task_01M4VXK2YVDRXZ0BA1B8DW3CEQ",
+      "type": "related_to"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-21",
+  "status": "backlog",
+  "tags": null,
+  "title": "FilterBar: announce invalid-submit and server-error feedback to screen readers",
+  "type": "task",
+  "updated_at": "2026-10-14T03:54:48Z",
+  "urgency": null
+}

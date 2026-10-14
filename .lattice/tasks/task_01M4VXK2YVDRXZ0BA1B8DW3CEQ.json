@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:25",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 2,
+  "comment_count": 4,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
@@ -23,10 +23,15 @@
       "id": "art_01M4W6JVK8PG4DFPD0558XZM7W",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W8RJEX9PZGNYXK1279SVG3",
+      "role": "review",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2YVDRXZ0BA1B8DW3CEQ",
-  "last_event_id": "ev_01M4W7KKNJ9TDRBPS6H7YJY6MY",
+  "last_event_id": "ev_01M4W8RJF0NB26PF5CRGW7WB8V",
   "last_status_changed_at": "2026-10-14T03:34:29Z",
   "linked_files": [],
   "priority": "high",
@@ -48,6 +53,6 @@
   ],
   "title": "FilterBar: seven fields, client-side validation with exact copy, server error mapping, Search and Clear",
   "type": "task",
-  "updated_at": "2026-10-14T03:34:29Z",
+  "updated_at": "2026-10-14T03:54:40Z",
   "urgency": null
 }

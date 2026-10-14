@@ -1,0 +1,36 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-10-14T03:39:09Z",
+  "created_by": "agent:opus-5.5-delegator",
+  "custom_fields": {},
+  "description": "Found in BC-5 code review (art_01M4W7VYKS1KWBVC8R1NX7T89M, nit 5). httpapi lowercases keyword tokens with Go's Unicode strings.ToLower (backend/internal/httpapi/query.go), but the store's SQL compares against SQLite's ASCII-only lower(description) (backend/internal/store/listings.go:35). Scenario: keyword=\u00c9cole -> token '\u00e9cole', never matches a description containing '\u00c9cole'. Seed data is all ASCII, so nothing is observable in v1. Options: ASCII-fold tokens to match SQLite, register a Unicode-aware lower() function, or document as a known limitation (BC-16 extensions doc). Not fixed in BC-5 (BC-4/store territory).",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4W7W5H5WJQ9EG3DZ3XJ6S2D",
+  "last_event_id": "ev_01M4W7W5MR5Y6P459KYKT4FS9H",
+  "last_status_changed_at": "2026-10-14T03:39:09Z",
+  "linked_files": [],
+  "priority": "low",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T03:39:09Z",
+      "created_by": "agent:opus-5.5-delegator",
+      "note": null,
+      "target_task_id": "task_01M4VXK2E02WC334GKAWFQ5XDG",
+      "type": "related_to"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-20",
+  "status": "backlog",
+  "tags": null,
+  "title": "Keyword match is case-insensitive only for ASCII (Go Unicode ToLower vs SQLite lower())",
+  "type": "task",
+  "updated_at": "2026-10-14T03:39:09Z",
+  "urgency": null
+}
