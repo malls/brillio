@@ -55,9 +55,10 @@ func BudgetFit(price, target float64) float64 {
 
 // AgeDays returns how many whole UTC calendar days lie between listedDate and
 // now. Each instant is first converted to UTC and reduced to its calendar
-// date, so the time of day and the location of either value do not matter: a
-// listing dated yesterday is 1 day old at any time today. A listedDate after
-// now counts as age 0.
+// date, so the time of day of either value does not matter and now may be in
+// any location: a listing dated yesterday is 1 day old at any time today.
+// listedDate is expected to be midnight UTC, as parsing with DateLayout
+// yields. A listedDate after now counts as age 0.
 func AgeDays(listedDate, now time.Time) int {
 	l, n := listedDate.UTC(), now.UTC()
 	from := time.Date(l.Year(), l.Month(), l.Day(), 0, 0, 0, 0, time.UTC)
