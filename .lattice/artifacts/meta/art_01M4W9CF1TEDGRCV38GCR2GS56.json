@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:05:32Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W9CF1TEDGRCV38GCR2GS56",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4W9CF1TEDGRCV38GCR2GS56.png",
+    "size_bytes": 166453
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Demo via file:// 763px (charset artifact O1)",
+  "token_usage": null,
+  "type": "file"
+}

@@ -359,4 +359,12 @@ Source: fallback plan review art_01M4W52D0MGHWNDTQYGTM6Q596 (APPROVE-WITH-CHANGE
   and 8; stage 2 when not using make) runs as `env -u DOCKER_DEFAULT_PLATFORM docker compose ...`. Record the
   env vars and this prefix in the evidence. The acceptance criterion "from a clean checkout `docker compose up`"
   is judged for a host without that variable; the prefix only neutralises the operator's shell override.
-- With `DOCKER_BUILDKIT=0` the legacy builder sends a ~18 kB build context (no `.dockerignore` needed).
+- With `DOCKER_BUILDKIT=0` the legacy builder sent a ~18 kB build context; superseded by review cycle 1: `backend/.dockerignore` (`*`) now limits it to ~800 B.
+
+## Review Cycle 2 Findings
+
+- [Minor] scripts/smoke.sh:50-55 — `cleanup` runs under `set -e`; with a dead stdout (terminal closed then SIGHUP, or
+  Ctrl-C on `smoke.sh 2>&1 | tee` killing tee) its first echo fails and errexit skips `docker compose down -v`.
+  Fix: `set +e` immediately after `status=$?` in `cleanup`, and `trap '' INT TERM HUP PIPE` (add PIPE) at the top of
+  `cleanup`. Keep the saved-status / teardown-failure logic unchanged. Teardown is best-effort if docker's own
+  output goes into a dead pipe.
