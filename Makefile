@@ -39,11 +39,13 @@ frontend/node_modules/.package-lock.json: frontend/package-lock.json
 	touch frontend/node_modules/.package-lock.json
 
 # --- Compose stack (BC-13) ---
+# compose.yaml fixes the project name (brillio), so these touch only its own objects.
+# up unsets DOCKER_DEFAULT_PLATFORM so the stack runs native (see compose.yaml).
 .PHONY: up down smoke
 up:
-	@echo 'not yet implemented: up (lands in BC-13)' >&2; exit 1
+	unset DOCKER_DEFAULT_PLATFORM; docker compose up --build
 down:
-	@echo 'not yet implemented: down (lands in BC-13)' >&2; exit 1
+	docker compose down -v
 smoke:
 	@echo 'not yet implemented: smoke (lands in BC-13)' >&2; exit 1
 
