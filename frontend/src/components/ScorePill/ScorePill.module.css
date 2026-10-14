@@ -1,0 +1,28 @@
+/* BRANDING.md section 5.6; section 3.2 "Status line, pager, score": Figtree 13/18, 400, ink-2,
+   tabular figures. */
+.score {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  font-weight: 400;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Section 3.2 Rank pill: Figtree 11/1.3, 500, +0.04em; 1px ink border, radius 999px (the only
+   rounded element, section 4.3), padding 2px 8px. Never the accent (section 2.2). */
+.rank {
+  font-size: var(--text-rank);
+  line-height: var(--leading-rank);
+  font-weight: 500;
+  letter-spacing: var(--tracking-rank);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
