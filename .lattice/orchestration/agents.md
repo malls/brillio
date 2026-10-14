@@ -8,11 +8,11 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 |---|---|---|---|---|---|---|---|---|
 | Orchestrator | all | panel:6 73809EE8-EE77-4F1E-8EE2-8E8B05308939 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | master | /Users/forrest/Code/brillio | dispatch | 2026-10-14T03:13Z | 2026-10-14T00:45Z |
 | Master Validator | all | panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | — | /Users/forrest/Code/brillio | audit loop | 2026-10-14T03:13Z | 2026-10-14T01:20Z |
-| Delegator | BC-5 | panel:24 2D11C0F2-6EC2-494F-8F52-856F7190DA45 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-5-search-api | /Users/forrest/Code/brillio-worktrees/bc-5-search-api | planned → impl | 2026-10-14T03:13Z | 2026-10-14T02:34Z |
 | Delegator | BC-9 | panel:25 93F19093-205B-4276-AD48-2ABEDE335616 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-9-filterbar | /Users/forrest/Code/brillio-worktrees.noindex/bc-9-filterbar | planning | 2026-10-14T03:13Z | 2026-10-14T02:56Z |
 | Delegator | BC-10 | panel:26 90079513-D6DF-432E-B7C6-287034065937 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-10-results-surface | /Users/forrest/Code/brillio-worktrees.noindex/bc-10-results-surface | boot | 2026-10-14T03:13Z | 2026-10-14T03:12Z |
 | Delegator | BC-13 | panel:21 58816CAB-6208-40B5-B6E7-A6D371F3FD33 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-13-compose-stack | /Users/forrest/Code/brillio-worktrees/bc-13-compose-stack | review (then hold for BC-5) | 2026-10-14T03:13Z | 2026-10-14T02:12Z |
 | Delegator | BC-6 | panel:28 0EE4218B-B323-4CD7-A39F-683C8E5C4D0B | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-6-openapi | /Users/forrest/Code/brillio-worktrees.noindex/bc-6-openapi | boot | 2026-10-14T03:42Z | 2026-10-14T03:42Z |
+| Delegator | BC-12 | panel:29 C4B54149-6B16-46DE-87DF-9AE951C10B13 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-12-search-page | /Users/forrest/Code/brillio-worktrees.noindex/bc-12-search-page | boot | 2026-10-14T03:58Z | 2026-10-14T03:58Z |
 
 ### Archived (run history)
 
@@ -25,3 +25,4 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 | agent:opus-5.5-delegator (panel:19 6903B98A-C658-438C-9B01-2547E56BF263) | BC-4 | done 03:04Z | Merge 1c23253; head 9daad85; 244 go tests incl. subtests; SPEC §4.2 one-sentence edit; created BC-18 (backlog) for review nits; mail sent file-first during c11 stall; worktree removed before its panel closed (close timed out, retried 03:08Z OK). |
 | agent:opus-5.5-delegator (panel:20 ECFFF9F4-A172-4457-9C6E-E90C1EF1FD35) | BC-8 | done 03:10Z | Merge ccd1669; landed head 0426cb4 = reviewed 43e8824 + orchestrator master merge; 197 vitest tests; exports listed in BC-8 completion comment. |
 | agent:opus-5.5-delegator (panel:27 CB8FE2DE-5324-4FA1-99A1-274F80B5EE3A) | BC-11 | done 03:41Z | Merge 0abb105; head 0e70187; +31 tests (228 FE total); text-button recipe relayed to BC-9/BC-10; created BC-19 (backlog) for the branding owner. |
+| agent:opus-5.5-delegator (panel:24 2D11C0F2-6EC2-494F-8F52-856F7190DA45) | BC-5 | done 03:56Z | Merge 52c69dd; head 1871b01; 432 Go tests; proposed malformed_query (approved); waited 13 min on an approval lost to a c11 doorbell timeout; created BC-20 (backlog). |

@@ -1,0 +1,50 @@
+
+ RUN  v5.0.4 /Users/forrest/Code/brillio-worktrees.noindex/bc-10-results-surface/frontend
+
+ ✓ src/format/keyword.test.ts > splitKeyword > splitKeyword splits on whitespace like the server 2ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > returns one plain segment without tokens 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > returns no segments for empty text 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > matches case-insensitively and keeps the original casing 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > marks every occurrence 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > handles several tokens in any order 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > merges overlapping and adjacent matches into one run 0ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > treats regex metacharacters literally 1ms
+ ✓ src/format/keyword.test.ts > emphasisSegments > ignores blank tokens 0ms
+ ✓ src/components/ScorePill/ScorePill.test.tsx > ScorePill > renders No. 11 and the score to two decimals 16ms
+ ✓ src/components/ScorePill/ScorePill.test.tsx > ScorePill > renders a fixture's rank and score 2ms
+ ✓ src/components/ScorePill/ScorePill.test.tsx > ScorePill > puts the rank pill before the score 2ms
+ ✓ src/components/Monogram/Monogram.test.tsx > Monogram > renders the city initials: Springfield as Sp 10ms
+ ✓ src/components/Monogram/Monogram.test.tsx > Monogram > renders the city initials: Vienna as Vi 1ms
+ ✓ src/components/Monogram/Monogram.test.tsx > Monogram > renders the city initials: Fairfax as Fa 1ms
+ ✓ src/components/Monogram/Monogram.test.tsx > Monogram > hides the decorative block from assistive technology 9ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders the address verbatim as a level 3 heading 78ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders every meta item in BRANDING order 4ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > shows PENDING first for A7 2ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > shows no status label for an active listing 2ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > emphasizes Pets and pets case-insensitively and leaves the rest untouched 3ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders no emphasis without keyword tokens 2ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders the price over the score pill 2ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders the city monogram 7ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > renders one card per item in rank order inside an ordered list 82ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > labels a polite live region with the Results heading 8ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > exposes a level 2 Results heading that script can focus 9ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > keeps the price block between the meta line and the description 4ms
+ ✓ src/components/ListingCard/ListingCard.test.tsx > ListingCard > renders no image, icon, link or button 2ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > passes keyword tokens to every card 3ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > renders the heading and no list for zero items 3ms
+ ✓ src/components/ListingList/ListingList.test.tsx > ListingList > keys cards by source and id 6ms
+ ✓ src/components/NoResults/NoResults.test.tsx > NoResults > renders the no-results copy verbatim 74ms
+ ✓ src/components/NoResults/NoResults.test.tsx > NoResults > calls onClear once on click 21ms
+ ✓ src/components/ErrorState/ErrorState.test.tsx > ErrorState > renders the error copy verbatim 69ms
+ ✓ src/components/ErrorState/ErrorState.test.tsx > ErrorState > calls onRetry once on click 19ms
+ ✓ src/components/NoResults/NoResults.test.tsx > NoResults > calls onClear from the keyboard 21ms
+ ✓ src/components/NoResults/NoResults.test.tsx > NoResults > renders a type=button 4ms
+ ✓ src/components/ErrorState/ErrorState.test.tsx > ErrorState > calls onRetry from the keyboard 22ms
+ ✓ src/components/ErrorState/ErrorState.test.tsx > ErrorState > renders a type=button 4ms
+ ✓ src/components/ErrorState/ErrorState.test.tsx > ErrorState > shows no error code 1ms
+
+ Test Files  7 passed (7)
+      Tests  41 passed (41)
+   Start at  23:58:10
+   Duration  1.21s (environment 75%, setup 13%, tests 7%, import 2%, transform 2%)
+

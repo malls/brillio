@@ -287,3 +287,31 @@ Review: art_01M4W6JVK8PG4DFPD0558XZM7W (PASS, 2 major, 6 minor). Triage by agent
    a FieldName, so it falls through to the unmapped line under the bar (no field mark). Add it to the unmapped
    server-mapping test (`{ field: 'query', code: 'malformed_query', message: <any> }` renders in the alert line).
    BC-8's exports and usage notes are in its completion comment (`lattice show BC-8`).
+
+## Review Cycle 1 Findings (PASS-WITH-NITS, art_01M4W8RJEX9PZGNYXK1279SVG3 @ f79fa6f) — routing
+
+Branch merged `master` @52c69dd (BC-5 + BC-11 landed) as 1763fb3 before the fixes. BC-5's landed server sentences
+match the client copy table exactly (checked `backend/internal/httpapi/query.go`).
+
+Fix in this branch:
+1. (Minor) Limit the pointerdown reveal to Search: move `onPointerDown` from the `.actions` wrapper to a wrapper
+   around Search only (or bail when the target is inside Clear). Add `onMouseDown={(e) => { e.preventDefault(); }}`
+   on Clear so the blur-triggered reveal on desktop cannot shift Clear before the click lands. Test: pointerdown on
+   Clear with an unrevealed invalid focused draft reveals nothing; pointerdown on the Search wrapper still reveals.
+2. (Nit) `FilterBar.module.css` actions comment: "a message under a field in the same row never moves the buttons".
+3. (Nit) `isPlainEnter` also bails when `event.nativeEvent.keyCode === 229` (WebKit IME commit). Test it.
+4. (Nit) `numberText` writes non-integers without exponent notation
+   (`n.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 })`); model test with 1e-7.
+5. (Nit) Clear dismisses field marks only and leaves the unmapped notice line alone (with `?pageSize=500` Clear keeps
+   pageSize, so the 400 still applies). Update the Clear test accordingly.
+New ticket: 6. (Nit, a11y live feedback) -> BC-21 (backlog, related_to BC-9).
+
+## Orchestrator shared recipe 03:25Z — text buttons (binding; supersedes the plan's `.clear` letter-spacing)
+
+BRANDING §5.8 + demo `.link`, as BC-11's Pager uses it, so BC-9/10/11 match (BC-14 checks): font 500 13px/1
+`var(--font-ui)`; colour `var(--oxblood)`; background none; border 0; padding 0; **no letter-spacing**; white-space
+nowrap; cursor pointer; text-decoration none. Hover: underline, `text-underline-offset: 3px`, **no colour change**.
+Focus-visible: 2px solid `var(--oxblood)` outline, offset 3px. Disabled: `var(--ink-3)` via the disabled attribute.
+For `.clear` this means: remove `letter-spacing: var(--tracking-button)`, remove the `.clear:active` oxblood-deep
+rule, add `.clear:disabled { color: var(--ink-3); cursor: default; }`. Search (`.search`, the primary button) keeps
+its +0.02em tracking and `oxblood-deep` hover/pressed per the demo `.btn`.
