@@ -127,7 +127,7 @@ func TestOpenAPIParsesAsYAML(t *testing.T) {
 	h, _ := newSearchRouter(t, testNow)
 	for _, path := range wantPaths {
 		if keys := slices.Sorted(maps.Keys(lookupMap(t, paths, path))); !slices.Equal(keys, []string{"get"}) {
-			t.Errorf("%s has %v, want only get: the router serves GET alone", path, keys)
+			t.Errorf("%s has %v, want only get (HEAD is implicit and not documented)", path, keys)
 		}
 		responses := lookupMap(t, paths, path, "get", "responses")
 		rec := serve(h, http.MethodGet, path)

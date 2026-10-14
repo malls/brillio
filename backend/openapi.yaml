@@ -371,11 +371,15 @@ components:
           description: Street address, free text as the feed wrote it.
         city:
           type: string
+          description: |-
+            City name, trimmed with internal whitespace collapsed. The `city` filter matches it
+            ignoring case, and `GET /api/cities` lists the distinct non-empty names.
         state:
           type: string
           description: State code, uppercased.
         zip:
           type: string
+          description: Postal code as the feed wrote it, trimmed. Its format is not checked.
         price:
           type: number
           minimum: 0
@@ -383,16 +387,20 @@ components:
         bedrooms:
           type: integer
           minimum: 0
+          description: Number of bedrooms.
         bathrooms:
           type: number
+          description: Number of bathrooms. Halves are allowed, such as 1.5.
         sqft:
           type: integer
           minimum: 0
           description: Interior area in square feet.
         latitude:
           type: number
+          description: Latitude in decimal degrees (WGS 84).
         longitude:
           type: number
+          description: Longitude in decimal degrees (WGS 84).
         listedDate:
           type: string
           format: date
