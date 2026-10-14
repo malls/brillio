@@ -306,3 +306,20 @@ lines. Total ~1200.
    code - product call; default is first value.
 3. BRANDING §7.2 `Min price must be less than max price.` vs SPEC rule `maxPrice >= minPrice` (equal allowed). Plan keeps
    the rule and the string verbatim; equal prices pass. Wording is for the branding owner (BRANDING §9), not blocking.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+
+Review: art_01M4W58G75R2QWP2A8RQZQAR1H (PASS). Triage by agent:opus-5.5-delegator.
+
+| # | Finding | Bucket | Resolution | Section |
+|---|---|---|---|---|
+| 1 | MAJOR: `malformed_query` on pseudo-field `query` is a contract addition (§5.3/§5.5) that BC-6/BC-9 mirror | complex (Orchestrator decision) | Routed to the Orchestrator for an explicit ack/decline before `in_progress`; the outcome is recorded below as "Decision 1". If acked, SPEC edit 2 also says: at most one `malformed_query` error per request (Go reports only the first bad pair), and the pairs that did decode are still validated normally. If declined: keep `r.URL.Query()`, drop `malformed_query` from the rules table, SPEC edits 2/3 and every test/curl that uses `keyword=100%`, and add a SPEC §5.3 known-limitation line instead. | Parsing rules, Error-code rules, SPEC edits 2-3, Tests, Validation |
+| 2 | MINOR: whitespace-only keyword vs raw length > 200: precedence unstated | obvious | Absence first for both `city` and `keyword`: a value that is empty after `strings.TrimSpace` is absent, full stop (201 spaces in keyword is absent, no error). Then the length rule: trimmed city > 100 runes, raw keyword > 200 runes -> `too_long`. Add a 201-space keyword row to `TestParseSearchQueryKeyword`; mirror the sentence in SPEC edit 2. | Parsing rules, Tests, SPEC edit 2 |
+| 3 | MINOR: `NO+Pets` expectation listed in seed order | obvious | Expected order is rank (no-budget, newest first): **A5, A3, B9, A7**. Assert the ordered slice. | Tests (`TestSearchKeyword`) |
+| 4 | MINOR: `-0` normalisation needs a mechanism and a raw-body assertion | obvious | After a successful float parse: `if v == 0 { v = 0 }` (literal assignment yields +0). The `-0` test row asserts the raw response body contains `"minPrice":0` and not `-0`, in addition to the decoded value. | Parsing rules, Tests |
+| 5 | MINOR: ParseFloat grammar wider than "a number" | obvious | SPEC edit 2 gains one sentence: "Number syntax is exactly Go's `strconv.ParseFloat` (decimal or hex float literals, underscores allowed); only non-finite results are rejected." Add one test row pinning `minPrice=1_000` -> 1000. | SPEC edit 2, Tests |
+| 6 | MINOR: validation-plan item 18 expects 11 for `status=active,pending` (correct is 12) | out of plan (Orchestrator file) | Plan is right (12). Mailed the Orchestrator to correct `.lattice/orchestration/validation-plan.md` item 18; BC-5 does not edit that file. | Validation |
+
+Planner open questions 2 and 3: (2) repeated scalar params use the first value, documented in SPEC edit 2, no new code; (3) BRANDING §7.2 "Min price must be less than max price." stays verbatim with equal prices valid; wording is the branding owner's call (BRANDING §9), noted to the Orchestrator, not blocking.
+
+Decision 1: (pending Orchestrator reply)

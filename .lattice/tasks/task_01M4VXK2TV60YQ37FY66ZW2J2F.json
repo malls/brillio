@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:20",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 1,
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
@@ -23,11 +23,26 @@
       "id": "art_01M4W468FKGQZA6X41W7ZDMZGP",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W5AWFDXPPGNHW06YWPYD3F",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W5FY722ERGNATHRYR3SQN6",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W5FYAGSQNYYARHC0DT31Y1",
+      "role": "validation",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2TV60YQ37FY66ZW2J2F",
-  "last_event_id": "ev_01M4W47J874K3CCGW76R4ZVVXM",
-  "last_status_changed_at": "2026-10-14T02:35:28Z",
+  "last_event_id": "ev_01M4W5P82M2Q1EJ7XANCK4AQ6H",
+  "last_status_changed_at": "2026-10-14T02:55:33Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -42,12 +57,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-8",
-  "status": "in_progress",
+  "status": "in_validation",
   "tags": [
     "frontend"
   ],
   "title": "Frontend core: API client and types, URL state and search hooks, BRANDING formatters",
   "type": "task",
-  "updated_at": "2026-10-14T02:35:28Z",
+  "updated_at": "2026-10-14T03:00:58Z",
   "urgency": null
 }

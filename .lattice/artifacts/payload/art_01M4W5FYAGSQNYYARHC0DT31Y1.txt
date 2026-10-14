@@ -1,0 +1,206 @@
+
+ RUN  v5.0.4 /Users/forrest/Code/brillio-worktrees/bc-8-frontend-core/frontend
+
+ ✓ src/format/date.test.ts > formatListedDate > runs where parsing the date with Date would shift the day 1ms
+ ✓ src/format/date.test.ts > formatListedDate > omits the year in the current year 0ms
+ ✓ src/format/date.test.ts > formatListedDate > adds the year when the current year is 2025 0ms
+ ✓ src/format/date.test.ts > formatListedDate > adds the year when the current year is 2027 0ms
+ ✓ src/format/date.test.ts > formatListedDate > drops the leading zero of the day 0ms
+ ✓ src/format/date.test.ts > formatListedDate > keeps Jan 1 on its own day and year 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 01 Jan 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 02 Feb 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 03 Mar 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 04 Apr 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 05 May 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 06 Jun 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 07 Jul 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 08 Aug 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 09 Sep 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 10 Oct 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 11 Nov 0ms
+ ✓ src/format/date.test.ts > formatListedDate > names month 12 Dec 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "garbage" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "2026-13-01" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "2026-00-10" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "2026-08-00" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "2026-08-32" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "2026-8-29" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > shows "" raw 0ms
+ ✓ src/format/date.test.ts > formatListedDate > defaults the current year to the local clock 1ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > parses a validation_error body with every field 6ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > drops malformed field entries and keeps the valid ones 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > gives no fields when a validation_error has none 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > parses any other error code as an http error with the body message 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > falls back to a generic message for an empty body 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > falls back to a generic message for an HTML body 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > falls back to a generic message for a JSON array 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > falls back to a generic message for a body without error 0ms
+ ✓ src/api/errors.test.ts > parseErrorResponse > falls back to a generic message for an empty message 0ms
+ ✓ src/api/errors.test.ts > ApiRequestError > is an Error carrying the ApiError, the request ID and the cause 1ms
+ ✓ src/api/errors.test.ts > toApiError > returns the ApiError of an ApiRequestError 0ms
+ ✓ src/api/errors.test.ts > toApiError > reports any other Error as a network error with its message 0ms
+ ✓ src/api/errors.test.ts > toApiError > reports a non-Error as a network error with a generic message 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > gives an empty string for no params 1ms
+ ✓ src/api/client.test.ts > buildSearchQuery > writes every param in SPEC section 5.3 order 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > repeats status once per value, deduplicated, in enum order 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits an empty city 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits a whitespace-only city 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits an empty keyword 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits an empty status list 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits a NaN price 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits an infinite budget 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > omits a negative infinite page 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > writes numbers as plain strings and keeps out-of-range values for the API to judge 0ms
+ ✓ src/api/client.test.ts > buildSearchQuery > trims city and keyword and encodes them 0ms
+ ✓ src/api/client.test.ts > client > searchListings > sends the built query with the signal and resolves with the body 3ms
+ ✓ src/api/client.test.ts > client > searchListings > requests the bare path for no params and passes a null signal when none is given 0ms
+ ✓ src/api/client.test.ts > client > searchListings > searchListingsByQuery sends the query as given 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 400 with a validation error, its fields and the request ID 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 500 with an http error carrying the body message 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 404 with an http error 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects the dev proxy HTML 502 with the fallback message 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 2xx with a non-JSON body as malformed 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 2xx with a body without items as malformed 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 2xx with a body without page as malformed 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a 2xx with a JSON array as malformed 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects a fetch TypeError with a network error and its message 0ms
+ ✓ src/api/client.test.ts > client > searchListings > rejects an abort with a network error 0ms
+ ✓ src/api/client.test.ts > client > searchListings > treats a body read cut short by an abort as an abort 0ms
+ ✓ src/api/client.test.ts > client > getCities > fetches /api/cities and resolves with the names 1ms
+ ✓ src/api/client.test.ts > client > getCities > drops non-string entries 0ms
+ ✓ src/api/client.test.ts > client > getCities > rejects a 500 with an http error 0ms
+ ✓ src/api/client.test.ts > client > getCities > rejects a body of the wrong shape as malformed 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Bedrooms: integer + " bd" 2ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Bathrooms: 1 as 1 ba 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Bathrooms: 1.5 as 1.5 ba 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Bathrooms: 2 as 2 ba 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Bathrooms: 2.5 as 2.5 ba 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Area: 1450 as 1,450 sqft 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Area: 980 as 980 sqft 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Source: underscore to space 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Status: a label only when not active 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Score: 0.94 as 0.94 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Score: 0.7414 as 0.74 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Score: 1 as 1.00 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Score: 0 as 0.00 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Rank: "No. " + integer 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Counts: 1 as 1 result 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Counts: 12 as 12 results 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Counts: 0 as 0 results 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Counts: 1200 as 1,200 results 0ms
+ ✓ src/format/listing.test.ts > BRANDING section 7.1 formatters > Pages: "Page N of M", empty when there are no pages 0ms
+ ✓ src/format/listing.test.ts > listing card > formats the location as City, ST ZIP 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the meta items in BRANDING section 5.4 order 0ms
+ ✓ src/format/listing.test.ts > listing card > leaves the status label out of the meta items 0ms
+ ✓ src/format/listing.test.ts > listing card > dates the meta items against the local clock by default 1ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "Springfield" as "Sp" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "Vienna" as "Vi" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "Fairfax" as "Fa" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "RESTON" as "Re" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "  Manassas " as "Ma" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "chantilly" as "Ch" 0ms
+ ✓ src/format/listing.test.ts > listing card > gives the monogram of "" as "" 0ms
+ ✓ src/format/listing.test.ts > status line > names the ordering 0ms
+ ✓ src/format/listing.test.ts > status line > summarizes a ranked response 0ms
+ ✓ src/format/listing.test.ts > status line > summarizes a response without a budget 0ms
+ ✓ src/format/listing.test.ts > status line > summarizes an empty response as 0 results 0ms
+ ✓ src/format/listing.test.ts > status line > gives the page position of the fixtures 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads minPrice=400000 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads maxPrice=600000.5 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads minBedrooms=2 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads city=Springfield 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads keyword=pets+allowed 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads targetBudget=450000 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status=pending 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status=active&status=sold 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads page=3 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads pageSize=100 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > round-trips the full set through buildSearchQuery 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads a query with or without the leading "?" 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minPrice=abc 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minPrice=12abc 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minPrice=0x10 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minPrice=Infinity 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops maxPrice=NaN 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops maxPrice=%20 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minBedrooms=2.5 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops targetBudget=1e400 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops page=0 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops page=-1 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops page=1.5 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops pageSize=0 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops pageSize=101 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops status=bogus 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops status=ACTIVE 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops city= 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops city=%20 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops keyword= 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > drops minprice=500000 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps minPrice=-5 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps minBedrooms=-1 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps minPrice=500000&maxPrice=1 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps targetBudget=0 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps minBedrooms=2.0 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps minPrice=1e5 for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > keeps over-long text for the API to judge 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status status=active,sold 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status status=sold,active,sold 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status status=sold&status=pending,active 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status status=active,bogus 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > reads status status=, 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > trims city and keyword 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > takes the first value of a repeated scalar 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > parseSearchParams > ignores unknown params and keeps the known ones 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > reads the URL on mount 13ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > reads an empty URL as no params 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setSearch pushes the new filters without page 2ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > keeps pageSize through setSearch, setPage and clear 2ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setSearch writes a pageSize it is given 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage changes only page 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage(1) removes page 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage(0) does nothing 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage(-1) does nothing 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage(1.5) does nothing 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > setPage(NaN) does nothing 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > clear writes an empty query 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > follows popstate 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > stops following popstate after unmount 1ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > pushes nothing for a search equal to the current one 0ms
+ ✓ src/hooks/useSearchParamsState.test.tsx > useSearchParamsState > keeps params and writers stable across a rerender 1ms
+ ✓ src/components/Header/Header.test.tsx > Header > renders the wordmark as the level 1 heading inside the banner 75ms
+ ✓ src/components/Header/Header.test.tsx > Header > renders no scope label when scope is absent 5ms
+ ✓ src/components/Header/Header.test.tsx > Header > renders the scope label when scope is given 9ms
+ ✓ src/App.test.tsx > App > renders the five shell rows in BRANDING order with their roles and names 82ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > starts loading with no previous, then succeeds 65ms
+ ✓ src/hooks/useCities.test.tsx > useCities > starts empty and loads the cities once from /api/cities 67ms
+ ✓ src/hooks/useCities.test.tsx > useCities > stays empty and logs once when loading fails 53ms
+ ✓ src/hooks/useCities.test.tsx > useCities > under StrictMode does not log the aborted first request 78ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > starts loading, then reports empty when there are no results 55ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > keeps the previous response while new params load 105ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > aborts a request when params change and ignores its late response 97ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > does not refetch for equal params in a new object 77ms
+ ✓ src/format/money.test.ts > formatPrice > formats 450000 as $450,000 1ms
+ ✓ src/format/money.test.ts > formatPrice > formats 0 as $0 0ms
+ ✓ src/format/money.test.ts > formatPrice > formats 980 as $980 0ms
+ ✓ src/format/money.test.ts > formatPrice > formats 1234567 as $1,234,567 0ms
+ ✓ src/format/money.test.ts > formatPrice > formats 399000.4 as $399,000 0ms
+ ✓ src/format/money.test.ts > formatPrice > formats 399999.5 as $400,000 0ms
+ ✓ src/format/money.test.ts > formatWholeNumber > formats 1450 as 1,450 0ms
+ ✓ src/format/money.test.ts > formatWholeNumber > formats 980 as 980 0ms
+ ✓ src/format/money.test.ts > formatWholeNumber > formats 12 as 12 0ms
+ ✓ src/format/money.test.ts > formatWholeNumber > formats 1000000 as 1,000,000 0ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > reports a 400 as invalid with its fields and the previous response, unlogged 106ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > reports a 500 as an http error with the previous response and logs it once 105ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > reports a fetch failure as a network error and logs it 54ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > retry refetches the same query, keeping the previous response while loading 165ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > keeps retry stable across renders 109ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > reports a page past the end as success with no items 53ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > returning to a held query shows its result at once and refetches without loading 105ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > aborts the request on unmount without updating or logging 24ms
+ ✓ src/hooks/useListingSearch.test.tsx > useListingSearch > under StrictMode aborts the first request unlogged and settles on the second 55ms
+
+ Test Files  10 passed (10)
+      Tests  197 passed (197)
+   Start at  22:56:39
+   Duration  2.34s (environment 70%, tests 14%, setup 13%, transform 2%, import 1%)
+
