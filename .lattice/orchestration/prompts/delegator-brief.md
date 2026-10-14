@@ -44,7 +44,8 @@ Never set `LATTICE_ROOT` to `$PWD` or the worktree (a worktree carries a stale s
    `c11 set-metadata --panel "$MY_PANEL" --key mailbox.delivery --value stdin --type string`,
    and `c11 set-description --panel "$MY_PANEL" "<plain-English what you are doing now; next gate>"`
    ending with a last line `Lineage: Orchestrator BC → <TICKET> delegator`. Refresh the description at
-   every phase change. Re-apply the title after every `lattice plan-review`/`code-review` call (the CLI can clobber it).
+   every phase change. Re-apply the title (`rename-panel` + `set-title`) after every `lattice status` transition and every
+   `lattice plan-review`/`code-review` call: with a bound surface the CLI renames the panel to the full ticket title.
 3. **Read cold:** `lattice show <TICKET>`, the cited sections of `docs/SPEC.md` and `BRANDING.md`,
    `.lattice/context.md`, and `$REPO_ROOT/.lattice/orchestration/run-state.md` (shared-files table,
    gate rule, port allocation, decision log, run-time footguns — all binding).
