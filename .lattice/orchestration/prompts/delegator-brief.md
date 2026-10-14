@@ -52,6 +52,16 @@ Never set `LATTICE_ROOT` to `$PWD` or the worktree (a worktree carries a stale s
 4. **Launch receipt:** `c11 mailbox send --to-parent "READY <TICKET> CWD <WORKTREE> HEAD <sha> BASE <sha of REVIEW_BASE> MODE active"`.
 5. `lattice branch-link <TICKET> <BRANCH> --actor agent:opus-5.5-delegator` (skip for BC-1).
 
+## Review routing (run-state decision 04:02Z — supersedes the headless calls below)
+
+Headless `lattice plan-review` / `code-review` died at the 600 s watchdog 5 times in ~15 runs, costing ~50 min of
+critical path, and diff size did not predict it. **Do not call the headless review commands at all.** Every plan review
+and code review is a fresh-context reviewer sub-agent spawned with the Agent tool **with `model: "fable"`** (a different
+model from the Opus implementers, preserving the cross-model check). Its brief and output shape are the "own-reviewer
+fallback" text below (plan + ticket + `git diff <REVIEW_BASE>...HEAD`; `Verdict:` and `Reviewed HEAD: <sha>` lines;
+findings with file:line). Attach with `--role plan-review` / `--role review` and the reviewer actor as written. Skip the
+"fallback: <reason>" comment; write "reviewer: fable sub-agent (decision 04:02Z)" in the review title instead.
+
 ## 1. Plan
 
 1. `lattice status <TICKET> in_planning --actor agent:opus-5.5-delegator`; verify with
