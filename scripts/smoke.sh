@@ -35,10 +35,12 @@ docker compose version >/dev/null 2>&1 || die 'docker compose is not available'
 existing=$(docker compose ps -a -q) || die 'docker compose ps failed'
 [ -z "$existing" ] || die 'a brillio stack already exists; run make down first'
 
+# Every curl call starts with -q (skip ~/.curlrc) and passes --noproxy '*', so a
+# proxy in the environment or the user's curl config never sees localhost.
 # curl exit 7 is "connection refused": nothing listens there, so the port is free.
 for p in 8080 5173; do
   rc=0
-  curl -s -o /dev/null --max-time 2 "http://localhost:$p/" || rc=$?
+  curl -q --noproxy '*' -s -o /dev/null --max-time 2 "http://localhost:$p/" || rc=$?
   [ "$rc" -eq 7 ] || die "port $p is in use"
 done
 
@@ -48,7 +50,7 @@ tmp=$(mktemp -d)
 cleanup() {
   status=$?
   trap - EXIT
-  trap '' INT TERM
+  trap '' INT TERM HUP
   echo 'teardown: docker compose down -v'
   if ! docker compose down -v; then
     echo 'FAIL  teardown'
@@ -59,6 +61,7 @@ cleanup() {
 }
 
 trap cleanup EXIT
+trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
@@ -73,10 +76,10 @@ fi
 # wait_for URL: the host-side check that the published port answers.
 wait_for() {
   i=0
-  until curl -fs -o /dev/null --max-time 2 "$1"; do
+  until curl -q --noproxy '*' -fs -o /dev/null --max-time 2 "$1"; do
     i=$((i + 1))
     if [ "$i" -ge 30 ]; then
-      echo "FAIL  $1 did not answer from the host"
+      printf 'FAIL  %s did not answer from the host\n' "$1"
       diagnose
       exit 1
     fi
@@ -96,7 +99,7 @@ code=000
 # status in $code (000 when the request itself failed).
 fetch() {
   rm -f "$tmp/body"
-  code=$(curl -s --max-time 10 -o "$tmp/body" -w '%{http_code}' "$1") || code=000
+  code=$(curl -q --noproxy '*' -s --max-time 10 -o "$tmp/body" -w '%{http_code}' "$1") || code=000
   [ -f "$tmp/body" ] || : >"$tmp/body"
 }
 
@@ -113,7 +116,9 @@ ok() {
 bad() {
   fail=$((fail + 1))
   excerpt=$(dd if="$tmp/body" bs=200 count=1 2>/dev/null | tr '\n\r' '  ')
-  echo "FAIL  $1 (HTTP $code: $excerpt)"
+  # printf, not echo: the excerpt is response body text, and some echos (dash)
+  # expand backslash escapes in it.
+  printf 'FAIL  %s (HTTP %s: %s)\n' "$1" "$code" "$excerpt"
 }
 
 # expect NAME CODE MODE NEEDLE: pass when the status is CODE and the body
