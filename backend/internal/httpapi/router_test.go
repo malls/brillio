@@ -137,6 +137,9 @@ func TestErrorEnvelopes(t *testing.T) {
 		{name: "DELETE on a GET route", method: http.MethodDelete, target: "/healthz",
 			wantStatus: http.StatusMethodNotAllowed, wantCode: "method_not_allowed",
 			wantMessage: "Method not allowed.", wantAllow: "GET, HEAD"},
+		{name: "POST on the OpenAPI document", method: http.MethodPost, target: "/api/openapi.yaml",
+			wantStatus: http.StatusMethodNotAllowed, wantCode: "method_not_allowed",
+			wantMessage: "Method not allowed.", wantAllow: "GET, HEAD"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
