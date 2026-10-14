@@ -172,7 +172,11 @@
   cursor: default;
 }
 
-/* Section 5.8 text button (section 2.2 job 2). */
+/*
+ * Section 5.8 Text button, as the demo's .link and the Pager's .button (section 2.2 job 2):
+ * Figtree 13/1, 500, oxblood, no letter-spacing (it inherits normal). Hover and press do not
+ * change color; hover underlines at a 3px offset.
+ */
 .clear {
   padding: 0;
   border: 0;
@@ -182,24 +186,25 @@
   font-size: var(--text-button);
   line-height: var(--leading-button);
   font-weight: 500;
-  letter-spacing: var(--tracking-button);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.clear:hover {
+.clear:hover:not(:disabled) {
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.clear:active {
-  color: var(--oxblood-deep);
 }
 
 .clear:focus-visible {
   outline: 2px solid var(--oxblood);
   outline-offset: 3px;
+}
+
+/* Disabled is ink-3, never reduced opacity (section 8). Clear is never disabled in v1. */
+.clear:disabled {
+  color: var(--ink-3);
+  cursor: default;
 }
 
 /* Server errors no field can show: one line under the bar, stated in ink (section 2.3). */
