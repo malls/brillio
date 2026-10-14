@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:12:00Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WD65X8Q5CPW0C2KATK709C",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WD65X8Q5CPW0C2KATK709C.md",
+    "size_bytes": 3099
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review c374ce8 (reviewer: fable sub-agent (decision 04:02Z))",
+  "token_usage": null,
+  "type": "note"
+}

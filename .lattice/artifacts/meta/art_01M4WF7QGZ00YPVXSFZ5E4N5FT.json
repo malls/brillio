@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:47:48Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WF7QGZ00YPVXSFZ5E4N5FT",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WF7QGZ00YPVXSFZ5E4N5FT.md",
+    "size_bytes": 31260
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation 10133f8",
+  "token_usage": null,
+  "type": "file"
+}

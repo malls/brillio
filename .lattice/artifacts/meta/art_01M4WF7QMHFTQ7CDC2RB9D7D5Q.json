@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:47:48Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WF7QMHFTQ7CDC2RB9D7D5Q",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WF7QMHFTQ7CDC2RB9D7D5Q.md",
+    "size_bytes": 14158
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "BC-14-keyboard.md",
+  "token_usage": null,
+  "type": "file"
+}

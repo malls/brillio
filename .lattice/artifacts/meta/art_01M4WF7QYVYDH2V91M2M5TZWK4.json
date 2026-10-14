@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:47:49Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WF7QYVYDH2V91M2M5TZWK4",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WF7QYVYDH2V91M2M5TZWK4.png",
+    "size_bytes": 69434
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "BC-14-noresults-1280.png",
+  "token_usage": null,
+  "type": "file"
+}
