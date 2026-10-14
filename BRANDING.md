@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | v1 draft, 2026-10-13. Composed from the branding interview picks; awaiting owner approval of the demo. |
+| **Status** | v1.1 draft, 2026-10-14. v1 composed from the branding interview picks; v1.1 makes a page change quiet (§5.9, BC-25). Awaiting owner approval of the demo. |
 | **Demo artifact** | https://claude.ai/artifact/HdSoc6KB2Wzwvmjt73AGTn — republish to this URL on every change |
 | **Demo source** | `docs/branding-demo.html` — the reference implementation of every token below |
 | **Interview record** | https://claude.ai/artifact/87Spdddf136Uv72dn8QWUf — picks of 2026-10-13 |
@@ -209,7 +209,7 @@ Field anatomy: label (§3.2 Label) above, value (Body 15) below, 1px `ink-2` und
 
 The select shows a `▾` glyph in `ink-2` at the right of the value; otherwise it matches a text field. Native pickers are fine.
 
-Actions: the Search button (§5.8) and a "Clear" text button. Search submits; Enter in any field submits. Search is disabled while loading.
+Actions: the Search button (§5.8) and a "Clear" text button. Search submits; Enter in any field submits. Search is disabled while a search loads; a page change leaves it enabled (§5.9).
 
 A new filter joins the grid as a seventh field with the same anatomy. The bar wraps to a second row at 1040px before any field shrinks below 130px.
 
@@ -217,8 +217,8 @@ A new filter joins the grid as a seventh field with the same anatomy. The bar wr
 
 Meta 13 in `ink-2`, left and right halves.
 
-- Left: `12 results · ranked for $450,000`. Without a target budget: `12 results · newest first`. While loading: `Loading`. No results: `0 results`. On error: empty.
-- Right: `Page 1 of 2`. Empty when there are no pages.
+- Left: `12 results · ranked for $450,000`. Without a target budget: `12 results · newest first`. While a search loads: `Loading`; while a page loads, the count and order stay. No results: `0 results`. On error: empty.
+- Right: `Page 1 of 2`, the page on screen; while a page loads, the page asked for. Empty when there are no pages.
 
 ### 5.4 Listing card
 
@@ -260,7 +260,8 @@ A 72×54 block (4:3) in `stone` holding the city's first two letters, first uppe
 
 | State | Where | What |
 |---|---|---|
-| Loading | Status line + a 2px line under the filter bar | Status reads `Loading`. The previous results stay on screen, unchanged. A 2px `oxblood` segment (40% wide) slides left to right along a `line`-colored track, 1.2s linear, looping. Search is disabled. First load with no prior results: the status line alone. |
+| Loading | Status line + a 2px line under the filter bar | A search: the first load, new filters (Search, Enter, Clear, back or forward), or Try again. Status reads `Loading`. The previous results stay on screen, unchanged. A 2px `oxblood` segment (40% wide) slides left to right along a `line`-colored track, 1.2s linear, looping. Search is disabled. First load with no prior results: the status line alone. |
+| Page change | Results region | Only the page changes: Previous, Next, a page number, or back or forward between pages of the same filters. A Search, Enter or Clear that changes only the page is a page change too. Nothing outside the results moves: no loading line, Search stays enabled, the status line keeps its count and order and shows the page asked for at once, and the pager marks that page current. The previous page stays on screen, unchanged, until the next one arrives and replaces it in place. After an error there is no list to keep, so the next load is a search. |
 | No results | Results region | Centered, 96px from the top: `No results.` (State heading) · `Adjust your filters.` (Body, `ink-2`) · `Clear filters` text button. Status reads `0 results`. |
 | Invalid input | The fields | The API's 400 maps to fields. `Min price must be less than max price.` under Max price with both fields marked. `Min bedrooms must be 0 or more.` under that field. The results region keeps the last good results. Nothing is sent until the user corrects it or the API rejects it; the UI validates the same rules the API does, and the API is the authority. |
 | Error | Results region | Centered: `Couldn't load results.` (State heading) · `Try again` text button, which re-runs the last search. Status line empty. No error code in the UI; it goes to the console. |

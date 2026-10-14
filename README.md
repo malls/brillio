@@ -244,6 +244,6 @@ Frontend: Vitest, React Testing Library and jsdom, with `fetch` stubbed.
 - Components render from props with BRANDING.md copy verbatim, and correct roles and labels.
 - Formatters cover every row of BRANDING.md §7.1.
 - Hooks: the URL round trip, `popstate`, and aborting a superseded request.
-- `SearchPage`: loading to results, no results, a 400 mapped onto fields (`min_gt_max` marks both prices), an error with Try again, and paging with continuous ranks.
+- `SearchPage`: loading to results, no results, a 400 mapped onto fields (`min_gt_max` marks both prices), an error with Try again, and quiet paging with continuous ranks.
 
 There is no automated browser suite. `make smoke` exercises the running stack over HTTP, against the API directly and through the Vite proxy.
