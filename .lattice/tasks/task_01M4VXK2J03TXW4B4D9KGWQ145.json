@@ -1,18 +1,33 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-6-openapi",
+      "linked_at": "2026-10-14T03:40:13Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:28",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
+  "comment_count": 1,
   "complexity": "low",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Write the OpenAPI 3.1 document for the API and serve it from the binary. Spec: docs/SPEC.md \u00a75.7 and \u00a75.1\u20135.6.\n\nWhy: senior bar. It also gives the interviewer a precise contract to read, and the sync test keeps the handler's param allowlist and the document from drifting.\n\nScope:\n- backend/openapi.yaml, OpenAPI 3.1: paths /healthz, /api/cities, /api/listings/search, /api/openapi.yaml. Components: Listing, ListingResult (with rank and relevance), PageMeta, ScoringMeta, SearchResponse, ErrorEnvelope, FieldError with the code enum from \u00a75.5. Every query param with type, constraints, default and a one-line description; document the unknown-parameter rule and the page-past-end and empty-city behavior in the operation description. Examples lifted from \u00a75.4 and \u00a75.5.\n- Embed with embed.FS and serve at GET /api/openapi.yaml with Content-Type application/yaml.\n- Tests: handler returns 200 and the body parses as YAML; a sync test that reads the allowlist of param names from the search handler and asserts each appears under the search operation's parameters, and vice versa.\n- Run one external validator once (for example `npx @redocly/cli lint backend/openapi.yaml`) and record its output in a task comment; do not add it to make check.\n\nAcceptance:\n- curl /api/openapi.yaml returns the document.\n- Validator reports no errors.\n- Sync test green; `make check` green.\n\nValidation: the curl and the validator output, attached with --role validation.",
   "done_at": null,
-  "evidence_refs": [],
+  "evidence_refs": [
+    {
+      "id": "art_01M4W8V9CRKJV5VJPVZ30DSRQP",
+      "role": "plan-review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK2J03TXW4B4D9KGWQ145",
-  "last_event_id": "ev_01M4VXK51E7V0PXG70BJ3DZPWE",
-  "last_status_changed_at": "2026-10-14T00:39:26Z",
+  "last_event_id": "ev_01M4W8WKGNQ9ME6R9NTHJ3ZETP",
+  "last_status_changed_at": "2026-10-14T03:56:52Z",
   "linked_files": [],
   "priority": "medium",
   "relationships_out": [
@@ -27,13 +42,13 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-6",
-  "status": "backlog",
+  "status": "in_progress",
   "tags": [
     "backend",
     "docs"
   ],
   "title": "OpenAPI 3.1 document, embedded and served at /api/openapi.yaml, with param sync test",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:28Z",
+  "updated_at": "2026-10-14T03:56:52Z",
   "urgency": null
 }

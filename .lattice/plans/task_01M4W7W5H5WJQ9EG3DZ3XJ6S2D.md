@@ -1,0 +1,3 @@
+# BC-20: Keyword match is case-insensitive only for ASCII (Go Unicode ToLower vs SQLite lower())
+
+Found in BC-5 code review (art_01M4W7VYKS1KWBVC8R1NX7T89M, nit 5). httpapi lowercases keyword tokens with Go's Unicode strings.ToLower (backend/internal/httpapi/query.go), but the store's SQL compares against SQLite's ASCII-only lower(description) (backend/internal/store/listings.go:35). Scenario: keyword=École -> token 'école', never matches a description containing 'École'. Seed data is all ASCII, so nothing is observable in v1. Options: ASCII-fold tokens to match SQLite, register a Unicode-aware lower() function, or document as a known limitation (BC-16 extensions doc). Not fixed in BC-5 (BC-4/store territory).

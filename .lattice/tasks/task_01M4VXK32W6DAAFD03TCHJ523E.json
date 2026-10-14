@@ -11,17 +11,88 @@
   ],
   "c11_surface": "panel:26",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 1,
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "The results surface: ListingCard with Monogram and ScorePill, ListingList, and the NoResults and ErrorState screens. Spec: docs/SPEC.md \u00a77.4, \u00a77.5, \u00a77.6. Design: BRANDING.md \u00a75.4 (card), \u00a75.5 (monogram), \u00a75.6 (score), \u00a75.9 (no results, error), \u00a73.2 (Price, Address, Meta, Description, State heading), \u00a74.1, \u00a74.4, \u00a77.1, \u00a77.2. Reference: docs/branding-demo.html.\n\nWhy: the handout requires address, price, bedrooms and relevance score per result; BRANDING fixes exactly how. Keeping the card a pure renderer over ListingResult lets it be tested against the real sample data.\n\nScope (props per SPEC \u00a77.4):\n- ListingCard: three columns (monogram 72px, text, price block right-aligned); hairline above every card but the first (handled by ListingList). Text column: address in Bodoni 22 with `text-wrap: balance`, verbatim; meta line in Figtree 13 ink-2 with ` \u00b7 ` separators in this order: status label only when not active, `City, ST ZIP`, bd, ba, sqft, `Listed Mon D`, source; description one line with ellipsis, each case-insensitive keyword match wrapped in weight 600 (never color). Price block: price in Bodoni 28/500 right-aligned over ScorePill. At or below 760px the price block moves under the meta line, left-aligned, price before rank (\u00a74.4). No hover state, no link.\n- Monogram: 72\u00d754 stone block, city initials (first upper, second lower) in Bodoni 26 ink-2, centered; never below 24px.\n- ScorePill: `No. N` pill (1px ink border, radius 999px, Figtree 11/500 +0.04em, padding 2px 8px) followed by the score to two decimals in Figtree 13 ink-2 tabular.\n- ListingList: renders cards separated by hairlines inside a region with a visually clear heading for focus management (BC-12 moves focus here), `aria-live=\"polite\"`.\n- NoResults: centered 96px from the top: `No results.` (State heading, italic Bodoni 22), `Adjust your filters.` (Body ink-2), `Clear filters` text button calling onClear.\n- ErrorState: centered `Couldn't load results.` (State heading) and a `Try again` text button calling onRetry. No error code shown.\n- Tests using fixtures from BC-8 built on the real listings: every meta item renders in order; PENDING shows for A7 and nothing for active; keyword emphasis wraps `Pets`/`pets` case-insensitively and leaves the rest untouched; ScorePill text `No. 11` and `0.87`; Monogram `Sp`, `Vi`, `Fa`; NoResults and ErrorState strings verbatim and callbacks fire; no `<img>`, no icons.\n\nAcceptance:\n- A card rendered from A1 matches the demo card pixel-for-pixel in structure and type (visual check against docs/branding-demo.html).\n- Tests green; lint green; no emoji; no oxblood anywhere in these components except the two text buttons.\n\nValidation: N/A until BC-12. Record a one-line justification with --role validation and cite the test output.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-10-14T04:07:09Z",
+  "evidence_refs": [
+    {
+      "id": "art_01M4W7WJVSF63MCKCGFZQAAG96",
+      "role": "plan-review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W8WFSPMXX3TVGXFFKTQHWJ",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CDTYQ3YAFHA6QT9VP6D4",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CDYGM5SEXFMNW88Z1PZC",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CE22MMTG3MW94818G2G0",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CE5P4G26G57RK8ZNB4ET",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CE99CYP4S51Z3CEBDFQS",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CECQ821W847CH35VEGAE",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CEG9FYAFWBQ1RVMPCHEF",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CEKR4GA9MT5GRCRSF534",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CEQ5T6Y4Y55JAYVKACJW",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CETV48YV6CYKTKD2TXRG",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CEYB4BA1M68Y42AQMWMM",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W9CF1TEDGRCV38GCR2GS56",
+      "role": "validation",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK32W6DAAFD03TCHJ523E",
-  "last_event_id": "ev_01M4W7GD3CTWDPJQ63MSFM8NFB",
-  "last_status_changed_at": "2026-10-14T03:31:49Z",
+  "last_event_id": "ev_01M4W9FDPEBCRDDRQD507QJCJ1",
+  "last_status_changed_at": "2026-10-14T04:07:09Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -36,12 +107,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-10",
-  "status": "planned",
+  "status": "done",
   "tags": [
     "frontend"
   ],
   "title": "Results surface: ListingCard, Monogram, ScorePill, ListingList, NoResults, ErrorState",
   "type": "task",
-  "updated_at": "2026-10-14T03:32:44Z",
+  "updated_at": "2026-10-14T04:07:09Z",
   "urgency": null
 }

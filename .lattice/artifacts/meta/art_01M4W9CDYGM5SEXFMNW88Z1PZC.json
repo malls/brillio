@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:05:31Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W9CDYGM5SEXFMNW88Z1PZC",
+  "model": null,
+  "payload": {
+    "content_type": "text/plain",
+    "file": "art_01M4W9CDYGM5SEXFMNW88Z1PZC.txt",
+    "size_bytes": 4647
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "vitest verbose 7 files / 41 tests",
+  "token_usage": null,
+  "type": "file"
+}

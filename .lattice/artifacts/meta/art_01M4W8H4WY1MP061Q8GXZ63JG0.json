@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T03:50:37Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W8H4WY1MP061Q8GXZ63JG0",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4W8H4WY1MP061Q8GXZ63JG0.md",
+    "size_bytes": 41640
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation 1871b01",
+  "token_usage": null,
+  "type": "file"
+}
