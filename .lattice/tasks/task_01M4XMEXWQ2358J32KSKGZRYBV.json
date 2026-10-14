@@ -1,0 +1,54 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": "agent:opus-5.5-orchestrator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-25-quiet-pagination",
+      "linked_at": "2026-10-14T16:41:25Z",
+      "linked_by": "agent:opus-5.5-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 6,
+  "complexity": null,
+  "created_at": "2026-10-14T16:38:21Z",
+  "created_by": "human:forrest",
+  "custom_fields": {},
+  "description": "Operator report 2026-10-14 (live demo at http://localhost:5173 via make up): changing pages reloads the whole site; only the results region should update. Expected: header, filter bar and layout stay mounted and visually stable; only the result list (and pager/summary) update. Root cause and fix to be determined in planning.",
+  "done_at": "2026-10-14T17:24:11Z",
+  "evidence_refs": [
+    {
+      "id": "art_01M4XNJV99YCPRR1N3XHGVYJ2D",
+      "role": "plan-review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4XPGW44DH2V9DH7XDRYDBPK",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "ev_01M4XQ1BQV41N8J1PDJ0ESN9PW",
+      "role": "validation",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01M4XMEXWQ2358J32KSKGZRYBV",
+  "last_event_id": "ev_01M4XQ2V0FW58HFB4VKN9FK498",
+  "last_status_changed_at": "2026-10-14T17:24:11Z",
+  "linked_files": [
+    "frontend/src/hooks/useListingSearch.ts",
+    "frontend/src/pages/SearchPage.tsx"
+  ],
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-25",
+  "status": "done",
+  "tags": null,
+  "title": "Pagination reloads the whole page instead of only the results region",
+  "type": "bug",
+  "updated_at": "2026-10-14T17:24:11Z",
+  "urgency": null
+}

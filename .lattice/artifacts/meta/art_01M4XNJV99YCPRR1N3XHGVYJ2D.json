@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T16:57:58Z",
+  "created_by": "agent:fable-plan-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4XNJV99YCPRR1N3XHGVYJ2D",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4XNJV99YCPRR1N3XHGVYJ2D.md",
+    "size_bytes": 10322
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Plan review (fable)",
+  "token_usage": null,
+  "type": "file"
+}
