@@ -32,7 +32,7 @@ machine). The Result Validator runs the first two classes exactly as written and
 | 15 | §5.3 empty value absent (BC-5) | `curl ':18099/api/listings/search?minPrice='` | BC-5 | 200 with 12 total items | pre-merge-runtime |
 | 16 | §5.3 page past end (BC-5) | `?page=99` | BC-5 | 200, `items: []`, `page.page` 99, `totalItems` 12, `totalPages` 2 | pre-merge-runtime |
 | 17 | §5.3 empty city (BC-5) | `?city=Atlantis` | BC-5 | 200, `totalItems` 0, `totalPages` 0 | pre-merge-runtime |
-| 18 | §5.3 status param (BC-5) | `?status=pending`; `?status=active,pending`; `?status=active&status=pending` | BC-5 | First returns only A7; second and third return identical sets (11 items) | pre-merge-runtime |
+| 18 | §5.3 status param (BC-5) | `?status=pending`; `?status=active,pending`; `?status=active&status=pending` | BC-5 | First returns only A7; second and third return identical sets (12 items: 11 active + 1 pending) | pre-merge-runtime |
 | 19 | §5.4 ranked response (BC-5) | `?targetBudget=450000&city=Springfield` | BC-5 | 4 items in order A1, B7, A2, B8 with ranks 1–4; scores equal §6.2 computed at `scoring.asOf` (four decimals); `scoring` block 450000/0.6/0.4/30/asOf; `appliedFilters` echoes city and nulls | pre-merge-runtime |
 | 20 | §5.4 no budget (BC-5) | `?pageSize=12` with no targetBudget | BC-5 | `scoring.targetBudget` null, weights 0/1, every `budgetFit` null, order newest first (A5, A4, A2, A3, …) | pre-merge-runtime |
 | 21 | §5.5 404/405 envelopes (BC-2) | `curl -si :18099/api/nope`; `curl -si -X POST :18099/api/listings/search` | BC-2 | 404 `not_found` and 405 `method_not_allowed`, both in the §5.5 envelope | pre-merge-runtime |

@@ -2,7 +2,7 @@
 
 **Spec:** docs/SPEC.md §2, §3, §10 and §11 (the smoke assertions follow §5.1-§5.5).
 **Worktree:** `/Users/forrest/Code/brillio-worktrees/bc-13-compose-stack`, branch
-`feat/BC-13-compose-stack`. It carries BC-2 from master and BC-7, which is still at review.
+`feat/BC-13-compose-stack`. It carries BC-2 and BC-7 from master (both landed; see Resolution 8).
 **Planner:** agent:opus-5.5-planner.
 
 ## Scope
@@ -330,3 +330,33 @@ Record stage 1 with `--role validation`, labeled "stage 1 of 2". The delegator t
 ## Size
 About 270 LOC: compose.yaml ~60, Dockerfile.dev ~20, .air.toml ~30, smoke.sh ~130, Makefile ~8,
 SPEC ~3. Complexity: medium; most of the work is validation.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+
+Source: fallback plan review art_01M4W52D0MGHWNDTQYGTM6Q596 (APPROVE-WITH-CHANGES). Triage by agent:opus-5.5-delegator.
+
+| # | Concern | Bucket | Resolution | Section |
+|---|---|---|---|---|
+| 1 | A passing smoke run whose teardown fails exits 0 and leaves brillio objects | Obvious | `cleanup` starts with `trap '' INT TERM` (and clears EXIT). If `docker compose down -v` fails: print `FAIL  teardown`, and if the saved status was 0 exit 1; otherwise keep the saved non-zero status. | smoke.sh step 2 |
+| 2 | Container logs are destroyed by the EXIT trap after an assertion fails; a stale body can be quoted | Obvious | In step 5, when M > 0, print `docker compose ps -a` and `docker compose logs --no-color --tail=60` before exiting 1 (teardown follows). `fetch` runs `rm -f "$tmp/body"` before every curl. | smoke.sh steps 4-5 |
+| 3 | `docker image rm brillio-api` does not force a cold build (BuildKit layer cache survives) | Obvious | Stage 1 step 1 uses `docker compose build --no-cache api` in the clone (project-scoped; prunes nothing). Never `docker builder prune`. | Validation stage 1 step 1 |
+| 4 | JSON-through-proxy fallback for the browser search is an unrecorded acceptance deviation | Obvious | If BC-12 is not on master at stage 2, the validator states "browser search fallback: BC-12 SearchPage not on master; searched via the 5173 proxy URL" in the validation evidence, and the delegator records the same in a `lattice comment` and in the LAND-READY mail so the Orchestrator accepts it knowingly. | Validation stage 2 step 3 |
+| 5 | SQLite WAL on the macOS bind mount only surfaces in stage 2 | Obvious (cheap de-risk) | Add stage 1 step 9: `docker run --rm --name brillio-walprobe -v "$PWD/data:/data" alpine:3 sh -c 'apk add -q sqlite && sqlite3 /data/walprobe.db "pragma journal_mode=wal; create table t(a); insert into t values(1); select * from t;"'` from the worktree; expect `wal` and `1`; then `rm -f data/walprobe.db*`. A failure is recorded and escalated (SPEC §10/§11 question), not fixed in this ticket. | Validation stage 1 |
+| 6 | Every `make smoke` / `make up` after `make down` starts cold (down -v wipes gomod/gobuild) | Evolutionary | Keep as planned (binding decision 4: `down` is exactly `docker compose down -v`). Cost noted in a lattice comment for the Orchestrator; no follow-up ticket unless it hurts in the live session. | Decisions; Risks |
+| 7 | a6 cannot match on the compacted body | Obvious | Text assertions a2, a6 and a8 grep the raw `"$tmp/body"` with `grep -qF`; only JSON-shape assertions (a1, a3, a4, a5, a7) use `compact`. | smoke.sh step 4 |
+| 8 | Plan says BC-7 is still at review | Obvious | BC-7 landed on master (aa65e61); master is merged into this branch (53f7b2e). The header line and the "BC-7 is not on master yet" risk are void; REVIEW_BASE is `master`. | Header; Risks |
+| 9 | The before/after volume diff can flag other projects' volumes | Obvious | In stage 1 step 6 (and stage 2 step 4), an extra volume fails the check only if `docker volume ls -q --filter label=com.docker.compose.project=brillio` lists it; that filtered list must be empty after `down -v`. | Validation stage 1 step 6 |
+| 10 | Stage 2 step 2 uses plain `git status` | Obvious | Use `git -c core.excludesFile=/dev/null status --porcelain` (must be empty). | Validation stage 2 step 2 |
+
+## Implementation Notes (AUTHORITATIVE for validation — delegator, after impl c22bda2..a0bc111)
+
+- **Host env footgun.** The operator's shell exports `DOCKER_DEFAULT_PLATFORM=linux/amd64`, `DOCKER_BUILDKIT=0`
+  and `COMPOSE_DOCKER_CLI_BUILD=0`. With the platform var set, `docker compose up` fails on this arm64 host
+  ("image with reference brillio-api was found but its platform (linux/arm64/v8) does not match the specified
+  platform (linux/amd64)"). Accepted deviation: `make up` and `scripts/smoke.sh` `unset DOCKER_DEFAULT_PLATFORM`;
+  compose.yaml stays architecture-neutral; `down` stays exactly `docker compose down -v`.
+- **Validation consequence.** Every raw `docker compose up|build` in the validation steps (stage 1 steps 1, 2
+  and 8; stage 2 when not using make) runs as `env -u DOCKER_DEFAULT_PLATFORM docker compose ...`. Record the
+  env vars and this prefix in the evidence. The acceptance criterion "from a clean checkout `docker compose up`"
+  is judged for a host without that variable; the prefix only neutralises the operator's shell override.
+- With `DOCKER_BUILDKIT=0` the legacy builder sends a ~18 kB build context (no `.dockerignore` needed).

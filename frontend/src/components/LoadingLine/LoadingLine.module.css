@@ -1,0 +1,46 @@
+/*
+ * BRANDING.md section 5.9: a 2px oxblood segment, 40% wide, slides left to right along a
+ * line-colored track, 1.2s linear, looping. Full-bleed: no inline padding.
+ *
+ * At rest the track keeps its 2px box (no layout shift) but is transparent, as in the demo:
+ * under the filter bar's own 1px hairline a resting line-colored track would read as a
+ * permanent 3px rule. To show the grey track at rest, move `background: var(--line)` from
+ * .active to .track.
+ */
+.track {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+}
+
+.active {
+  background: var(--line);
+}
+
+/* Section 2.2: the loading segment is one of oxblood's jobs; the only oxblood in this file. */
+.segment {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 40%;
+  background: var(--oxblood);
+  animation: slide 1.2s linear infinite;
+}
+
+/* Percentages are of the 40% segment: -100% is off the left edge, 250% is off the right. */
+@keyframes slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+/* Section 6: under reduced motion the loading line is a static full-width line. */
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    width: 100%;
+    animation: none;
+  }
+}
