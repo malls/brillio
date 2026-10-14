@@ -59,11 +59,11 @@ API `PORT=18000+N`, web `vite --port 15100+N --strictPort` with `VITE_API_PROXY_
 |---|---|---|---|---|---|---|
 | BC-1 | Repo bootstrap | done (f4f8a0b) | fast (stage sub-agents) | master (direct) | — | opus |
 | BC-2 | Backend scaffold | done 02:09Z (merge b273a8a, head a9b7f73) | stage sub-agents | feat/BC-2-backend-scaffold | master | opus |
-| BC-3 | Domain ranking | dispatched 01:49Z panel:18 | stage sub-agents | feat/BC-3-domain-ranking | anchor feat/BC-2 @5da9b80 | opus |
-| BC-4 | SQLite store | dispatched 01:49Z panel:19 | stage sub-agents | feat/BC-4-sqlite-store | anchor feat/BC-2 @5da9b80 | opus |
-| BC-5 | Search API | backlog | stage sub-agents | feat/BC-5-search-api | BC-3+BC-4 | opus |
+| BC-3 | Domain ranking | in_validation 02:28Z panel:18 | stage sub-agents | feat/BC-3-domain-ranking | anchor feat/BC-2 @5da9b80 | opus |
+| BC-4 | SQLite store | review 02:28Z panel:19 | stage sub-agents | feat/BC-4-sqlite-store | anchor feat/BC-2 @5da9b80 | opus |
+| BC-5 | Search API | dispatched 02:34Z panel:24 | stage sub-agents | feat/BC-5-search-api | master + feat/BC-3 @ee09340 + feat/BC-4 @318ebc5 (both merged at creation) | opus |
 | BC-6 | OpenAPI | backlog | stage sub-agents | feat/BC-6-openapi | BC-5 | opus |
-| BC-7 | Frontend scaffold | review ~02:03Z (head 1d6008a) panel:17 | stage sub-agents | feat/BC-7-frontend-scaffold | master | opus |
+| BC-7 | Frontend scaffold | done 02:27Z (merge aa65e61, head 0d1c2a2) | stage sub-agents | feat/BC-7-frontend-scaffold | master | opus |
 | BC-8 | Frontend core | dispatched 02:06Z panel:20 | stage sub-agents | feat/BC-8-frontend-core | anchor feat/BC-7 @1d6008a | opus |
 | BC-9 | FilterBar | backlog | stage sub-agents | feat/BC-9-filterbar | BC-8 | opus |
 | BC-10 | Results surface | backlog | stage sub-agents | feat/BC-10-results-surface | BC-8 | opus |
@@ -77,7 +77,8 @@ API `PORT=18000+N`, web `vite --port 15100+N --strictPort` with `VITE_API_PROXY_
 
 Branch-base rule (press-ahead): all deps landed → base `master`. Exactly one dep unlanded and it is at
 `review`/`in_validation` → base that dep's branch (with every landed dep already in master merged in).
-Otherwise wait. Children record their anchor here and merge `master` (never rebase) once the anchor lands.
+Several unlanded deps, all at `review` or later and merging cleanly → master + all their branches, and the
+child may not enter `review` until they all land (decision 02:31Z). Otherwise wait. Children record their anchor here and merge `master` (never rebase) once the anchor lands.
 
 ## Shared files — canonical owner and landing order
 
@@ -94,12 +95,12 @@ Otherwise wait. Children record their anchor here and merge `master` (never reba
 
 ## Landing checklist additions
 
-- BC-7 landing: also add the ESLint 9.39.5 pin (jsx-a11y peer) to `.lattice/context.md` Versions, matching BC-7's SPEC §2 edit (MV 02:10Z).
+- [done 02:27Z] BC-7 landing: also add the ESLint 9.39.5 pin (jsx-a11y peer) to `.lattice/context.md` Versions, matching BC-7's SPEC §2 edit (MV 02:10Z).
 
 ## Gate (make check) rule
 
 `make check` green on the exact branch head (after merging current `master` into it) before any merge.
-Exception, intake decision 1: until both BC-2 and BC-7 have landed, the half owned by the landing ticket must be
+Exception (ENDED 02:27Z — both scaffolds landed; full `make check` now required for every merge), intake decision 1: until both BC-2 and BC-7 had landed, the half owned by the landing ticket must be
 green and the other half may still be the BC-1 "not yet implemented" stub. From the second of BC-2/BC-7 onward,
 full `make check` is required with no exceptions.
 
@@ -128,6 +129,9 @@ full `make check` is required with no exceptions.
   code-review; otherwise gate-only, logged here.
 - 2026-10-14T00:49Z [operator] golangci-lint 2.14.0 installed via brew on the host.
 - 2026-10-14T01:18Z [autonomy: Moderate] BC-1 landed (direct on master f4f8a0b; review PASS-WITH-NITS art_01M4VZQ546WYVMW5DWJH6HMBPN, two .gitignore nits forwarded to BC-2 card item 7; validation N/A art_01M4VZR7YZVPYGH5N4MW71Q9MD). Board sync 2afc005.
+- 2026-10-14T02:41Z [autonomy: Moderate] c11 socket down (connection refused; app pid 90026 alive). Orchestrator continues via lattice/git; no new launches or panel closes until c11 answers; operator notified (OS notification + Orchestrator reply).
+- 2026-10-14T02:31Z [autonomy: Moderate] Press-ahead extension: BC-5 has two unlanded deps (BC-3 in_validation, BC-4 review), both past implementation and merging cleanly (`git merge-tree` rc 0). Branch-base rule extended: when every unlanded dep is at review or later and they merge cleanly, base on master + all their branches. BC-5 may plan/implement now but may not enter review until both have landed (card note 1).
+- 2026-10-14T02:27Z [autonomy: Moderate] BC-7 landed: merge aa65e61 (tree == branch 63f0b0e), full make check + npm run build pass on 0d1c2a2 (orchestrator re-run), review art_01M4W3KK82ANSRJRSAXKGYGDWG PASS @ 0d1c2a2, validation art_01M4W345316DKA55J6NMBF5X4J (browser + screenshot) and addendum art_01M4W39TDPTX0KHPDEPP84NS3K. context.md ESLint 9.39.5 pin added (landing checklist). Board sync 83952b0. Half-gate exception ended. BC-8/BC-13 mailed to merge master.
 - 2026-10-14T02:12Z [autonomy: Moderate] BC-13 now depends_on BC-5 (make smoke asserts search/cities behavior). Press-ahead exception: BC-13 builds on feat/BC-7 + master now, validates compose/health/proxy/hot-reload, then holds at in_validation until BC-5 lands; only then full make smoke + LAND-READY.
 - 2026-10-14T02:09Z [autonomy: Moderate] BC-2 landed: merge b273a8a (--no-ff, tree == branch tree 3cd22df), half-gate make lint-api test-api pass (uncached go test -race re-run by orchestrator), review art_01M4W2E06P2SMDVN8PGN8XWYVK PASS @ a9b7f73 with 2 minors skipped-with-reason by delegator, validation art_01M4W2M170ZQMTYVSWZDQZGD5A. Board sync 7ab182d. BC-3/BC-4 mailed to merge master.
 - 2026-10-14T02:06Z [autonomy: Moderate] Press-ahead: BC-8 cut from feat/BC-7-frontend-scaffold @1d6008a (BC-7 at review).
@@ -143,6 +147,8 @@ full `make check` is required with no exceptions.
 
 | Symptom | Cause | Mitigation |
 |---|---|---|
+| c11 socket refuses connections (errno 61) while the c11 app process is alive; all c11 commands fail | Host overload 02:38Z: load average 90–100 (Spotlight mdworker ×15 indexing the new worktrees + macOS daemons), swap 7.2/8 GB | Keep working through git + lattice (landing does not need c11); defer panel closes and launches; OS notification to operator; do not quit c11 while agents run (kills every agent PTY). Suggest excluding ~/Code/brillio-worktrees from Spotlight |
+| `c11 launch-agent` exits 1 with `timeout: method=agent.launch`; `c11 tree` times out or prints "No windows" | Host load average 65+ from macOS daemons (AppleSpell, opendirectoryd, mobileassetd, modelcatalogd; 02:32Z), not from the build | Check `c11 rpc panel.list` (still answers) before retrying a launch — the timed-out launch created no panel; retry once load eases. Never double-launch |
 | `c11 tree` prints "No windows" and panel-scoped calls (`mailbox recv`, `get-metadata`) time out after 10 s while `window.list`/`ping` work | Transient c11 server stall (02:04Z, cleared within ~3 min) | Do git/lattice work meanwhile; retry c11 calls next step; never treat an empty tree as "no agents" |
 | Headless `lattice plan-review` takes 7–10 min and can die at the 600 s watchdog (`review-status`: dead holder pid, never recorded a result) | `claude -p` reviewing a large plan plus SPEC/BRANDING context runs past `review_timeout_seconds` (BC-7 01:44Z; BC-1/BC-2 finished in ~7 min) | Brief fallback works as written (fresh-context plan-review sub-agent). Keep plans proportional; do not raise the timeout mid-run |
 | Delegator panel title becomes `BC-N [status]: <full ticket title>` | `lattice status` on a claimed (surface-bound) ticket renames the panel, as do plan-review/code-review (MV 01:24Z) | Brief now re-applies `rename-panel` + `set-title` after every status transition and review call |
