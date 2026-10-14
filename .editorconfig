@@ -1,0 +1,26 @@
+# EditorConfig - https://editorconfig.org
+root = true
+
+# Every file: UTF-8, LF line endings, final newline, no trailing whitespace,
+# 2-space indent (ts, tsx, js, json, yaml, yml, md, css, html and the rest).
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown: two trailing spaces are a hard line break, so keep them.
+[*.md]
+trim_trailing_whitespace = false
+
+# Go: gofmt indents with tabs.
+[{*.go,go.mod,go.work}]
+indent_style = tab
+indent_size = tab
+
+# Make: recipe lines must start with a TAB.
+[{Makefile,*.mk}]
+indent_style = tab
+indent_size = tab

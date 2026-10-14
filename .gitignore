@@ -1,0 +1,35 @@
+# Brillio Listings - root ignore rules.
+# .lattice/ is tracked on purpose (board state); its runtime paths are
+# ignored by .lattice/.gitignore. data/sample_listings.json is tracked.
+
+# macOS
+.DS_Store
+
+# Environment files with local values or secrets
+.env
+.env.local
+.env.*.local
+
+# Go (backend): air build output, built binaries, test binaries
+/backend/tmp/
+/backend/bin/
+*.exe
+*.test
+
+# Node (frontend)
+node_modules/
+/frontend/dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# SQLite databases and their journal / WAL / SHM side files
+*.db
+*.db-*
+
+# Coverage output
+coverage.out
+*.coverprofile
+/frontend/coverage/
+
+# Release zip output (make dist)
+/dist/

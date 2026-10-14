@@ -1,0 +1,52 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": "low",
+  "created_at": "2026-10-14T00:39:27Z",
+  "created_by": "agent:fable-planner",
+  "custom_fields": {},
+  "description": "Write the README the handout asks for: run instructions, architecture, the scoring approach and its trade-offs. Spec: docs/SPEC.md \u00a71, \u00a72, \u00a76, \u00a79, \u00a712; handout \"Deliverables\". Voice: BRANDING.md \u00a77 (plain product, sentence case, no emoji).\n\nWhy: the handout grades \"a short README explaining your scoring approach and any trade-offs\". The interviewer reads this before the code. Every claim must be true of the code as merged.\n\nScope (README.md, under roughly 250 lines):\n- What it is: two sentences.\n- Run it: `docker compose up` then http://localhost:5173; native alternative with `make dev-api` and `make dev-web`; `make check`; `make smoke`; required tools and versions.\n- Project layout: the \u00a73 tree, trimmed to what exists.\n- API: the three endpoints with one curl example each and a pointer to /api/openapi.yaml; the error envelope in five lines.\n- Scoring: the formula in words and symbols, the asymmetric budget fit and why (over budget hurts twice as much), the 30-day half-life and why, the 0.6/0.4 weights and why, tie-breaking, the worked example from \u00a76.2, what happens without a budget (newest first), and where the constants live. Quote the doc comment from BC-3.\n- Handling invalid input: strict unknown params, all errors collected, page past the end is a 200, an empty city is a 200, and why each.\n- Trade-offs: SQL filters with Go ranking (and the scaling path), SQLite over a server database, keeping cross-source duplicates visible, stdlib only, no dark mode by decision.\n- Extending it: three sentences and a link to docs/EXTENSIONS.md.\n- Testing: what is covered in each half and how to run it.\n\nAcceptance:\n- Every command in the README runs as written (BC-17 proves it from the zip).\n- Every number and formula matches internal/domain.\n- No emoji; no exclamation marks.\n\nValidation: N/A (documentation). Record a one-line justification with --role validation; BC-17 performs the fresh-directory check.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4VXK3QPSMGSSGYBJ82HRQ4Z",
+  "last_event_id": "ev_01M4VXK6Y5KMTAA0F0FHTKPSEA",
+  "last_status_changed_at": "2026-10-14T00:39:27Z",
+  "linked_files": [],
+  "priority": "high",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T00:39:30Z",
+      "created_by": "agent:fable-planner",
+      "note": null,
+      "target_task_id": "task_01M4VXK3B24KGCHXTZ413MTS4W",
+      "type": "depends_on"
+    },
+    {
+      "created_at": "2026-10-14T00:39:30Z",
+      "created_by": "agent:fable-planner",
+      "note": null,
+      "target_task_id": "task_01M4VXK3F2NX1DGFTZ60YX6K0H",
+      "type": "depends_on"
+    },
+    {
+      "created_at": "2026-10-14T00:39:30Z",
+      "created_by": "agent:fable-planner",
+      "note": null,
+      "target_task_id": "task_01M4VXK2J03TXW4B4D9KGWQ145",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-15",
+  "status": "backlog",
+  "tags": [
+    "docs"
+  ],
+  "title": "README: run instructions, architecture, scoring rationale and trade-offs",
+  "type": "task",
+  "updated_at": "2026-10-14T00:39:30Z",
+  "urgency": null
+}

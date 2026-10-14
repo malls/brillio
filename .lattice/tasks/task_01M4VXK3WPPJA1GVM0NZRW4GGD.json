@@ -1,0 +1,38 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": "low",
+  "created_at": "2026-10-14T00:39:27Z",
+  "created_by": "agent:fable-planner",
+  "custom_fields": {},
+  "description": "Spike: write docs/EXTENSIONS.md, the playbook for the requirements the interviewer is likely to add live. Spec: docs/SPEC.md \u00a79. Design hooks: BRANDING.md \u00a75 (\"where a new requirement goes\" notes in each component) and \u00a710.\n\nWhy: the live session is explicitly about extending a design already built, narrating the reasoning. A rehearsed playbook with the exact seams turns a surprise into a demo. This is also where the owner rehearses before the session.\n\nScope (docs/EXTENSIONS.md):\n- One entry per \u00a79 item: the requirement in one line; the exact files and functions to touch (verified to exist by grep at writing time); the API change (params, response fields) and the UI change (which BRANDING \u00a75 slot); the tests to add; a minutes estimate. Keep each entry under 25 lines.\n- A rehearsal section working three of them through as mini-plans the owner can narrate aloud: cross-source dedupe (stage in the \u00a76 pipeline, key choice, which record wins, the `2 sources` meta item), geo radius (bounding box in SQL, haversine in Go, two new params and validation), sort options (one change in domain ordering, a select in the status line per BRANDING \u00a75.7's precedent).\n- A short \"what I would say\" paragraph for the two trade-offs most likely to be questioned: scoring weights and SQL-versus-Go ranking.\n\nAcceptance:\n- Every referenced symbol exists in the code (a reviewer greps each one).\n- Plain product voice, no emoji, under 300 lines.\n\nValidation: N/A (documentation). Record a one-line justification with --role validation.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4VXK3WPPJA1GVM0NZRW4GGD",
+  "last_event_id": "ev_01M4VXK721C1FBDFMQWW1HV5F6",
+  "last_status_changed_at": "2026-10-14T00:39:27Z",
+  "linked_files": [],
+  "priority": "low",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T00:39:30Z",
+      "created_by": "agent:fable-planner",
+      "note": null,
+      "target_task_id": "task_01M4VXK3B24KGCHXTZ413MTS4W",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-16",
+  "status": "backlog",
+  "tags": [
+    "docs"
+  ],
+  "title": "Extension playbook: how each likely live-session requirement lands (docs/EXTENSIONS.md)",
+  "type": "spike",
+  "updated_at": "2026-10-14T00:39:30Z",
+  "urgency": null
+}

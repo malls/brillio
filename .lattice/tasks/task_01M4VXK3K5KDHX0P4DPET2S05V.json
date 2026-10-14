@@ -1,0 +1,39 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": "medium",
+  "created_at": "2026-10-14T00:39:27Z",
+  "created_by": "agent:fable-planner",
+  "custom_fields": {},
+  "description": "Audit the running UI against BRANDING.md and the reference demo, and fix every deviation that is a frontend bug rather than a design change. Design: BRANDING.md in full, with special attention to \u00a72.2 (the five oxblood jobs), \u00a73.3 (type rules), \u00a74 (shell and breakpoints), \u00a75 (every component), \u00a76 (motion), \u00a77 (copy and formatting), \u00a78 (don'ts). Reference: docs/branding-demo.html. Spec: docs/SPEC.md \u00a713 for known engineering deltas.\n\nWhy: three component tasks and a wiring task were built in parallel by different agents; this pass is the one place the whole surface is checked as one system by fresh eyes before the README and packaging.\n\nScope:\n- With api and web running, compare each component to the demo at a width above 760px and at or below 760px.\n- Checklist, each recorded pass or fixed in a task comment: oxblood appears only in the five \u00a72.2 jobs; no radius except the rank pill; no shadows, gradients, translucency, icons, images; Bodoni never below 18px; tabular figures where digits sit in columns; uppercase only in labels and the wordmark; every \u00a77.2 string verbatim; every \u00a77.1 format; the document never scrolls; pinned header, filter bar, status line and pager; loading line is the only animation and is static under reduced motion; disabled looks use ink-3 and stone, not opacity; keyboard-only pass through search, pagination and Try again; `grep -rP \"[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\"` over the repo finds nothing.\n- Fix small CSS, markup and copy deviations in place. Anything that would require changing BRANDING.md itself (for example the Status field row, SPEC \u00a713.1) is not changed here: raise it with `lattice needs-human` naming the section.\n\nAcceptance:\n- A checklist comment on the task listing every BRANDING section with pass or fixed.\n- Screenshots at both breakpoints for the default search, the no-results state, the invalid-input state and the error state, attached to the task.\n- `make check` still green.\n\nValidation: the screenshots and the keyboard pass are the evidence; attach with --role validation.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4VXK3K5KDHX0P4DPET2S05V",
+  "last_event_id": "ev_01M4VXK6JD7W01XFH8HS4QSR0F",
+  "last_status_changed_at": "2026-10-14T00:39:27Z",
+  "linked_files": [],
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T00:39:30Z",
+      "created_by": "agent:fable-planner",
+      "note": null,
+      "target_task_id": "task_01M4VXK3B24KGCHXTZ413MTS4W",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-14",
+  "status": "backlog",
+  "tags": [
+    "frontend",
+    "design"
+  ],
+  "title": "Branding conformance pass: audit UI against BRANDING.md and the demo, fix deviations",
+  "type": "task",
+  "updated_at": "2026-10-14T00:39:30Z",
+  "urgency": null
+}
