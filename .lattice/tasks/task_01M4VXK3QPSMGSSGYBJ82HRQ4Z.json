@@ -1,7 +1,16 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-15-readme",
+      "linked_at": "2026-10-14T04:39:14Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:33",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
   "comment_count": 0,
   "complexity": "low",
   "created_at": "2026-10-14T00:39:27Z",
@@ -11,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK3QPSMGSSGYBJ82HRQ4Z",
-  "last_event_id": "ev_01M4VXK6Y5KMTAA0F0FHTKPSEA",
-  "last_status_changed_at": "2026-10-14T00:39:27Z",
+  "last_event_id": "ev_01M4WBA98W7G1M9RHT3KVGF3TW",
+  "last_status_changed_at": "2026-10-14T04:39:18Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -41,12 +50,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-15",
-  "status": "backlog",
+  "status": "in_planning",
   "tags": [
     "docs"
   ],
   "title": "README: run instructions, architecture, scoring rationale and trade-offs",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:30Z",
+  "updated_at": "2026-10-14T04:39:18Z",
   "urgency": null
 }
