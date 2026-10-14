@@ -1,6 +1,7 @@
 /*
- * BRANDING.md section 5.2: the fields in a grid, then the actions, hairline below. A direct child
- * of the shell (shell.module.css), so it applies the inline padding itself.
+ * BRANDING.md section 5.2: the fields in a grid, then the actions, hairline below. It sits in
+ * SearchPage's row-2 wrapper with the LoadingLine (shell.module.css), so it applies the inline
+ * padding itself.
  *
  * Above 760px the grid fits as many 130px-or-wider columns as the width allows. At the 1040px
  * content width that is the seven fields on row one and the actions on row two at the left

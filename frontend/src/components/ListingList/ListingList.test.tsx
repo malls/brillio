@@ -21,11 +21,13 @@ describe('ListingList', () => {
     ]);
   });
 
-  it('labels a polite live region with the Results heading', () => {
+  it('labels the region with the Results heading and leaves the live region to the page', () => {
     render(<ListingList items={searchResponse.items} keywordTokens={[]} />);
 
+    // SearchPage's <main> is the one live region (SPEC section 7.6): nested regions can
+    // announce twice.
     const region = screen.getByRole('region', { name: 'Results' });
-    expect(region).toHaveAttribute('aria-live', 'polite');
+    expect(region).not.toHaveAttribute('aria-live');
     expect(region).toHaveAttribute('aria-labelledby', RESULTS_HEADING_ID);
     expect(within(region).getByRole('list')).toBeInTheDocument();
   });

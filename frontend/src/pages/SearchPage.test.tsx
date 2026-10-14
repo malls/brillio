@@ -224,6 +224,7 @@ describe('SearchPage', () => {
     ]);
     expect(resultsRegion()).toHaveAttribute('aria-live', 'polite');
     expect(resultsRegion()).toHaveAttribute('aria-busy', 'false');
+    expect(resultsRegion()).toHaveAttribute('tabindex', '0');
   });
 
   // T1
@@ -623,5 +624,25 @@ describe('SearchPage', () => {
     expect(statusHalves()).toEqual(['', '']);
     expect(screen.queryByRole('navigation', { name: 'Pagination' })).not.toBeInTheDocument();
     expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?city=Reston`);
+  });
+
+  // T13
+  it('puts the results region in the Tab order after Clear, so the keyboard can scroll it', async () => {
+    // SPEC section 7.6. The cards hold nothing focusable, so without the region's own Tab stop
+    // a browser with no focusable scrollers (WebKit) goes from Clear straight to the pager.
+    const { user } = await renderDefaultSettled();
+    const clear = screen.getByRole('button', { name: 'Clear' });
+    act(() => {
+      clear.focus();
+    });
+    expect(clear).toHaveFocus();
+
+    await user.tab();
+    expect(resultsRegion()).toHaveFocus();
+
+    // Previous is disabled on page 1, so the next stop is Page 1.
+    await user.tab();
+    expect(pageButton(1)).toHaveFocus();
+    expect(consoleError).not.toHaveBeenCalled();
   });
 });
