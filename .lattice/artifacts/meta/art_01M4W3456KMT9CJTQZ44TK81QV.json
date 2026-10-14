@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T02:16:08Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W3456KMT9CJTQZ44TK81QV",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4W3456KMT9CJTQZ44TK81QV.png",
+    "size_bytes": 35192
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Header screenshot 1d6008a",
+  "token_usage": null,
+  "type": "file"
+}

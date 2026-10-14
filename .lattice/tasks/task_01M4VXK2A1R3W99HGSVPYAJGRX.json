@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:19",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 2,
+  "comment_count": 3,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -26,8 +26,8 @@
     }
   ],
   "id": "task_01M4VXK2A1R3W99HGSVPYAJGRX",
-  "last_event_id": "ev_01M4W2NNDS35BQH5AE1KGM97A5",
-  "last_status_changed_at": "2026-10-14T02:08:13Z",
+  "last_event_id": "ev_01M4W3H4G3DRV97K5166VR9726",
+  "last_status_changed_at": "2026-10-14T02:23:11Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -42,12 +42,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-4",
-  "status": "in_progress",
+  "status": "review",
   "tags": [
     "backend"
   ],
   "title": "SQLite store: schema migrations, JSON seed loader, filtered search query, cities query",
   "type": "task",
-  "updated_at": "2026-10-14T02:08:13Z",
+  "updated_at": "2026-10-14T02:23:13Z",
   "urgency": null
 }

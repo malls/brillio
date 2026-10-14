@@ -23,5 +23,5 @@ None.
 - **`make check` must be green** (lint + tests, both halves) before any merge to master.
 - **Actor IDs.** `agent:<model>-planner`, `agent:<model>-impl`, `agent:<model>-reviewer`, `agent:<model>-validator`. Tasks were created by `agent:fable-planner` on behalf of `human:Forrest` from the 2026-10-13 planning interview.
 - **Parallel lanes.** After BC-1: BC-2 and BC-7 in parallel. Backend lane: BC-3 ‖ BC-4 → BC-5 → BC-6. Frontend lane: BC-8 → BC-9 ‖ BC-10 ‖ BC-11 → BC-12. Infra: BC-13 once BC-2 and BC-7 exist. Then BC-14, BC-15, BC-16 → BC-17.
-- **Versions.** Go 1.27, modernc.org/sqlite 1.60+, Node 24, React 19, Vite 8, TypeScript 6.0.3 (pinned: typescript-eslint does not support TS 7; operator ruling 2026-10-14, SPEC §2), Vitest 5, Docker Compose v5. Use the newest stable patch at implementation time.
+- **Versions.** Go 1.27, modernc.org/sqlite 1.60+, Node 24, React 19, Vite 8, TypeScript 6.0.3 (pinned: typescript-eslint does not support TS 7; operator ruling 2026-10-14, SPEC §2), Vitest 5, ESLint 9.39.5 (pinned: eslint-plugin-jsx-a11y 6.10.2 peers eslint <=9; BC-7, SPEC §2), Docker Compose v5. Use the newest stable patch at implementation time.
 - **BRANDING.md changes** go through its own §9 process (edit, update the demo, republish, owner approval). Engineering deltas the branding owner has not yet absorbed are listed in docs/SPEC.md §13.
