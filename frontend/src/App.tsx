@@ -1,16 +1,6 @@
-import { Header } from './components/Header/Header';
-import shell from './styles/shell.module.css';
+import { SearchPage } from './pages/SearchPage';
 
-// BC-7 placeholder for the pinned app shell (BRANDING.md section 4.2). The empty regions carry
-// accessible names only; BC-12 replaces this body with <SearchPage />.
+// The app is one page: the listing search (docs/SPEC.md section 7.4).
 export function App() {
-  return (
-    <div className={shell.shell}>
-      <Header scope="Northern Virginia" />
-      <div className={shell.row} role="search" aria-label="Filters" />
-      <div className={shell.row} role="status" />
-      <main className={shell.results} aria-label="Results" aria-live="polite" />
-      <nav className={shell.row} aria-label="Pagination" />
-    </div>
-  );
+  return <SearchPage />;
 }

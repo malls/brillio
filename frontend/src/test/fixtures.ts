@@ -203,3 +203,151 @@ export const listingB7: ListingResult = {
   description: 'Top floor condo, walk to shopping. Pets allowed.',
   relevance: { score: 0.7297, budgetFit: 0.9911, recency: 0.3376 },
 };
+
+// --- BC-12 additions ---
+
+// B10, Reston: rank 11 of 12, the first card of page 2.
+export const listingB10: ListingResult = {
+  rank: 11,
+  id: 'B10',
+  source: 'MLS_B',
+  address: '100 Maple Dr',
+  city: 'Reston',
+  state: 'VA',
+  zip: '20190',
+  price: 585000,
+  bedrooms: 3,
+  bathrooms: 2.5,
+  sqft: 1900,
+  latitude: 38.9601,
+  longitude: -77.3499,
+  listedDate: '2026-08-20',
+  status: 'active',
+  description: 'Townhome with 2-car garage, community pool.',
+  relevance: { score: 0.3549, budgetFit: 0.4, recency: 0.2872 },
+};
+
+// A4, Reston: rank 12 of 12, the last card of page 2.
+export const listingA4: ListingResult = {
+  rank: 12,
+  id: 'A4',
+  source: 'MLS_A',
+  address: '22 Birch Ln',
+  city: 'Reston',
+  state: 'VA',
+  zip: '20190',
+  price: 610000,
+  bedrooms: 4,
+  bathrooms: 3,
+  sqft: 2100,
+  latitude: 38.9586,
+  longitude: -77.357,
+  listedDate: '2026-09-03',
+  status: 'active',
+  description: 'Spacious family home near Reston Town Center. Pets welcome.',
+  relevance: { score: 0.3321, budgetFit: 0.2889, recency: 0.3969 },
+};
+
+// Page 2 of the real search `targetBudget=450000`: the last two of the 12 results, ranks 11 and
+// 12, so rank numbering continues across pages.
+export const searchResponsePage2: SearchResponse = {
+  ...searchResponse,
+  items: [listingB10, listingA4],
+  page: { page: 2, pageSize: 10, totalItems: 12, totalPages: 2 },
+};
+
+// Page 1 of the real search with no params (the default search on an empty URL): no budget, so
+// the score is recency alone (SPEC section 5.4) and the order is newest first. Trimmed like
+// searchResponse to its first three rows; rank and relevance are this search's, not the
+// targetBudget=450000 ranking's.
+export const newestFirstResponse: SearchResponse = {
+  items: [
+    {
+      rank: 1,
+      id: 'A5',
+      source: 'MLS_A',
+      address: '55 Elm Ct',
+      city: 'Vienna',
+      state: 'VA',
+      zip: '22180',
+      price: 470000,
+      bedrooms: 3,
+      bathrooms: 2,
+      sqft: 1300,
+      latitude: 38.9012,
+      longitude: -77.2653,
+      listedDate: '2026-09-04',
+      status: 'active',
+      description: 'Quiet cul-de-sac, walkable to Metro. No pets.',
+      relevance: { score: 0.4061, budgetFit: null, recency: 0.4061 },
+    },
+    {
+      ...listingA4,
+      rank: 2,
+      relevance: { score: 0.3969, budgetFit: null, recency: 0.3969 },
+    },
+    {
+      rank: 3,
+      id: 'A2',
+      source: 'MLS_A',
+      address: '456 Oak Ave',
+      city: 'Springfield',
+      state: 'VA',
+      zip: '22150',
+      price: 525000,
+      bedrooms: 3,
+      bathrooms: 2,
+      sqft: 1450,
+      latitude: 38.7791,
+      longitude: -77.1901,
+      listedDate: '2026-09-02',
+      status: 'active',
+      description: 'Updated kitchen, fenced yard, close to schools.',
+      relevance: { score: 0.3878, budgetFit: null, recency: 0.3878 },
+    },
+  ],
+  page: { page: 1, pageSize: 10, totalItems: 12, totalPages: 2 },
+  scoring: {
+    targetBudget: null,
+    budgetWeight: 0,
+    recencyWeight: 1,
+    recencyHalfLifeDays: 30,
+    asOf: '2026-10-13',
+  },
+  appliedFilters: {
+    minPrice: null,
+    maxPrice: null,
+    minBedrooms: null,
+    city: null,
+    keyword: null,
+    status: ['active', 'pending', 'sold'],
+  },
+};
+
+// The API's 400 for `minPrice=500000&maxPrice=400000`: one min_gt_max error, on maxPrice.
+export const minGtMaxErrorBody: ErrorBody = {
+  error: {
+    code: 'validation_error',
+    message: 'Invalid search parameters.',
+    fields: [
+      { field: 'maxPrice', code: 'min_gt_max', message: 'Min price must be less than max price.' },
+    ],
+  },
+};
+
+// The API's 400 for a query string that is not valid URL encoding
+// (backend/internal/httpapi/query.go): reported on the `query` pseudo-field, which no bar field
+// shows.
+export const malformedQueryErrorBody: ErrorBody = {
+  error: {
+    code: 'validation_error',
+    message: 'Invalid search parameters.',
+    fields: [
+      {
+        field: 'query',
+        code: 'malformed_query',
+        message: 'Query string is not valid URL encoding.',
+      },
+    ],
+  },
+};
