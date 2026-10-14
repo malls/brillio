@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:24",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 4,
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -23,11 +23,16 @@
       "id": "art_01M4W58G75R2QWP2A8RQZQAR1H",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W7VYKS1KWBVC8R1NX7T89M",
+      "role": "review",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2E02WC334GKAWFQ5XDG",
-  "last_event_id": "ev_01M4W5AQ0TRVJJGHZD2F42002J",
-  "last_status_changed_at": "2026-10-14T02:44:50Z",
+  "last_event_id": "ev_01M4W7VYKYKYXD3CTW99AANE67",
+  "last_status_changed_at": "2026-10-14T03:29:51Z",
   "linked_files": [],
   "priority": "critical",
   "relationships_out": [
@@ -49,12 +54,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-5",
-  "status": "planned",
+  "status": "review",
   "tags": [
     "backend"
   ],
   "title": "Search API: strict query parsing, validation with field codes, pipeline handler, cities endpoint",
   "type": "task",
-  "updated_at": "2026-10-14T02:54:40Z",
+  "updated_at": "2026-10-14T03:39:02Z",
   "urgency": null
 }

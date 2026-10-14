@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:21",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 5,
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
@@ -26,7 +26,7 @@
     }
   ],
   "id": "task_01M4VXK3F2NX1DGFTZ60YX6K0H",
-  "last_event_id": "ev_01M4W5Q1RAP2XRVG0RH4WZ5HFW",
+  "last_event_id": "ev_01M4W6BGRXHZS03XSJK4MPN833",
   "last_status_changed_at": "2026-10-14T03:01:24Z",
   "linked_files": [],
   "priority": "high",
@@ -62,6 +62,6 @@
   ],
   "title": "Docker Compose dev stack with hot reload, health gating, and make smoke",
   "type": "task",
-  "updated_at": "2026-10-14T03:01:24Z",
+  "updated_at": "2026-10-14T03:12:35Z",
   "urgency": null
 }
