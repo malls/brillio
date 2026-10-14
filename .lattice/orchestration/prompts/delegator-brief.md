@@ -67,7 +67,8 @@ Never set `LATTICE_ROOT` to `$PWD` or the worktree (a worktree carries a stale s
    length costs time at every later stage.
 3. Confirm `PLAN_FILE` now holds a real plan (not the scaffold). Then
    `lattice status <TICKET> planned --no-auto-review --actor agent:opus-5.5-delegator`.
-4. **Plan review** (explicit, watchdogged):
+4. **Plan review** (explicit, watchdogged). **Skip straight to the fallback sub-agent** (no headless call) when the plan
+   exceeds 250 lines or `uptime` shows a 1-minute load average above 30 (run-state decision 03:22Z):
    `cd $REPO_ROOT && perl -e 'alarm shift; exec @ARGV' 600 lattice plan-review <TICKET> --mode single --actor agent:opus-5.5-plan-reviewer`.
    If it times out (exit 142), errors, or returns something that is not a review, spawn a fresh-context
    plan-review sub-agent instead, attach its output with
@@ -109,7 +110,9 @@ Never set `LATTICE_ROOT` to `$PWD` or the worktree (a worktree carries a stale s
 1. Bring in the base: `git -C <WORKTREE> merge master` if master moved (and, for a press-ahead child,
    `git merge <ANCHOR branch>` if the anchor gained commits). Re-run the gate after any merge.
 2. `lattice status <TICKET> review --no-auto-review --actor agent:opus-5.5-delegator` (verify).
-3. Code review (explicit, watchdogged):
+3. Code review (explicit, watchdogged). **Skip straight to the own-reviewer fallback** (step 4) when
+   `git diff --shortstat <REVIEW_BASE>...HEAD -- . ':!*package-lock.json'` exceeds 1500 changed lines or the
+   1-minute load average is above 30 (run-state decision 03:22Z); say so in the review comment:
    `cd $REPO_ROOT && perl -e 'alarm shift; exec @ARGV' 600 lattice code-review <TICKET> --mode single --base <REVIEW_BASE> --head <BRANCH> --worktree <WORKTREE> --actor agent:opus-5.5-reviewer`.
 4. **A fired review is not a finished review.** Confirm a NEW `--role review` artifact exists that postdates
    this cycle's `→ review` event, names the reviewed commit (== `git -C <WORKTREE> rev-parse HEAD`), and
