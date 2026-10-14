@@ -36,7 +36,7 @@ make smoke      # Compose stack up, HTTP checks, stack down
 |---|---|
 | Docker with Compose | tested on Docker 29.8.1, Compose v5.5.1 |
 | Go | 1.27 |
-| Node and npm | Node 24, 24.15 or later (jsdom 30 requires it); tested on 24.21.0 |
+| Node and npm | Node 24 (24.15 or later, which jsdom 30 needs); tested on 24.21.0 |
 | golangci-lint | v2; tested on 2.14.0 |
 | make, curl | GNU Make 3.81 works; `make smoke` uses curl |
 
@@ -83,7 +83,7 @@ frontend/
 `backend/internal/httpapi/search.go` holds the whole pipeline, one call per stage:
 
 1. Parse and validate the query (`query.go`), collecting every problem before answering.
-2. Filter in SQL (`store.Search`): one WHERE clause per filter, rows ordered by `(source, id)`.
+2. Filter in SQL (`store.Search`): one WHERE clause per filter (one per keyword token), rows ordered by `(source, id)`.
 3. Dedupe slot: marked between search and rank, not built (see trade-offs).
 4. Score and order every filtered listing at full precision (`domain.Rank`).
 5. Paginate the whole ranked set (`domain.Paginate`), so ranks continue across pages.
@@ -116,7 +116,7 @@ Search takes nine parameters: `minPrice`, `maxPrice`, `minBedrooms`, `city`, `ke
 items           rank, the listing's fields, relevance {score, budgetFit, recency}
 page            page, pageSize, totalItems, totalPages
 scoring         targetBudget, budgetWeight, recencyWeight, recencyHalfLifeDays, asOf
-appliedFilters  the filters as the server read them, null when absent
+appliedFilters  the filters as the server read them, null when absent; status echoes the effective set
 ```
 
 API errors (400, 404, 405, 500) share one envelope; `fields` appears on a 400 only:
