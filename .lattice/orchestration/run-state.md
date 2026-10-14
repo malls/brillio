@@ -72,7 +72,7 @@ API `PORT=18000+N`, web `vite --port 15100+N --strictPort` with `VITE_API_PROXY_
 | BC-13 | Compose stack | done 04:28Z (merge 4030996, head 103c57e) | stage sub-agents | feat/BC-13-compose-stack | anchor feat/BC-7 @1d6008a + master @7ab182d | opus |
 | BC-14 | Branding pass | relaunched 04:56Z panel:37 (first delegator panel:32 killed by close-panel footgun) | stage sub-agents | feat/BC-14-branding-pass | anchor feat/BC-12 @5ac2397 | opus |
 | BC-15 | README | done 05:33Z (merge f41fb8c, head 79408db) | stage sub-agents | feat/BC-15-readme | feat/BC-12 @5ac2397 + feat/BC-6 @70518b5 | opus |
-| BC-16 | Extensions doc | dispatched 04:40Z panel:34 | stage sub-agents | feat/BC-16-extensions-doc | anchor feat/BC-12 @5ac2397 | opus |
+| BC-16 | Extensions doc | done 05:43Z (merge 04214e9, head a0866dc) | stage sub-agents | feat/BC-16-extensions-doc | anchor feat/BC-12 @5ac2397 | opus |
 | BC-17 | Release packaging | dispatched 05:18Z panel:38 | stage sub-agents | feat/BC-17-release-dist | master + feat/BC-15 @0b4e230 + feat/BC-16 @f4b6c77 (BC-14 merged when it lands) | opus |
 
 Branch-base rule (press-ahead): all deps landed → base `master`. Exactly one dep unlanded and it is at
@@ -97,6 +97,11 @@ child may not enter `review` until they all land (decision 02:31Z). Otherwise wa
 ## Landing checklist additions
 
 - [done 02:27Z] BC-7 landing: also add the ESLint 9.39.5 pin (jsx-a11y peer) to `.lattice/context.md` Versions, matching BC-7's SPEC §2 edit (MV 02:10Z).
+
+## Final handoff checklist (open human items)
+
+- BC-14 needs_human: 14 branding-owner questions O1-O14 (BRANDING §9 process; non-blocking; full list in BC-14 plan §4 and the needs_human reason). Must appear in the Phase 2 handoff (MV 05:40Z).
+- Backlog tickets created during the run, for the operator: BC-18 (store hardening nits), BC-19 (text-button tracking/hover, branding owner), BC-20 (Unicode keyword vs SQLite ASCII lower()), BC-21 (a11y live feedback).
 
 ## Gate (make check) rule
 
@@ -130,6 +135,7 @@ full `make check` is required with no exceptions.
   code-review; otherwise gate-only, logged here.
 - 2026-10-14T00:49Z [operator] golangci-lint 2.14.0 installed via brew on the host.
 - 2026-10-14T01:18Z [autonomy: Moderate] BC-1 landed (direct on master f4f8a0b; review PASS-WITH-NITS art_01M4VZQ546WYVMW5DWJH6HMBPN, two .gitignore nits forwarded to BC-2 card item 7; validation N/A art_01M4VZR7YZVPYGH5N4MW71Q9MD). Board sync 2afc005.
+- 2026-10-14T05:43Z [autonomy: Moderate] BC-16 landed: orchestrator merged master (BC-15 README only, no overlap) → a0866dc; full make check pass; docs/EXTENSIONS.md 221 lines, no emoji; review art_01M4WECRZDRX1JMAQNPE1F7B5X PASS @ 3fc1aa4 (cycle 2, fable), validation art_01M4WESGCGK6X6QP4Q4DWYFFN5 (symbol greps). README link to docs/EXTENSIONS.md now resolves. Merge 04214e9, tree == branch 1bc9fb7, board sync f03ef56.
 - 2026-10-14T05:40Z [operator ruling] Zip contents: SHIP CLAUDE.md and agents.md in the recruiter zip (honest disclosure of the AI workflow); SPEC §12 unchanged (it already does not exclude them). BC-17 needs-human cleared.
 - 2026-10-14T05:33Z [autonomy: Moderate] BC-15 landed: merge f41fb8c (tree == branch fd79916), README-only diff (+242/-6, 245 lines), full make check pass on 79408db, no emoji/exclamation marks, review art_01M4WDX8JZJ51XARPZCPHZE0DC PASS @ 79408db (fable), validation art_01M4WE5VJ2SFN6E8PBJ7TG0JEZ (native README commands run; compose blocks cite BC-13 smoke per 04:58Z approval). README links docs/EXTENSIONS.md, live once BC-16 lands (before BC-17 zips). Board sync c8837b5. BC-17 mailed.
 - 2026-10-14T05:23Z [autonomy: Moderate] Emoji check scope ruling (BC-14 question): the BRANDING §8 / BC-14 / BC-17 emoji grep covers shipped files only (git ls-files minus .lattice/ and the two PDFs); .lattice holds 724 U+2713 marks in vitest logs inside artifacts, never shipped. Validation-plan row 4 aligned.

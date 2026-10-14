@@ -20,3 +20,13 @@
   overscroll-behavior: contain;
   padding-inline: var(--inline-pad);
 }
+
+/*
+ * The results region takes Tab focus so the keyboard can scroll it (docs/SPEC.md section 7.6).
+ * Its ring is BRANDING.md section 2.2 job 3's 2px oxblood, inset because the region is
+ * full-bleed.
+ */
+.results:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: -2px;
+}

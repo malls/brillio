@@ -160,3 +160,7 @@ Open question (complex, sent to the human via needs-human; non-blocking for impl
 exclude them with a SPEC §12 edit. Implement with the default (ship). Keep the exclusion pathspecs in one list in scripts/dist.sh
 so the answer is a one-line change plus the §12 sentence; if the answer is "exclude", also drop the arrows/text-symbol carve-outs
 only if the stricter scan then still passes on the shipped tree (otherwise keep them).
+
+## Operator ruling (human:Forrest, 05:40Z, AUTHORITATIVE)
+Ship both CLAUDE.md and agents.md in the zip (honest disclosure of the AI workflow). No SPEC §12 change. The emoji carve-outs
+(arrows block, ©/®/™ alone) stay, because CLAUDE.md:46 and agents.md:41 carry U+2195 in the Lattice status diagram.

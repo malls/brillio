@@ -24,7 +24,9 @@
    The 6px top margin is this layout's spacing, not part of the recipe. */
 .action {
   margin-top: 6px;
-  font: 500 13px/1 var(--font-ui);
+  font-size: var(--text-button);
+  line-height: var(--leading-button);
+  font-weight: 500;
   color: var(--oxblood);
   background: none;
   border: 0;
@@ -46,4 +48,5 @@
 
 .action:disabled {
   color: var(--ink-3);
+  cursor: default;
 }
