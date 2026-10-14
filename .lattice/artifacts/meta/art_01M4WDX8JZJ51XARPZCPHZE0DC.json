@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:24:37Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WDX8JZJ51XARPZCPHZE0DC",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WDX8JZJ51XARPZCPHZE0DC.md",
+    "size_bytes": 2236
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review 79408db (reviewer: fable sub-agent (decision 04:02Z))",
+  "token_usage": null,
+  "type": "note"
+}

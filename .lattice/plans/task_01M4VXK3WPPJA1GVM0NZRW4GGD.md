@@ -116,3 +116,29 @@ Validation: N/A (documentation; no ports). With `--role validation` the validato
 - BRANDING §5.2's "a new filter joins as a seventh field" is stale: Status is the seventh (SPEC §7.4, §13 note 1), so new filters start at eight.
 - SPEC §9.1's "address + zip" key misses A2/B8, and its list of expansions lacks Ct/Court (A5/B11). The doc says so; §9 is design notes, not contract.
 - BRANDING has no slot for sort: the doc uses the §5.7 precedent and says the branding owner needs a note when it is built. StatusLine is one `role="status"` live region, so any select must sit outside it.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+Review art_01M4WCKXJV38BKNP5MAJCS9MBY (fable, PASS-WITH-NITS). All six findings triaged obvious; none evolutionary or complex.
+1. Order/score drift with the clock (Minor; Rehearsal Dedupe, What I would say). Resolution: the doc pins the survivor order and
+   A1 = 0.7414 to "asOf 2026-10-13 (the SPEC §5.4 date)" and says in one clause that recency moves the order day to day.
+2. `\s` in line 36 (Minor; symbol table). Resolution: use `^[[:space:]]+ListingsFile string` (count 3 under grep -E).
+3. Stale base (Minor; header, BC-6 decision). Resolution: the delegator merged master into the branch before implementation; the branch
+   HEAD is now master 0b24829 (BC-6 and BC-12 both present). Drop the `git grep ... master` workaround: run the whole block once in the
+   worktree. The doc intro names the commit the names were checked at; use the branch HEAD at writing time (`git rev-parse --short HEAD`).
+4. Size budget (Minor; outline). Resolution: targets are 16-20 lines per §9 entry (including its heading and trailing blank line, which
+   the awk count includes; the hard limit is under 25 by that count), 20-24 per rehearsal subsection, 6-8 per What I would say subsection.
+   Whole doc target 240-280, hard cap 299.
+5. "A precomputed column does not fit" (Nit; SQL versus Go). Resolution: phrase as "precompute the inputs (a dedupe key, a price index),
+   compute the score in SQL with the request's target and today's date", consistent with SPEC §6's scaling path.
+6. Voice grep hits code (Nit; acceptance 2). Resolution: keep the grep; the validator reads each hit and records that it sits in a code
+   span or sample, not prose.
+
+## Review Cycle 1 Findings (PASS-WITH-NITS, art for f4b6c77) — fix inline, then re-review
+Symbol table additions (implementer used them; both exist on HEAD):
+```
+grep -cE '^func \(s \*Store\) Upsert\(' backend/internal/store/listings.go  # 1
+grep -cE '^[[:space:]]+Statuses \[\]ListingStatus' backend/internal/domain/filter.go  # 1
+```
+Doc fixes: (1) line ~192 price-sort ranks: say they are on the 12 listings, without dedupe; (2) lines ~130 and ~167: one phrasing for the
+proposed 0002 index, "an index on (latitude, longitude); its leading column makes the box a range scan"; (3) line ~198: "`filterKey` drops it
+beside `page` and `pageSize`" (it does not drop sort today); (4) backtick `asOf` (a SPEC §5.4 response field) at its three mentions.
