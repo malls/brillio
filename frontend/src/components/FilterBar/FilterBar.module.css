@@ -1,0 +1,236 @@
+/*
+ * BRANDING.md section 5.2: the fields in a grid, then the actions, hairline below. A direct child
+ * of the shell (shell.module.css), so it applies the inline padding itself.
+ *
+ * Above 760px the grid fits as many 130px-or-wider columns as the width allows. At the 1040px
+ * content width that is the seven fields on row one and the actions on row two at the left
+ * (section 4.5); narrower, the bar wraps again before any field drops below 130px.
+ */
+.bar {
+  /* A field's value box: 22px value line, 6px padding above and below, 1px underline. */
+  --control-height: 35px;
+  --button-height: 40px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 20px;
+  align-items: start;
+  margin: 0;
+  padding-block: 20px 18px;
+  padding-inline: var(--inline-pad);
+  border-bottom: 1px solid var(--line);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-label);
+  min-width: 0;
+}
+
+/* Section 3.2 Label: Figtree 11/14, 500, +0.08em, uppercase, ink-2. DOM text stays sentence case. */
+.label {
+  font-size: var(--text-label);
+  line-height: var(--leading-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Inputs and selects: Body 15/22 in ink over a 1px ink-2 underline; the underline is the focus
+   indicator, so there is no outline. The box is 35px tall in every state. */
+.control {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: var(--control-height);
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink-2);
+  border-radius: 0;
+  background: transparent;
+  appearance: none;
+  outline: none;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.control::placeholder {
+  color: var(--ink-2);
+  opacity: 1;
+}
+
+/* Focus and invalid: 2px oxblood underline (section 2.2 jobs 3 and 4). */
+.control:focus,
+.control[aria-invalid='true'] {
+  border-bottom: 2px solid var(--oxblood);
+  padding-bottom: 5px;
+}
+
+.control:disabled {
+  color: var(--ink-3);
+  border-bottom-color: var(--line);
+}
+
+.control:disabled::placeholder {
+  color: var(--ink-3);
+}
+
+/* The select's glyph (section 5.10): ink-2, at the right of the value, not announced. */
+.select {
+  position: relative;
+  display: block;
+}
+
+.select .control {
+  padding-right: 16px;
+  cursor: pointer;
+}
+
+.select::after {
+  content: '▾';
+  content: '▾' / '';
+  position: absolute;
+  top: 6px;
+  right: 0;
+  font-size: 12px;
+  line-height: var(--leading-body);
+  color: var(--ink-2);
+  pointer-events: none;
+}
+
+.select:has(.control:disabled)::after {
+  color: var(--ink-3);
+}
+
+/* An invalid field's message: Meta 13/18 in oxblood (section 2.2 job 4). */
+.message {
+  margin: 6px 0 0;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--oxblood);
+}
+
+/*
+ * Search's bottom edge sits on the fields' underline, as in the demo's align-items: end, but the
+ * offset is measured from the top, so a message under a field in the same row never moves the
+ * buttons. Clear is centred on Search.
+ */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-top: calc(
+    var(--leading-label) + var(--gap-label) + var(--control-height) - var(--button-height) - 1px
+  );
+  padding-bottom: 1px;
+}
+
+/* Wraps Search alone so a press on the disabled button can reveal the messages (FilterBar.tsx). */
+.searchSlot {
+  display: flex;
+}
+
+/* Section 5.8 primary button (section 2.2 job 1). */
+.search {
+  height: var(--button-height);
+  padding: 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: var(--oxblood);
+  color: var(--paper);
+  font-size: var(--text-button);
+  line-height: var(--leading-button);
+  font-weight: 500;
+  letter-spacing: var(--tracking-button);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.search:hover:not(:disabled),
+.search:active:not(:disabled) {
+  background: var(--oxblood-deep);
+}
+
+.search:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 2px;
+}
+
+.search:disabled {
+  background: var(--stone);
+  color: var(--ink-3);
+  cursor: default;
+}
+
+/*
+ * Section 5.8 Text button, as the demo's .link and the Pager's .button (section 2.2 job 2):
+ * Figtree 13/1, 500, oxblood, no letter-spacing (it inherits normal). Hover and press do not
+ * change color; hover underlines at a 3px offset.
+ */
+.clear {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--oxblood);
+  font-size: var(--text-button);
+  line-height: var(--leading-button);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.clear:hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.clear:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 3px;
+}
+
+/* Disabled is ink-3, never reduced opacity (section 8). Clear is never disabled in v1. */
+.clear:disabled {
+  color: var(--ink-3);
+  cursor: default;
+}
+
+/* Server errors no field can show: one line under the bar, stated in ink (section 2.3). */
+.notice {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--ink);
+}
+
+/* Section 4.4: two columns; Search and Clear on their own row, Search full width. */
+@media (max-width: 760px) {
+  .bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: 16px;
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    padding-top: 0;
+  }
+
+  .searchSlot,
+  .search {
+    flex: 1;
+  }
+}
