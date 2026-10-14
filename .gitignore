@@ -10,11 +10,15 @@
 .env.local
 .env.*.local
 
-# Go (backend): air build output, built binaries, test binaries
+# Go (backend): air build output, built binaries, test binaries, a stray
+# plain `go build` in backend/, ad-hoc coverage files
 /backend/tmp/
 /backend/bin/
 *.exe
 *.test
+/backend/api
+/backend/cover.out
+/backend/coverage.html
 
 # Node (frontend)
 node_modules/
