@@ -6,12 +6,13 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 
 | Role | Ticket | Panel ref | Area ref | Branch | Worktree | Phase | Last seen | Spawned at |
 |---|---|---|---|---|---|---|---|---|
-| Orchestrator | all | panel:6 73809EE8-EE77-4F1E-8EE2-8E8B05308939 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | master | /Users/forrest/Code/brillio | dispatch | 2026-10-14T02:13Z | 2026-10-14T00:45Z |
-| Master Validator | all | panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | — | /Users/forrest/Code/brillio | audit loop | 2026-10-14T02:13Z | 2026-10-14T01:20Z |
-| Delegator | BC-4 | panel:19 6903B98A-C658-438C-9B01-2547E56BF263 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-4-sqlite-store | /Users/forrest/Code/brillio-worktrees/bc-4-sqlite-store | planned | 2026-10-14T02:13Z | 2026-10-14T01:49Z |
-| Delegator | BC-8 | panel:20 ECFFF9F4-A172-4457-9C6E-E90C1EF1FD35 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-8-frontend-core | /Users/forrest/Code/brillio-worktrees/bc-8-frontend-core | boot | 2026-10-14T02:13Z | 2026-10-14T02:06Z |
-| Delegator | BC-13 | panel:21 58816CAB-6208-40B5-B6E7-A6D371F3FD33 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-13-compose-stack | /Users/forrest/Code/brillio-worktrees/bc-13-compose-stack | boot | 2026-10-14T02:13Z | 2026-10-14T02:12Z |
-| Delegator | BC-5 | panel:24 2D11C0F2-6EC2-494F-8F52-856F7190DA45 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-5-search-api | /Users/forrest/Code/brillio-worktrees/bc-5-search-api | boot | 2026-10-14T02:34Z | 2026-10-14T02:34Z |
+| Orchestrator | all | panel:6 73809EE8-EE77-4F1E-8EE2-8E8B05308939 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | master | /Users/forrest/Code/brillio | dispatch | 2026-10-14T03:13Z | 2026-10-14T00:45Z |
+| Master Validator | all | panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | — | /Users/forrest/Code/brillio | audit loop | 2026-10-14T03:13Z | 2026-10-14T01:20Z |
+| Delegator | BC-5 | panel:24 2D11C0F2-6EC2-494F-8F52-856F7190DA45 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-5-search-api | /Users/forrest/Code/brillio-worktrees/bc-5-search-api | planned → impl | 2026-10-14T03:13Z | 2026-10-14T02:34Z |
+| Delegator | BC-9 | panel:25 93F19093-205B-4276-AD48-2ABEDE335616 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-9-filterbar | /Users/forrest/Code/brillio-worktrees.noindex/bc-9-filterbar | planning | 2026-10-14T03:13Z | 2026-10-14T02:56Z |
+| Delegator | BC-10 | panel:26 90079513-D6DF-432E-B7C6-287034065937 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-10-results-surface | /Users/forrest/Code/brillio-worktrees.noindex/bc-10-results-surface | boot | 2026-10-14T03:13Z | 2026-10-14T03:12Z |
+| Delegator | BC-11 | panel:27 CB8FE2DE-5324-4FA1-99A1-274F80B5EE3A | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-11-pager-status-loading | /Users/forrest/Code/brillio-worktrees.noindex/bc-11-pager-status-loading | boot | 2026-10-14T03:13Z | 2026-10-14T03:12Z |
+| Delegator | BC-13 | panel:21 58816CAB-6208-40B5-B6E7-A6D371F3FD33 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-13-compose-stack | /Users/forrest/Code/brillio-worktrees/bc-13-compose-stack | review (then hold for BC-5) | 2026-10-14T03:13Z | 2026-10-14T02:12Z |
 
 ### Archived (run history)
 
@@ -21,3 +22,5 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 | agent:opus-5.5-delegator (panel:16 E50A586D-7B7D-4FBA-89A0-918D59278F9A) | BC-2 | done 02:09Z | Merge b273a8a; head a9b7f73 (4 commits); 1 fix→re-review cycle (CORS origin minor); 2 remaining minors skipped with reasons; 82 go test runs, lint 0; plan review ~7 min (Fable 5.1); froze shared domain types at 5da9b80 and posted the Listing/DateLayout rule to BC-3/4/5. |
 | agent:opus-5.5-delegator (panel:17 F93C149A-6AA9-4705-A195-09CEABBE1680) | BC-7 | done 02:27Z | Merge aa65e61; head 0d1c2a2 (merged master/BC-2 in-branch, re-reviewed exact head). Plan review timed out at 600 s → fallback sub-agent. Deviations: ESLint 9.39.5 (jsx-a11y peer), tsc -b --noEmit (SPEC §2/§8 edits). Vitest 4 tests; build 220 kB JS. |
 | agent:opus-5.5-delegator (panel:18 C207406F-8A23-49A3-AA40-5069A4D11E99) | BC-3 | done 02:45Z | Merge dc35d1a; head cdec405; 66 domain tests incl. 36 §8-named subtests; 2 of 2 fix cycles used on doc fixes; no SPEC edits. Landed from board state while c11 mail recv was wedged. |
+| agent:opus-5.5-delegator (panel:19 6903B98A-C658-438C-9B01-2547E56BF263) | BC-4 | done 03:04Z | Merge 1c23253; head 9daad85; 244 go tests incl. subtests; SPEC §4.2 one-sentence edit; created BC-18 (backlog) for review nits; mail sent file-first during c11 stall; worktree removed before its panel closed (close timed out, retried 03:08Z OK). |
+| agent:opus-5.5-delegator (panel:20 ECFFF9F4-A172-4457-9C6E-E90C1EF1FD35) | BC-8 | done 03:10Z | Merge ccd1669; landed head 0426cb4 = reviewed 43e8824 + orchestrator master merge; 197 vitest tests; exports listed in BC-8 completion comment. |

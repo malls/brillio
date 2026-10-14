@@ -173,14 +173,19 @@ uses this to populate the City `<select>` (BRANDING.md §5.2), with "Any" first.
 
 Parsing rules:
 
-- An empty value (`minPrice=`) is treated as absent.
-- Numbers parse with `strconv.ParseFloat`; integers must be whole (`minBedrooms=2.5` is a field error).
-- **Unknown query parameters are a 400** with a field error naming the parameter. Rationale: a typo like `minprice=500000` must not silently widen the result set. Deliberate; say it out loud in the interview.
-- All validation problems are collected and returned together, not first-error-only.
+- An empty value (`minPrice=`) is treated as absent. A `city` or `keyword` that is only whitespace is absent too, and absence is decided before the length rule (201 spaces in `keyword` is absent, not `too_long`). Lengths count Unicode code points (characters): `city` after trimming, `keyword` as received.
+- A repeated parameter other than `status` uses its first value (`minPrice=1&minPrice=2` means 1), and an empty first value is absent (`minPrice=&minPrice=5` is absent, not 5).
+- Numbers parse with `strconv.ParseFloat`; integers must be whole (`minBedrooms=2.5` is a field error). Number syntax is exactly Go's `strconv.ParseFloat` (decimal or hex float literals, underscores allowed); only non-finite results are rejected: `NaN`, `Inf` and overflow such as `1e400` are `not_a_number`. Values are not trimmed (`minPrice=%205` is `not_a_number`), `-0` reads as `0`, and `2.0` and `1e2` are whole. An integer of 2^53 or more is `out_of_range`: from there on a float64 cannot hold every whole number (`9007199254740993` parses as 2^53), so the value cannot be read exactly.
+- `status` pieces are trimmed, empty pieces ignored, duplicates collapsed, matched case-sensitively and echoed in the order active, pending, sold. Any invalid piece gives one `invalid_enum` error on `status`.
+- A query string that is not valid URL encoding (for example a bare `%`, `%zz` or a `;` separator) is a 400 with field `query` and code `malformed_query`, because the decoder would otherwise drop the pair and silently widen the results (the same reason unknown params are a 400). There is at most one `malformed_query` error per request, and the pairs that did decode are still validated normally. The same error is returned when the query has more than 10000 `&`-separated parameters (Go's `url.ParseQuery` limit); then nothing decodes, so nothing else is validated.
+- **Unknown query parameters are a 400** with a field error naming the parameter, whatever its value (`minprice=` included). Rationale: a typo like `minprice=500000` must not silently widen the result set. Deliberate; say it out loud in the interview.
+- All validation problems are collected and returned together, not first-error-only. Field errors are ordered: `malformed_query` first, then at most one error per parameter in the table order above (`min_gt_max` takes `maxPrice`'s place), then unknown parameters sorted by name.
 - `page` past the last page is **not** an error: `200` with empty `items` and correct `page` metadata so the UI can recover.
 - A city with no listings is **not** an error: `200` with `totalItems: 0`. The UI renders the no-results state.
 
 ### 5.4 Success response
+
+<!-- asserted by backend/internal/httpapi/search_test.go (specExample): keep this block valid JSON and equal to the targetBudget=450000 response, first item only -->
 
 ```json
 {
@@ -193,7 +198,7 @@ Parsing rules:
       "latitude": 38.7893, "longitude": -77.1873,
       "listedDate": "2026-08-29", "status": "active",
       "description": "Bright top-floor condo near shops and transit. Pet friendly.",
-      "relevance": { "score": 0.8731, "budgetFit": 1.0, "recency": 0.3536 }
+      "relevance": { "score": 0.7414, "budgetFit": 1.0, "recency": 0.3536 }
     }
   ],
   "page": { "page": 1, "pageSize": 10, "totalItems": 12, "totalPages": 2 },
@@ -210,12 +215,16 @@ Parsing rules:
 }
 ```
 
+The example is A1 for `targetBudget=450000` and no other filters at asOf 2026-10-13: budgetFit 1.0, recency 0.5^(45/30) = 0.3536, score 0.6 × 1.0 + 0.4 × 0.3536 = 0.7414.
+
 - `rank` is the 1-based position in the **whole** ranked result set, so page 2 with pageSize 10 starts at 11 (BRANDING.md §5.6).
 - `relevance.score` is in `[0, 1]`, rounded to four decimals. `budgetFit` and `recency` are in `[0, 1]`, four decimals. The UI shows the score to two decimals.
 - When `targetBudget` is absent: `scoring.targetBudget` is `null`, `budgetWeight` is `0`, `recencyWeight` is `1`, and `relevance.budgetFit` is `null`.
 - `appliedFilters` echoes the effective filters after parsing, with `null` for absent ones, so the client never has to guess what the server understood.
 
 ### 5.5 Error response
+
+<!-- asserted by backend/internal/httpapi/search_test.go (specExample): compared byte-for-byte after json.Compact, so keep key order and values in sync with the API -->
 
 ```json
 {
@@ -239,7 +248,8 @@ Parsing rules:
 | 500 | `internal_error` | unexpected failure; message is generic, details go to the log with the request ID, never to the client |
 
 Field error `code` values: `not_a_number`, `not_an_integer`, `negative`, `not_positive`,
-`out_of_range`, `too_long`, `invalid_enum`, `min_gt_max`, `unknown_param`. The min/max
+`out_of_range`, `too_long`, `invalid_enum`, `min_gt_max`, `unknown_param`, `malformed_query`
+(field `query`, §5.3). The min/max
 conflict is reported once, on `maxPrice`, with code `min_gt_max`; the UI marks both price
 fields and shows the message under Max price (BRANDING.md §5.2). Messages use the exact
 strings from BRANDING.md §7.2 where one exists, otherwise a plain sentence in the same voice
@@ -550,3 +560,4 @@ BRANDING.md §9 when convenient; none blocks implementation.
 2. **Score field name.** BRANDING.md §5.6 says `relevanceScore`; the API field is `relevance.score` (§5.4), same `[0, 1]` range.
 3. **Rank** is supplied by the API (`rank` per item) rather than computed by the UI.
 4. **No budget** ordering is newest-first by construction (§6.2), so "newest first" in §5.3 is accurate.
+5. **Min/max price copy.** BRANDING §7.2 says "Min price must be less than max price." while the API allows minPrice == maxPrice (SPEC §5.3); the UI keeps the string verbatim and only flags min > max. Suggested copy: "Min price must not exceed max price."

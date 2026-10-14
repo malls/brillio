@@ -1,0 +1,77 @@
+/*
+ * BRANDING.md section 5.7: 48px including the hairline above, Previous at left, Next at right,
+ * page numbers centered with 16px gaps. Status line, pager and score type (section 3.2):
+ * Meta 13/18 with tabular figures.
+ */
+.pager {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 16px;
+  height: var(--pager-height);
+  padding-inline: var(--inline-pad);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.pages {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.previous {
+  justify-self: start;
+}
+
+.next {
+  justify-self: end;
+}
+
+/*
+ * Section 5.8 Text button, as the demo's .link: Figtree 13/1, 500, oxblood (section 2.2 job 2),
+ * no background, border or padding. Hover underlines at a 3px offset and does not change color.
+ */
+.button {
+  padding: 0;
+  border: 0;
+  background: none;
+  white-space: nowrap;
+  font-size: var(--text-button);
+  line-height: var(--leading-button);
+  font-weight: 500;
+  color: var(--oxblood);
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled, [aria-current='page']) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Section 2.2 job 3: the focus ring on buttons, 2px oxblood at a 3px offset (section 5.8). */
+.button:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 3px;
+}
+
+/* Disabled is ink-3, never reduced opacity (section 8). */
+.button:disabled {
+  color: var(--ink-3);
+  cursor: default;
+}
+
+/*
+ * Section 2.2 job 5: the current page is oxblood, weight 500, with a 1px oxblood underline.
+ * Styled by the attribute so the semantics and the look cannot drift. A text underline keeps
+ * the button's box the same height as its siblings.
+ */
+.button[aria-current='page'] {
+  color: var(--oxblood);
+  font-weight: 500;
+  text-decoration: underline 1px;
+  text-underline-offset: 3px;
+  cursor: default;
+}
