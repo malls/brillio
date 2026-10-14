@@ -3,6 +3,7 @@ package httpapi
 import (
 	"fmt"
 	"math"
+	"net/http"
 	"net/url"
 	"slices"
 	"strconv"
@@ -167,6 +168,21 @@ func ParseSearchQuery(v url.Values) (SearchQuery, []FieldError) {
 		return SearchQuery{}, p.errs
 	}
 	return q, nil
+}
+
+// parseSearchRequest decodes and validates r's query string. It decodes with
+// url.ParseQuery rather than r.URL.Query(), which silently drops a pair that
+// is not valid URL encoding and so would widen the results. Such a query gets
+// one malformed_query error, first, and the pairs that did decode are still
+// validated.
+func parseSearchRequest(r *http.Request) (SearchQuery, []FieldError) {
+	v, decodeErr := url.ParseQuery(r.URL.RawQuery)
+	q, errs := ParseSearchQuery(v)
+	if decodeErr != nil {
+		malformed := FieldError{Field: fieldQuery, Code: codeMalformedQuery, Message: msgMalformedQuery}
+		return SearchQuery{}, append([]FieldError{malformed}, errs...)
+	}
+	return q, errs
 }
 
 // parser reads parameters from values and collects their field errors.
