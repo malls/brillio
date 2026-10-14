@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:18",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 2,
+  "comment_count": 3,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -23,11 +23,16 @@
       "id": "art_01M4W2GSCK5ZH6F3NFEK578VKW",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W39EHHZZZG7MCVW0ABDC5E",
+      "role": "review",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK25Y5H07PWF6BX0PMFG1",
-  "last_event_id": "ev_01M4W2HSYWSF719SPH480A9G7Z",
-  "last_status_changed_at": "2026-10-14T02:06:07Z",
+  "last_event_id": "ev_01M4W3A1WYSJY7AADMZ68MW4C4",
+  "last_status_changed_at": "2026-10-14T02:13:51Z",
   "linked_files": [],
   "priority": "critical",
   "relationships_out": [
@@ -42,12 +47,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-3",
-  "status": "in_progress",
+  "status": "review",
   "tags": [
     "backend"
   ],
   "title": "Domain: relevance scoring, deterministic ordering, pagination with ranks (pure Go)",
   "type": "task",
-  "updated_at": "2026-10-14T02:06:07Z",
+  "updated_at": "2026-10-14T02:19:21Z",
   "urgency": null
 }

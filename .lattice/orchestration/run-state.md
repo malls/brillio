@@ -58,18 +58,18 @@ API `PORT=18000+N`, web `vite --port 15100+N --strictPort` with `VITE_API_PROXY_
 | Ticket | Title (short) | Status | Mode | Branch | Base | Model |
 |---|---|---|---|---|---|---|
 | BC-1 | Repo bootstrap | done (f4f8a0b) | fast (stage sub-agents) | master (direct) | — | opus |
-| BC-2 | Backend scaffold | review 01:47Z (head 5da9b80) panel:16 | stage sub-agents | feat/BC-2-backend-scaffold | master | opus |
+| BC-2 | Backend scaffold | done 02:09Z (merge b273a8a, head a9b7f73) | stage sub-agents | feat/BC-2-backend-scaffold | master | opus |
 | BC-3 | Domain ranking | dispatched 01:49Z panel:18 | stage sub-agents | feat/BC-3-domain-ranking | anchor feat/BC-2 @5da9b80 | opus |
 | BC-4 | SQLite store | dispatched 01:49Z panel:19 | stage sub-agents | feat/BC-4-sqlite-store | anchor feat/BC-2 @5da9b80 | opus |
 | BC-5 | Search API | backlog | stage sub-agents | feat/BC-5-search-api | BC-3+BC-4 | opus |
 | BC-6 | OpenAPI | backlog | stage sub-agents | feat/BC-6-openapi | BC-5 | opus |
-| BC-7 | Frontend scaffold | dispatched 01:22Z panel:17 | stage sub-agents | feat/BC-7-frontend-scaffold | master | opus |
-| BC-8 | Frontend core | backlog | stage sub-agents | feat/BC-8-frontend-core | BC-7 | opus |
+| BC-7 | Frontend scaffold | review ~02:03Z (head 1d6008a) panel:17 | stage sub-agents | feat/BC-7-frontend-scaffold | master | opus |
+| BC-8 | Frontend core | dispatched 02:06Z panel:20 | stage sub-agents | feat/BC-8-frontend-core | anchor feat/BC-7 @1d6008a | opus |
 | BC-9 | FilterBar | backlog | stage sub-agents | feat/BC-9-filterbar | BC-8 | opus |
 | BC-10 | Results surface | backlog | stage sub-agents | feat/BC-10-results-surface | BC-8 | opus |
 | BC-11 | Pager/Status/Loading | backlog | stage sub-agents | feat/BC-11-pager-status-loading | BC-8 | opus |
 | BC-12 | SearchPage + e2e | backlog | stage sub-agents | feat/BC-12-search-page | BC-5,9,10,11 | opus |
-| BC-13 | Compose stack | backlog | stage sub-agents | feat/BC-13-compose-stack | BC-2+BC-7 | opus |
+| BC-13 | Compose stack | dispatched 02:12Z panel:21 (validation hold for BC-5) | stage sub-agents | feat/BC-13-compose-stack | anchor feat/BC-7 @1d6008a + master @7ab182d | opus |
 | BC-14 | Branding pass | backlog | stage sub-agents | feat/BC-14-branding-pass | BC-12 | opus |
 | BC-15 | README | backlog | stage sub-agents | feat/BC-15-readme | BC-6,12,13 | opus |
 | BC-16 | Extensions doc | backlog | stage sub-agents | feat/BC-16-extensions-doc | BC-12 | opus |
@@ -91,6 +91,10 @@ Otherwise wait. Children record their anchor here and merge `master` (never reba
 | `frontend/src/App.tsx` | BC-7 (placeholder) | BC-12 (renders SearchPage) | — |
 | `README.md` | BC-1 (stub) | BC-15 (real) | — |
 | `docs/SPEC.md` | contract | any ticket via SPEC's own deviation rule (edit in-branch + lattice comment) | union |
+
+## Landing checklist additions
+
+- BC-7 landing: also add the ESLint 9.39.5 pin (jsx-a11y peer) to `.lattice/context.md` Versions, matching BC-7's SPEC §2 edit (MV 02:10Z).
 
 ## Gate (make check) rule
 
@@ -124,6 +128,9 @@ full `make check` is required with no exceptions.
   code-review; otherwise gate-only, logged here.
 - 2026-10-14T00:49Z [operator] golangci-lint 2.14.0 installed via brew on the host.
 - 2026-10-14T01:18Z [autonomy: Moderate] BC-1 landed (direct on master f4f8a0b; review PASS-WITH-NITS art_01M4VZQ546WYVMW5DWJH6HMBPN, two .gitignore nits forwarded to BC-2 card item 7; validation N/A art_01M4VZR7YZVPYGH5N4MW71Q9MD). Board sync 2afc005.
+- 2026-10-14T02:12Z [autonomy: Moderate] BC-13 now depends_on BC-5 (make smoke asserts search/cities behavior). Press-ahead exception: BC-13 builds on feat/BC-7 + master now, validates compose/health/proxy/hot-reload, then holds at in_validation until BC-5 lands; only then full make smoke + LAND-READY.
+- 2026-10-14T02:09Z [autonomy: Moderate] BC-2 landed: merge b273a8a (--no-ff, tree == branch tree 3cd22df), half-gate make lint-api test-api pass (uncached go test -race re-run by orchestrator), review art_01M4W2E06P2SMDVN8PGN8XWYVK PASS @ a9b7f73 with 2 minors skipped-with-reason by delegator, validation art_01M4W2M170ZQMTYVSWZDQZGD5A. Board sync 7ab182d. BC-3/BC-4 mailed to merge master.
+- 2026-10-14T02:06Z [autonomy: Moderate] Press-ahead: BC-8 cut from feat/BC-7-frontend-scaffold @1d6008a (BC-7 at review).
 - 2026-10-14T01:57Z [autonomy: Moderate] Accepted BC-7 deviation: ESLint held at 9.39.5 (not 10.12.0) because allowlisted eslint-plugin-jsx-a11y 6.10.2 (latest) peers `eslint ^3..^9` (verified with npm view). Same principle as the operator's TS 6.0.3 ruling: compatible versions, no overrides. BC-7 records it as an in-branch SPEC §2 edit.
 - 2026-10-14T01:55Z [autonomy: Moderate] Accepted (MV 01:53Z): headless `lattice plan-review`/`code-review` runs `claude -p` on its default model, which self-identifies as **Fable 5.1**, not Opus 5.5. Kept as-is: reviewers then differ from the Opus implementers, which is closer to the skill's cross-model review intent than an all-Opus run. Own-reviewer fallback sub-agents remain Opus.
 - 2026-10-14T01:49Z [autonomy: Moderate] Press-ahead: BC-3 and BC-4 cut from feat/BC-2-backend-scaffold @5da9b80 (BC-2 at review). They merge master once BC-2 lands.
@@ -136,6 +143,7 @@ full `make check` is required with no exceptions.
 
 | Symptom | Cause | Mitigation |
 |---|---|---|
+| `c11 tree` prints "No windows" and panel-scoped calls (`mailbox recv`, `get-metadata`) time out after 10 s while `window.list`/`ping` work | Transient c11 server stall (02:04Z, cleared within ~3 min) | Do git/lattice work meanwhile; retry c11 calls next step; never treat an empty tree as "no agents" |
 | Headless `lattice plan-review` takes 7–10 min and can die at the 600 s watchdog (`review-status`: dead holder pid, never recorded a result) | `claude -p` reviewing a large plan plus SPEC/BRANDING context runs past `review_timeout_seconds` (BC-7 01:44Z; BC-1/BC-2 finished in ~7 min) | Brief fallback works as written (fresh-context plan-review sub-agent). Keep plans proportional; do not raise the timeout mid-run |
 | Delegator panel title becomes `BC-N [status]: <full ticket title>` | `lattice status` on a claimed (surface-bound) ticket renames the panel, as do plan-review/code-review (MV 01:24Z) | Brief now re-applies `rename-panel` + `set-title` after every status transition and review call |
 | Delegate area vanishes after closing a finished delegator panel | Closing the last panel in an area collapses the area (01:20Z: areas 8 and 10 lost) | Every delegate area keeps a never-closed placeholder shell panel; check `c11 tree` before `close-panel` |
