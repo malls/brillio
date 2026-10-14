@@ -7,3 +7,4 @@
 {"actor":"agent:opus-5.5-delegator","data":{"branch":"feat/BC-13-compose-stack"},"id":"ev_01M4W2SHX8Y5RDK8X3G5GPKP5C","schema_version":1,"task_id":"task_01M4VXK3F2NX1DGFTZ60YX6K0H","ts":"2026-10-14T02:10:21Z","type":"branch_linked"}
 {"actor":"agent:opus-5.5-delegator","data":{"from":null,"to":"agent:opus-5.5-delegator"},"id":"ev_01M4W2SNV8EBCTZ9MPJXT23V00","schema_version":1,"task_id":"task_01M4VXK3F2NX1DGFTZ60YX6K0H","ts":"2026-10-14T02:10:25Z","type":"assignment_changed"}
 {"actor":"agent:opus-5.5-delegator","data":{"from":"backlog","to":"in_planning"},"id":"ev_01M4W2SNV8EBCTZ9MPJXT23V01","schema_version":1,"task_id":"task_01M4VXK3F2NX1DGFTZ60YX6K0H","ts":"2026-10-14T02:10:25Z","type":"status_changed"}
+{"actor":"agent:opus-5.5-delegator","data":{"from":"in_planning","to":"planned"},"id":"ev_01M4W3RP6KQYH6VNQ9K4C08ZVT","schema_version":1,"task_id":"task_01M4VXK3F2NX1DGFTZ60YX6K0H","ts":"2026-10-14T02:27:21Z","type":"status_changed"}

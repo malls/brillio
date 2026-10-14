@@ -20,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK3F2NX1DGFTZ60YX6K0H",
-  "last_event_id": "ev_01M4W2SNV8EBCTZ9MPJXT23V01",
-  "last_status_changed_at": "2026-10-14T02:10:25Z",
+  "last_event_id": "ev_01M4W3RP6KQYH6VNQ9K4C08ZVT",
+  "last_status_changed_at": "2026-10-14T02:27:21Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -50,12 +50,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-13",
-  "status": "in_planning",
+  "status": "planned",
   "tags": [
     "infra"
   ],
   "title": "Docker Compose dev stack with hot reload, health gating, and make smoke",
   "type": "task",
-  "updated_at": "2026-10-14T02:10:25Z",
+  "updated_at": "2026-10-14T02:27:21Z",
   "urgency": null
 }

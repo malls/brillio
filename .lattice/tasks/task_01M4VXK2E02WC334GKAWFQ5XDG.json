@@ -1,8 +1,17 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 2,
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-5-search-api",
+      "linked_at": "2026-10-14T02:34:54Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:24",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
+  "comment_count": 3,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -11,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK2E02WC334GKAWFQ5XDG",
-  "last_event_id": "ev_01M4W2HNZPQKQ1428QP0GMKV4T",
-  "last_status_changed_at": "2026-10-14T00:39:25Z",
+  "last_event_id": "ev_01M4W46NQ21KQQFP9F24X9C1J9",
+  "last_status_changed_at": "2026-10-14T02:34:59Z",
   "linked_files": [],
   "priority": "critical",
   "relationships_out": [
@@ -34,12 +43,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-5",
-  "status": "backlog",
+  "status": "in_planning",
   "tags": [
     "backend"
   ],
   "title": "Search API: strict query parsing, validation with field codes, pipeline handler, cities endpoint",
   "type": "task",
-  "updated_at": "2026-10-14T02:06:03Z",
+  "updated_at": "2026-10-14T02:34:59Z",
   "urgency": null
 }

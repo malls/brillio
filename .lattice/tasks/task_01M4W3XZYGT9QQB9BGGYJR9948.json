@@ -1,0 +1,36 @@
+{
+  "acceptance_criteria": [],
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-10-14T02:30:15Z",
+  "created_by": "agent:opus-5.5-delegator",
+  "custom_fields": {},
+  "description": "Follow-up from BC-4 code review art_01M4W3X92E3R58R3C7QHCR8TXJ (PASS, two minor findings, deferred so they do not cost a re-review cycle). (1) backend/internal/store/listings.go: write listed_date with l.ListedDate.UTC().Format(domain.DateLayout) so a Listing built with a non-UTC location near midnight cannot store a different calendar date (seed.Load always yields UTC midnight today, matching the domain invariant). (2) backend/internal/store/migrate.go: the applied-migration set is read outside the migration transaction, so two processes bootstrapping the same new DB file race (second fails 'table schema_migrations already exists'); re-check inside the tx or use CREATE TABLE IF NOT EXISTS / INSERT OR IGNORE for the bookkeeping. v1 runs one API process, so this is theoretical. Small; can ride along with BC-5 if its owner touches the store.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01M4W3XZYGT9QQB9BGGYJR9948",
+  "last_event_id": "ev_01M4W3Y024SMCGC2KDHNV9JG0W",
+  "last_status_changed_at": "2026-10-14T02:30:15Z",
+  "linked_files": [],
+  "priority": "low",
+  "relationships_out": [
+    {
+      "created_at": "2026-10-14T02:30:15Z",
+      "created_by": "agent:opus-5.5-delegator",
+      "note": null,
+      "target_task_id": "task_01M4VXK2A1R3W99HGSVPYAJGRX",
+      "type": "related_to"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "BC-18",
+  "status": "backlog",
+  "tags": null,
+  "title": "Store hardening: UTC-normalize ListedDate on write; idempotent schema_migrations bootstrap",
+  "type": "task",
+  "updated_at": "2026-10-14T02:30:15Z",
+  "urgency": null
+}
