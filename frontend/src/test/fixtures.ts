@@ -179,3 +179,27 @@ export function deferred<T>(): Deferred<T> {
   });
   return { promise, resolve, reject };
 }
+
+// --- BC-10 additions ---
+
+// B7, Springfield: rank 2 of 12 and the demo's second card (docs/branding-demo.html); its
+// description carries a capital 'Pets' for the keyword-emphasis tests.
+export const listingB7: ListingResult = {
+  rank: 2,
+  id: 'B7',
+  source: 'MLS_B',
+  address: '123 Main Street, Unit 4B',
+  city: 'Springfield',
+  state: 'VA',
+  zip: '22150',
+  price: 452000,
+  bedrooms: 2,
+  bathrooms: 1.5,
+  sqft: 980,
+  latitude: 38.7893,
+  longitude: -77.1873,
+  listedDate: '2026-08-27',
+  status: 'active',
+  description: 'Top floor condo, walk to shopping. Pets allowed.',
+  relevance: { score: 0.7297, budgetFit: 0.9911, recency: 0.3376 },
+};

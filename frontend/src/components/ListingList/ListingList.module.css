@@ -1,0 +1,36 @@
+/* The results region inside the shell's scroller (BRANDING.md section 4.2). The 6px top padding
+   is the demo's results padding; the gutter stays on the scroller. position: relative keeps the
+   hidden heading inside the scroller, so focusing it scrolls the list back to the top. */
+.region {
+  position: relative;
+  padding-top: 6px;
+}
+
+/* Visually hidden, still in the accessibility tree and focusable from script. No focus ring:
+   focus rings are for buttons and links (section 2.2 job 3). */
+.heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.heading:focus {
+  outline: none;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Section 5.4: a hairline above every card but the first. */
+.item + .item {
+  border-top: 1px solid var(--line);
+}

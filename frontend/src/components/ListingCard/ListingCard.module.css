@@ -1,0 +1,122 @@
+/*
+ * BRANDING.md section 5.4 card, sections 4.1 and 4.4 layout. One flat grid: the monogram spans
+ * every row on the left, the price block spans every row on the right. The last row is 1fr, so
+ * a price block taller than the text grows only the description row and the meta line stays
+ * directly under the address. The hairline between cards belongs to ListingList. No hover state.
+ */
+.card {
+  display: grid;
+  grid-template-columns: var(--monogram-width) minmax(0, 1fr) auto;
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'monogram address price'
+    'monogram meta price'
+    'monogram description price';
+  column-gap: var(--card-column-gap);
+  row-gap: 0;
+  align-items: start;
+  padding-block: var(--card-padding-block);
+}
+
+.monogramSlot {
+  grid-area: monogram;
+}
+
+/* Section 3.2 Address: Bodoni Moda 22/26, 400, balanced. The feed's address, verbatim. */
+.address {
+  grid-area: address;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-address);
+  line-height: var(--leading-address);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* Section 3.2 Meta: Figtree 13/18, 400, ink-2, tabular figures. */
+.meta {
+  grid-area: meta;
+  margin: 4px 0 0;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  font-weight: 400;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section 3.2 Label: Figtree 11/14, 500, +0.08em, uppercase; inherits ink-2, never the accent
+   (section 2.2). formatStatusLabel already returns uppercase; the transform keeps the Label style
+   whole. */
+.statusLabel {
+  font-size: var(--text-label);
+  line-height: var(--leading-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Section 3.2 Description: Figtree 14/20, 400, one line with an ellipsis. */
+.description {
+  grid-area: description;
+  margin: 6px 0 0;
+  font-size: var(--text-description);
+  line-height: var(--leading-description);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A keyword match: weight, not color (section 5.4). */
+.match {
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Section 5.4 price block: right-aligned, price over the rank pill and score, 8px apart. */
+.priceBlock {
+  grid-area: price;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  text-align: right;
+}
+
+/* Section 3.2 Price: Bodoni Moda 28/31, 500, -0.01em; proportional figures (section 3.3). */
+.price {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-price);
+  line-height: var(--leading-price);
+  font-weight: 500;
+  letter-spacing: var(--tracking-price);
+  white-space: nowrap;
+}
+
+/*
+ * Section 4.4 at 760px and below: two columns, monogram and text; the price block moves under the
+ * meta line, left-aligned, price before rank. Sizes do not change (sections 2.4, 3.2, 4.1); the
+ * 14px gap between price and pill is the demo's.
+ */
+@media (max-width: 760px) {
+  .card {
+    grid-template-columns: var(--monogram-width) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas:
+      'monogram address'
+      'monogram meta'
+      'monogram price'
+      'monogram description';
+  }
+
+  .priceBlock {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+    column-gap: 14px;
+    margin-top: var(--grid);
+    text-align: left;
+  }
+}

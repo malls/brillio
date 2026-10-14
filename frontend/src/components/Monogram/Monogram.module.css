@@ -1,0 +1,15 @@
+/* BRANDING.md section 5.5: a 72x54 (4:3) stone block, the initials in Bodoni 26 ink-2, centered.
+   Section 3.2 Monogram: 26/1, 400. Same size at every width: never below 24px (section 2.4). */
+.monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--monogram-width);
+  height: 54px;
+  background: var(--stone);
+  font-family: var(--font-display);
+  font-size: var(--text-monogram);
+  line-height: var(--leading-monogram);
+  font-weight: 400;
+  color: var(--ink-2);
+}
