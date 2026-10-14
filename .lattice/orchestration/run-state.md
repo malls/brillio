@@ -60,13 +60,13 @@ API `PORT=18000+N`, web `vite --port 15100+N --strictPort` with `VITE_API_PROXY_
 | BC-1 | Repo bootstrap | done (f4f8a0b) | fast (stage sub-agents) | master (direct) | — | opus |
 | BC-2 | Backend scaffold | done 02:09Z (merge b273a8a, head a9b7f73) | stage sub-agents | feat/BC-2-backend-scaffold | master | opus |
 | BC-3 | Domain ranking | done 02:45Z (merge dc35d1a, head cdec405) | stage sub-agents | feat/BC-3-domain-ranking | anchor feat/BC-2 @5da9b80 | opus |
-| BC-4 | SQLite store | in_validation panel:19 | stage sub-agents | feat/BC-4-sqlite-store | anchor feat/BC-2 @5da9b80 | opus |
+| BC-4 | SQLite store | done 03:03Z (merge 1c23253, head 9daad85) | stage sub-agents | feat/BC-4-sqlite-store | anchor feat/BC-2 @5da9b80 | opus |
 | BC-5 | Search API | dispatched 02:34Z panel:24 | stage sub-agents | feat/BC-5-search-api | master + feat/BC-3 @ee09340 + feat/BC-4 @318ebc5 (both merged at creation) | opus |
 | BC-6 | OpenAPI | backlog | stage sub-agents | feat/BC-6-openapi | BC-5 | opus |
 | BC-7 | Frontend scaffold | done 02:27Z (merge aa65e61, head 0d1c2a2) | stage sub-agents | feat/BC-7-frontend-scaffold | master | opus |
 | BC-8 | Frontend core | in_validation panel:20 | stage sub-agents | feat/BC-8-frontend-core | anchor feat/BC-7 @1d6008a | opus |
 | BC-9 | FilterBar | dispatched 02:56Z (pid 81771; panel ref pending — c11 stalled) | stage sub-agents | feat/BC-9-filterbar | anchor feat/BC-8 @43e8824 | opus |
-| BC-10 | Results surface | backlog | stage sub-agents | feat/BC-10-results-surface | BC-8 | opus |
+| BC-10 | Results surface | worktree ready (.noindex), launch deferred until c11 answers | stage sub-agents | feat/BC-10-results-surface | anchor feat/BC-8 @43e8824 | opus |
 | BC-11 | Pager/Status/Loading | backlog | stage sub-agents | feat/BC-11-pager-status-loading | BC-8 | opus |
 | BC-12 | SearchPage + e2e | backlog | stage sub-agents | feat/BC-12-search-page | BC-5,9,10,11 | opus |
 | BC-13 | Compose stack | dispatched 02:12Z panel:21 (validation hold for BC-5) | stage sub-agents | feat/BC-13-compose-stack | anchor feat/BC-7 @1d6008a + master @7ab182d | opus |
@@ -129,6 +129,7 @@ full `make check` is required with no exceptions.
   code-review; otherwise gate-only, logged here.
 - 2026-10-14T00:49Z [operator] golangci-lint 2.14.0 installed via brew on the host.
 - 2026-10-14T01:18Z [autonomy: Moderate] BC-1 landed (direct on master f4f8a0b; review PASS-WITH-NITS art_01M4VZQ546WYVMW5DWJH6HMBPN, two .gitignore nits forwarded to BC-2 card item 7; validation N/A art_01M4VZR7YZVPYGH5N4MW71Q9MD). Board sync 2afc005.
+- 2026-10-14T03:04Z [autonomy: Moderate] BC-4 landed: merge 1c23253 (tree == branch c04b652), full make check + uncached store/httpapi race tests pass on 9daad85, only direct Go dep modernc.org/sqlite v1.60.1, review art_01M4W554XM9SHY2F8MP25KD1YD PASS @ 9daad85, validation addendum art_01M4W4XNCKYAQH20402VRMBQK6 @ 9daad85. Board sync 2745b8c. BC-4 created follow-up BC-18 (backlog, low, store hardening nits) — out of contract scope; left in backlog for the operator. Panel close timed out (c11 stall); BC-10 launch deferred while load ~90 and c11 unresponsive.
 - 2026-10-14T03:00Z [autonomy: Moderate] Approved BC-5 contract addition: field-error code `malformed_query` on pseudo-field `query` (400, at most one per request) because Go's url.ParseQuery silently drops a malformed pair (bare `%`), which would widen results — the same failure §5.3's unknown_param rule prevents. BC-5 edits SPEC §5.3/§5.5 in-branch; BC-6 must include it in the OpenAPI code enum; BC-9 shows it via the unmapped-field line. Also: validation-plan row 18 corrected to 12 items (BC-5 report); BC-5 adds SPEC §13 note 5 (min/max copy vs equal-allowed) for the branding owner.
 - 2026-10-14T02:45Z [autonomy: Moderate] BC-3 landed from verified board state while mail recv was wedged (LAND-READY confirmed afterwards in the c11 event log): merge dc35d1a, tree == branch 763965a, full make check + uncached domain race tests pass on cdec405, review art_01M4W4GP7NV84NM69TY4JRJ6HZ PASS @ cdec405, validation art_01M4W48RXGH4QGBPP4YB7F742W @ cdec405. Board sync c91fa7f. BC-5 mailed. c11 socket back 02:43Z but panel.get_metadata still times out.
 - 2026-10-14T02:41Z [autonomy: Moderate] c11 socket down (connection refused; app pid 90026 alive). Orchestrator continues via lattice/git; no new launches or panel closes until c11 answers; operator notified (OS notification + Orchestrator reply).

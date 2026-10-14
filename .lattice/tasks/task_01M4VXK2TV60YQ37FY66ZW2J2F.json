@@ -17,7 +17,7 @@
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "The frontend's non-visual core: API types and client, URL state hook, search hook with abort and previous-results memory, cities hook, and the BRANDING formatters. Spec: docs/SPEC.md \u00a77.1, \u00a77.2, \u00a77.3, \u00a78 (frontend hooks and formatters). Design: BRANDING.md \u00a77.1 formatting table.\n\nWhy: components (BC-9, BC-10, BC-11) must be pure props-in renderers; everything stateful and every string-formatting rule lives here with its own tests, so three component tasks can run in parallel.\n\nScope:\n- src/api/types.ts exactly as \u00a77.3. src/api/errors.ts with ApiError union and a `parseErrorResponse(res)` helper. src/api/client.ts: `searchListings(params, signal?)` builds the query string (undefined omitted, status repeated, numbers as plain strings), `getCities(signal?)`; non-2xx bodies parse into ApiError; fetch TypeError and AbortError map to kind 'network' (the hook ignores aborts).\n- src/hooks/useSearchParamsState.ts per \u00a77.1: parse window.location.search into SearchParams on mount (numbers parsed, invalid values dropped), `setSearch(next)` pushes the new query string without page, `setPage(n)` pushes with only page changed, `clear()` pushes an empty query, popstate re-reads; pageSize preserved if present.\n- src/hooks/useListingSearch.ts per \u00a77.2 returning SearchState; AbortController per request; previous data retained during loading and on invalid/error; the state 'empty' when totalItems is 0; 'invalid' for validation errors.\n- src/hooks/useCities.ts: load once, return string[] (empty on failure, error to console.error).\n- src/format/money.ts, date.ts, listing.ts implementing every row of BRANDING \u00a77.1: price `$450,000`; `2 bd`; `1 ba` / `1.5 ba`; `1,450 sqft`; `Listed Aug 29` with `, YYYY` when not the current year (year injected for tests); source `MLS_A` to `MLS A`; status label uppercase only when not active; score two decimals; rank `No. 1`; `1 result` / `12 results`; `Page 1 of 2`; monogram initials `Sp`.\n- Tests per \u00a78: client query building and error parsing (400 validation with fields, 500 http, TypeError network, abort ignored); both hooks under jsdom with history and popstate; every formatter row.\n\nAcceptance:\n- All tests green; `make lint` green.\n- No new runtime dependencies.\n- Types compile against a fixture built from the real sample data (src/test/fixtures.ts with three listings and one full SearchResponse).\n\nValidation: N/A until BC-12 wires a page. Record a one-line justification with --role validation and cite the test output.",
-  "done_at": null,
+  "done_at": "2026-10-14T03:07:48Z",
   "evidence_refs": [
     {
       "id": "art_01M4W468FKGQZA6X41W7ZDMZGP",
@@ -41,8 +41,8 @@
     }
   ],
   "id": "task_01M4VXK2TV60YQ37FY66ZW2J2F",
-  "last_event_id": "ev_01M4W5P82M2Q1EJ7XANCK4AQ6H",
-  "last_status_changed_at": "2026-10-14T02:55:33Z",
+  "last_event_id": "ev_01M4W62RSN7D3H4B9T911WPCZ7",
+  "last_status_changed_at": "2026-10-14T03:07:48Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -57,12 +57,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-8",
-  "status": "in_validation",
+  "status": "done",
   "tags": [
     "frontend"
   ],
   "title": "Frontend core: API client and types, URL state and search hooks, BRANDING formatters",
   "type": "task",
-  "updated_at": "2026-10-14T03:00:58Z",
+  "updated_at": "2026-10-14T03:07:48Z",
   "urgency": null
 }
