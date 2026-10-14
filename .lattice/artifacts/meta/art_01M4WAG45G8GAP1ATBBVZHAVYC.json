@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:25:00Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WAG45G8GAP1ATBBVZHAVYC",
+  "model": null,
+  "payload": {
+    "content_type": "text/plain",
+    "file": "art_01M4WAG45G8GAP1ATBBVZHAVYC.txt",
+    "size_bytes": 2697
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "make smoke output 21cd239",
+  "token_usage": null,
+  "type": "file"
+}

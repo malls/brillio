@@ -1,0 +1,23 @@
+# Dev image for the `api` Compose service (docs/SPEC.md section 10): Go plus air,
+# which rebuilds and restarts the server when a watched file changes (.air.toml).
+# There is no COPY: compose.yaml bind-mounts ./backend at /app, so the build sends
+# no context and the image holds only the toolchain and the air binary.
+FROM golang:1.27-alpine
+
+# Newest air tag at implementation time; it needs Go 1.26 or later.
+ARG AIR_VERSION=v1.67.4
+
+# Pure Go build (the SQLite driver is modernc, no cgo). The cache paths match the
+# gomod and gobuild named volumes in compose.yaml.
+ENV CGO_ENABLED=0 \
+    GOMODCACHE=/go/pkg/mod \
+    GOCACHE=/root/.cache/go-build
+
+# Clear the caches in this same layer: the image stays small, and the empty gomod
+# and gobuild volumes are not seeded with air's own dependency tree on first mount.
+RUN go install github.com/air-verse/air@${AIR_VERSION} \
+    && go clean -cache -modcache
+
+WORKDIR /app
+EXPOSE 8080
+CMD ["air", "-c", ".air.toml"]

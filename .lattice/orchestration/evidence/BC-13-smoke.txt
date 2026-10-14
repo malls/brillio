@@ -1,0 +1,82 @@
+sh scripts/smoke.sh
+smoke: docker compose up -d --build --wait
+ Image brillio-api Building 
+ Image brillio-api Building 
+Sending build context to Docker daemon     796B
+Step 1/8 : FROM golang:1.27-alpine
+ ---> b14800def2ec
+Step 2/8 : ARG AIR_VERSION=v1.67.4
+ ---> Using cache
+ ---> d6817590b530
+Step 3/8 : ENV CGO_ENABLED=0     GOMODCACHE=/go/pkg/mod     GOCACHE=/root/.cache/go-build
+ ---> Using cache
+ ---> 32cc6284f514
+Step 4/8 : RUN go install github.com/air-verse/air@${AIR_VERSION}     && go clean -cache -modcache
+ ---> Using cache
+ ---> d64f80e46ce6
+Step 5/8 : WORKDIR /app
+ ---> Using cache
+ ---> 958d84dd7132
+Step 6/8 : EXPOSE 8080
+ ---> Using cache
+ ---> 6e563f872610
+Step 7/8 : CMD ["air", "-c", ".air.toml"]
+ ---> Using cache
+ ---> 4a6b5d8e128a
+Step 8/8 : LABEL com.docker.compose.image.builder=classic
+ ---> Using cache
+ ---> 5d60f855c02e
+Successfully built 5d60f855c02e
+Successfully tagged brillio-api:latest
+ Image brillio-api Built 
+ Image brillio-api Built 
+ Network brillio_default Creating 
+ Network brillio_default Creating 
+ Volume brillio_gomod Creating 
+ Volume brillio_gomod Creating 
+ Volume brillio_gobuild Creating 
+ Volume brillio_gobuild Creating 
+ Volume brillio_gomod Created 
+ Volume brillio_gomod Created 
+ Volume brillio_gobuild Created 
+ Volume brillio_gobuild Created 
+ Network brillio_default Created 
+ Network brillio_default Created 
+ Container brillio-api-1 Creating 
+ Container brillio-api-1 Created 
+ Container brillio-web-1 Creating 
+ Container brillio-web-1 Created 
+ Container brillio-api-1 Starting 
+ Container brillio-api-1 Started 
+ Container brillio-api-1 Waiting 
+ Container brillio-api-1 Healthy 
+ Container brillio-web-1 Starting 
+ Container brillio-web-1 Started 
+ Container brillio-web-1 Waiting 
+ Container brillio-api-1 Waiting 
+ Container brillio-api-1 Healthy 
+ Container brillio-web-1 Healthy 
+PASS  a1 api /healthz is ok
+PASS  a2 api /api/cities lists Springfield
+PASS  a3 api search returns items
+PASS  a4 api search ranks the first item 1
+PASS  a5 api search rejects minPrice > maxPrice
+PASS  a6 web serves the app shell
+PASS  a7 web proxies /healthz to api
+PASS  a8 web proxies /api/cities to api
+smoke: 8 passed, 0 failed
+teardown: docker compose down -v
+ Container brillio-web-1 Stopping 
+ Container brillio-web-1 Stopped 
+ Container brillio-web-1 Removing 
+ Container brillio-web-1 Removed 
+ Container brillio-api-1 Stopping 
+ Container brillio-api-1 Stopped 
+ Container brillio-api-1 Removing 
+ Container brillio-api-1 Removed 
+ Volume brillio_gobuild Removing 
+ Volume brillio_gomod Removing 
+ Network brillio_default Removing 
+ Volume brillio_gobuild Removed 
+ Network brillio_default Removed 
+ Volume brillio_gomod Removed 

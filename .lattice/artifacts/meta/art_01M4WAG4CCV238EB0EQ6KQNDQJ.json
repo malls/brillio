@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:25:01Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WAG4CCV238EB0EQ6KQNDQJ",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WAG4CCV238EB0EQ6KQNDQJ.png",
+    "size_bytes": 318810
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Browser search via 5173 proxy 21cd239",
+  "token_usage": null,
+  "type": "file"
+}
