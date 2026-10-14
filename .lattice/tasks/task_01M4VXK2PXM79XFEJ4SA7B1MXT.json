@@ -11,23 +11,48 @@
   ],
   "c11_surface": "panel:17",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 3,
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Create the frontend project with the exact toolchain, the design tokens, the fonts, the pinned app shell and the Header. Spec: docs/SPEC.md \u00a72, \u00a73, \u00a77.6, \u00a710 (proxy). Design: BRANDING.md \u00a72.1 (tokens), \u00a72.5, \u00a73.1 (fonts), \u00a73.2 (scale), \u00a74 (grid, shell, breakpoints), \u00a75.1 (Header). Reference rendering: docs/branding-demo.html.\n\nWhy: every component task (BC-9, BC-10, BC-11) needs tokens, the type scale and the test harness in place, and the shell grid is what makes \"app, not document\" true.\n\nScope:\n- `npm create vite@latest frontend -- --template react-ts`, then pin latest stable: React 19, Vite 8, TypeScript 7, Vitest 5, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, jsdom, typescript-eslint, eslint-plugin-react-hooks, eslint-plugin-jsx-a11y, prettier. No other runtime or dev dependencies.\n- tsconfig strict plus noUncheckedIndexedAccess and exactOptionalPropertyTypes. ESLint flat config. .prettierrc. vitest config with jsdom and src/test/setup.ts (jest-dom matchers).\n- vite.config.ts: proxy /api and /healthz to VITE_API_PROXY_TARGET, default http://localhost:8080.\n- index.html: `<title>Brillio Listings</title>`, the BRANDING \u00a73.1 Google Fonts link, lang=\"en\".\n- src/styles/tokens.css: the \u00a72.1 :root block verbatim, plus `--font-display`, `--font-ui`, the \u00a73.2 sizes/leading as custom properties, spacing (8px grid, 24/16px gutters, 1040px content width, 760px breakpoint noted in a comment since media queries cannot read custom properties).\n- src/styles/global.css: html/body height 100% and overflow hidden, paper background, ink text, Figtree body at 15/22, `font-optical-sizing: auto`, `color-scheme: light`, a `.tabular` utility, reset for buttons/inputs to inherit font.\n- src/styles/shell.module.css: \u00a74.2 grid with rows `auto auto auto minmax(0, 1fr) auto`, results region `overflow-y: auto; overscroll-behavior: contain`, 1040px centered content, gutters per \u00a74.1.\n- src/components/Header: wordmark BRILLIO LISTINGS per \u00a73.2 (Figtree 13/600, +0.16em, uppercase), optional scope label at right in ink-2, 56px tall, hairline below. Test: renders wordmark and optional scope.\n- App.tsx renders the shell with Header and placeholder regions labelled by role.\n- Makefile: dev-web (npm run dev), frontend halves of test, lint (eslint + tsc --noEmit + prettier --check), check.\n\nAcceptance:\n- `npm run dev` shows the header on paper ground with the fonts loaded (check computed font-family in devtools).\n- `npm run build`, `npm test`, and `make lint` all pass.\n- package.json contains only the listed dependencies.\n- No emoji anywhere (BRANDING \u00a78).\n\nValidation: open http://localhost:5173 in a browser (c11-browser skill), confirm the header renders and the document itself does not scroll; attach a screenshot with --role validation.",
-  "done_at": null,
+  "done_at": "2026-10-14T02:25:47Z",
   "evidence_refs": [
     {
       "id": "art_01M4W1VMFHB6FMYMB8P8981EAT",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W2SMAMFTH2Z6WCYBSQM2T8",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W345316DKA55J6NMBF5X4J",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W3456KMT9CJTQZ44TK81QV",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W39TDPTX0KHPDEPP84NS3K",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W3KK82ANSRJRSAXKGYGDWG",
+      "role": "review",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2PXM79XFEJ4SA7B1MXT",
-  "last_event_id": "ev_01M4W281PKF3SAC1VPT7QE2SQ6",
-  "last_status_changed_at": "2026-10-14T02:00:47Z",
+  "last_event_id": "ev_01M4W3NT3XZTVJX6PQ7QNRYXR4",
+  "last_status_changed_at": "2026-10-14T02:25:47Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -42,12 +67,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-7",
-  "status": "review",
+  "status": "done",
   "tags": [
     "frontend"
   ],
   "title": "Frontend scaffold: Vite 8 + React 19 + TS 6.0, lint, Vitest/RTL, API proxy, BRANDING tokens, app shell, Header",
   "type": "task",
-  "updated_at": "2026-10-14T02:00:47Z",
+  "updated_at": "2026-10-14T02:25:47Z",
   "urgency": null
 }

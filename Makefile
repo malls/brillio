@@ -24,13 +24,19 @@ test-api:
 	cd backend && go test -race ./...
 
 # --- Frontend (BC-7) ---
+# Recipes run in frontend/. The sentinel frontend/node_modules/.package-lock.json (written
+# by npm) runs `npm ci` when missing or older than the lockfile; an empty node_modules
+# directory (e.g. a Compose anonymous volume's mount point) does not count as installed.
 .PHONY: dev-web lint-web test-web
-dev-web:
-	@echo 'not yet implemented: dev-web (lands in BC-7)' >&2; exit 1
-lint-web:
-	@echo 'not yet implemented: lint-web (lands in BC-7)' >&2; exit 1
-test-web:
-	@echo 'not yet implemented: test-web (lands in BC-7)' >&2; exit 1
+dev-web: frontend/node_modules/.package-lock.json
+	cd frontend && npm run dev
+lint-web: frontend/node_modules/.package-lock.json
+	cd frontend && npm run lint && npm run typecheck && npm run format:check
+test-web: frontend/node_modules/.package-lock.json
+	cd frontend && npm test
+frontend/node_modules/.package-lock.json: frontend/package-lock.json
+	cd frontend && npm ci
+	touch frontend/node_modules/.package-lock.json
 
 # --- Compose stack (BC-13) ---
 .PHONY: up down smoke

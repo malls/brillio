@@ -47,6 +47,11 @@ exports no classic compiler API, and typescript-eslint (8.71, latest) requires `
 frontend therefore pins TypeScript 6.0.3, the last 6.x release, so ESLint type-aware linting works with no
 workarounds. Moving to TypeScript 7 is a one-line bump once typescript-eslint supports it.
 
+ESLint version (2026-10-14): eslint-plugin-jsx-a11y 6.10.2 (latest) peers `eslint ^3 … ^9`, so the
+frontend pins ESLint 9.39.5, the newest 9.x, with no peer overrides (typescript-eslint and react-hooks
+already accept ^10). Moving to ESLint 10 is a one-line bump once jsx-a11y supports it. `@types/node`
+tracks the Node 24 runtime (24.x), not the newest major.
+
 Rules: no third-party HTTP router, no testify, no ORM. On the frontend, no state library,
 no router, no msw, no icon set. Fewer dependencies means less to defend live.
 
@@ -472,7 +477,7 @@ page; disabled Previous/Next are not focusable (BRANDING.md §5.7). The loading 
 - `useSearchParamsState`: round-trips every param, `popstate` handling, page reset on search, `pageSize` preserved.
 - `SearchPage`: loading → success, loading → empty, validation error mapped to the right field (including `min_gt_max` marking both), network error with Try again, page change issues a new request and aborts the old one, rank numbering continues across pages.
 
-**Lint and checks:** `golangci-lint run` (default linters + `errcheck`, `govet`, `staticcheck`, `revive`), `eslint`, `tsc --noEmit`, `prettier --check`. `make check` runs lint + tests for both halves and must pass before any merge to `master`.
+**Lint and checks:** `golangci-lint run` (default linters + `errcheck`, `govet`, `staticcheck`, `revive`), `eslint`, `tsc -b --noEmit` (plain `tsc --noEmit` on the solution tsconfig checks no files), `prettier --check`. `make check` runs lint + tests for both halves and must pass before any merge to `master`.
 
 ## 9. Extension points (designed for, not built)
 

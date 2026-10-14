@@ -1,0 +1,50 @@
+/* Global base. Tokens come from tokens.css, imported first in main.tsx. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* BRANDING.md section 4.2: the document never scrolls; only the results region does. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Form controls take the UI face and square corners (BRANDING.md section 4.3). */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  border-radius: 0;
+}
+
+/* Tabular figures wherever digits sit in a column (BRANDING.md section 3.3). */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
