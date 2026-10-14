@@ -296,3 +296,25 @@ About 1,000 LOC: components ~490, `keyword.ts` ~45, fixture ~25, tests ~450. One
 ## Open questions
 
 - Non-blocking, for the branding owner (BRANDING §9). At 760px and below, the demo contradicts BRANDING in the ways listed in D1 (monogram size, address/price/gap sizes, price block placement). BC-10 follows the BRANDING text. If the demo is what was intended, the two need reconciling through §9, and BC-14 adjusts the CSS.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+
+Review: fresh-context Opus plan-review sub-agent (headless review skipped: plan > 250 lines, run-state 03:22Z). Verdict APPROVE-WITH-CHANGES.
+
+| # | Concern | Resolution | Section |
+|---|---|---|---|
+| R1 | `.action` copied BC-9's `.clear` (+tracking); the Orchestrator's shared text-button recipe (03:25Z mail, BRANDING §5.8 + demo `.link`) is binding for BC-9/10/11 | `.action` in NoResults and ErrorState is EXACTLY: `font: 500 13px/1 var(--font-ui)`; `color: var(--oxblood)`; `background: none; border: 0; padding: 0`; **no letter-spacing**; `white-space: nowrap; cursor: pointer; text-decoration: none`. `:hover` → `text-decoration: underline; text-underline-offset: 3px` (no colour change). `:focus-visible` → `outline: 2px solid var(--oxblood); outline-offset: 3px`. `:disabled` → `color: var(--ink-3)` (never used here; kept for parity). Keep the `margin-top: 6px` spacing on `.action` (layout, not part of the button recipe). Do not use `--tracking-button`. | §3 NoResults/ErrorState |
+| R2 | Ticket acceptance asks for a visual check of A1 against `docs/branding-demo.html`; jsdom cannot do that | Implementation unchanged. At validation the validator mounts an **uncommitted** throwaway preview (A1, A7, B7 with `['pets']`, NoResults, ErrorState) on vite port 15110 (run-state 15100+N), opens a c11 browser panel in area:11, screenshots ~1100px and 375px next to the demo, attaches them, removes the preview and kills the server. Pending Orchestrator confirmation (mailed as a non-blocking QUESTION); if refused, the check is deferred to BC-12/BC-14 and recorded. | §7.3, §8 |
+| R3 | `.monogram` row omitted the display face | Add `font-family: var(--font-display)` to `.monogram` (Bodoni 26 per BRANDING §5.5). | §3 Monogram |
+| R4 | Ticket says "a visually clear heading"; plan's heading is visually hidden | Keep D5 (BRANDING §5.4 and demo line 136 show no heading; BRANDING §3.2 has no type style for one; a visible heading breaks A1 structural parity). Record this interpretation in `## Open questions` and in the completion comment for BC-12/BC-14/human. | D5, Open questions |
+| R5 | "B7 is the only real description with a capital `Pets`" is false (A4: "Pets welcome.") | Reason becomes: B7 is demo card 2 and real rank 2, and carries a capital `Pets`. Values unchanged (rank 2, score 0.7297, budgetFit 0.9911, recency 0.3376). | §6 |
+| R6 | No `frontend/node_modules` in this worktree; `npx prettier` would fetch an unpinned Prettier | Gate order: `cd frontend && npm ci` first, then `npm run format` (or the repo's pinned prettier via `npx --no-install`), then `make check`, then `npm run build`. | §7.1 |
+| R7 | D8's reason was wrong (demo `.msgbox` centers vertically) and "reuses" could tempt a cross-folder CSS import | Reason: BRANDING §5.9 gives 96px for No results and only "Centered" for Error; ErrorState uses the same 96px top offset for consistency. The rules are **copied** into `ErrorState.module.css`; no component imports another folder's CSS module. | D8 |
+| R8 | ErrorState tests lacked keyboard activation and `type=button` | Add `calls onRetry from the keyboard` and `renders a type=button` to ErrorState.test.tsx. | §5 ErrorState |
+| R9 | 0.8731 attributed to SPEC §5.4 (being corrected by BC-5 to 0.7414) | Keep 0.8731 as the test input; drop the SPEC attribution in the test name/comment. | §5 ScorePill |
+| R10 | Helper `keywordTokens` collides with the `keywordTokens` prop name | Rename the helper to `splitKeyword(keyword: string \| undefined): string[]`; tests renamed accordingly (`splitKeyword splits on whitespace like the server`). The prop stays `keywordTokens` (SPEC §7.4). | D3, §5 keyword.test.ts, §6 |
+| R11 | `text-transform: uppercase` on `.statusLabel` is redundant (formatter returns `PENDING`) | Skip: keep the BRANDING Label style declarations intact (harmless, keeps the label style uniform); add a one-line CSS comment that the formatter already returns uppercase. | §3 ListingCard |
+
+Additional note for the completion comment: BRANDING §3.2/§3.3 mention +0.02em on buttons while the Orchestrator's recipe and the demo `.link` use none; the recipe is binding here — flag the discrepancy to the Orchestrator for BC-14.
+
+Open questions (amended): (1) the ≤760px demo-vs-BRANDING discrepancy (D1, unchanged, non-blocking); (2) "visually clear heading" interpreted as a visually hidden, focusable `h2` "Results" (R4, non-blocking).
