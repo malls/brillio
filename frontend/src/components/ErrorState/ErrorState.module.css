@@ -1,0 +1,49 @@
+/* BRANDING.md section 5.9 Error: centered. Section 5.9 gives 96px from the top for No results
+   only; Error uses the same offset so the two states sit alike. */
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 96px;
+  text-align: center;
+}
+
+/* Section 3.2 State heading: Bodoni Moda 22/26, 400 italic, ink. */
+.heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-address);
+  line-height: var(--leading-address);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* Section 5.8 text button, the shared recipe for every text button (section 2.2 jobs 2 and 3).
+   The 6px top margin is this layout's spacing, not part of the recipe. */
+.action {
+  margin-top: 6px;
+  font: 500 13px/1 var(--font-ui);
+  color: var(--oxblood);
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.action:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.action:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 3px;
+}
+
+.action:disabled {
+  color: var(--ink-3);
+}
