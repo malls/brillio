@@ -2,20 +2,16 @@
  * App shell (BRANDING.md section 4.2): header, filter bar, status line, results, pager.
  * The results row is the only scroller; html and body never scroll (global.css).
  *
- * Row components (Header, FilterBar, StatusLine, Pager) are direct children of .shell and
- * apply padding-inline: var(--inline-pad) and their own hairlines themselves, as Header does.
- * .row exists only for BC-7's placeholder regions; do not wrap real components in it.
- * The 2px loading line (BC-11) goes inside row 2 or 3; the five-row template stays.
+ * Row components (Header, FilterBar, StatusLine, Pager) apply padding-inline: var(--inline-pad)
+ * and their own hairlines themselves, as Header does. Row 2 is an unstyled wrapper holding the
+ * FilterBar and the full-bleed 2px LoadingLine under it, so the five-row template stays
+ * (SearchPage.tsx). With no Pager (first load, no results, error) row 5 collapses to 0.
  */
 .shell {
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-columns: minmax(0, 1fr);
   height: 100%;
-}
-
-.row {
-  padding-inline: var(--inline-pad);
 }
 
 .results {
