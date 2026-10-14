@@ -228,3 +228,37 @@ tokens.css and global.css are untouched (BC-14 owns fixes). Makefile is untouche
 - Decision recorded: the Pager is hidden on `error`. §7.5 lists only ErrorState and the empty StatusLine, and BC-11's
   StatusLine already treats error as "no page on screen".
 - No human decision required.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+
+Review: art_01M4W9XKQPJ88MBHYFZT8JNEVX (PASS, six minors, all triaged obvious; no human questions).
+
+1. **Step 0 / anchors (Step 0, Risks).** Done by the delegator: the branch now contains master @76d6a97 (BC-10 LANDED,
+   merge 5eaacdc) and feat/BC-9-filterbar @13ae060 (merges 1a3c5bb, e5eb493, c52a505; HEAD c52a505). The implementer
+   skips both merges and starts with `cd frontend && npm ci`. Remaining review hold: BC-9 only. If feat/BC-9 gains
+   commits, `git merge --no-ff feat/BC-9-filterbar`; when BC-9 lands, `git merge --no-ff master`. Never rebase.
+2. **Stale list after an error (Wiring `shown`).** Add the guard (option b). Track the last settled status (any status
+   other than `loading`). While the last settled status is `error` and the current status is `loading` or `invalid`,
+   the page keeps the error view: results region renders `<ErrorState onRetry={retry} />`, no Pager, and StatusLine
+   receives the state with `previous` removed (so it reads `Loading` alone during the retry, and its unchanged empty
+   halves on `invalid`). Once a `success`/`empty` settles, normal rendering resumes. Implement it lint-clean (e.g.
+   React's "store information from previous renders" `useState` pattern, or a ref written in an effect); no ref
+   mutation during render if the react-hooks lint flags it. Add test **T12**: 500 → ErrorState; Try again with a
+   `replyLater()`: ErrorState still shown, no cards, StatusLine `Loading`, no Pagination nav; resolve success → cards.
+   Also record in Findings: the ticket's "keep previous results on screen ... on error" contradicts SPEC §7.5 /
+   BRANDING §5.9 (ErrorState replaces the list) and the ticket's own validation item 6; SPEC wins, no SPEC edit needed.
+3. **Harness and T8/T2 (Tests).** Harness rule: every search the page will issue needs a queued entry, including the
+   hook's refetch of a held result. T8: before `history.back()` queue a `replyLater()` for the page-1 refetch (third
+   search call); assert `searchCalls().length === 3`, the third URL has no `page`, A's signal is aborted, then resolve
+   A late with page 2 and assert the first card is still `No. 1`. T7 likewise queues the page-1 refetch. T2: queue a
+   reply for the post-Clear default search and assert no `console.error`.
+4. **Validation item 6.** Start with "navigate to `http://localhost:15112/`" (item 5 leaves `pageSize=3` in the URL,
+   which setSearch would preserve). Expected URL after picking Vienna: `?city=Vienna`. Also check the retry-loading
+   guard of resolution 2 visually: during Try again the list does not reappear before the result.
+5. **Pager vs StatusLine during a page-change load.** No code change. Accepted: for one request the StatusLine reads
+   the previous `Page 1 of N` while the Pager already marks the clicked page. Handed to BC-14 by lattice comment.
+6. **Nested polite live regions (Focus and a11y).** Keep `main` as the polite, `aria-busy` region (only way to announce
+   NoResults/ErrorState without editing BC-10). Explicit decision; handed to BC-14 by lattice comment the question of
+   dropping `aria-live` from ListingList's `section` now that SearchPage owns the region.
+
+Size estimate after resolutions: about 700 LOC added (T12 + guard).

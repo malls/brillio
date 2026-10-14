@@ -1,0 +1,41 @@
+# air configuration for the `api` Compose service (docs/SPEC.md section 10).
+# The working directory is /app, the bind-mounted backend/. The env paths that
+# compose.yaml sets are absolute (/data/...), so they resolve from any cwd.
+# Native development does not use air: `make dev-api` builds to backend/bin/.
+
+root = "."
+# Build output lands in backend/tmp/ on the host (gitignored).
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/api ./cmd/api"
+entrypoint = ["./tmp/api"]
+# sql and yaml: embedded migrations (SPEC 4.1) and the embedded openapi.yaml (SPEC 5.7).
+# .golangci.yml is not watched: its extension is yml.
+include_ext = ["go", "sql", "yaml"]
+exclude_dir = ["tmp", "bin", "testdata", "vendor"]
+# Editing a test does not restart the server.
+exclude_regex = ["_test\\.go$"]
+# Poll instead of inotify: bind-mount file events are unreliable on some macOS
+# Docker file-sharing backends, and the tree is small.
+poll = true
+poll_interval = 500
+delay = 200
+# SIGINT first so the server drains gracefully; SIGKILL if it is still up after 2s.
+send_interrupt = true
+kill_delay = "2s"
+# A failed build keeps the last good binary serving.
+stop_on_error = false
+# Build errors are also written here, inside tmp_dir.
+log = "build-errors.log"
+
+[log]
+time = true
+
+[screen]
+# Keep the Compose log stream readable.
+clear_on_rebuild = false
+
+[misc]
+# Remove backend/tmp/ when the container stops.
+clean_on_exit = true

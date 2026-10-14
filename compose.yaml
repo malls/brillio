@@ -1,0 +1,96 @@
+# Brillio Listings dev stack (docs/SPEC.md section 10).
+#
+#   make up      docker compose up --build    (foreground; Ctrl-C stops it)
+#   make down    docker compose down -v       (removes containers, network and volumes)
+#   make smoke   sh scripts/smoke.sh          (up, assert, tear down)
+#
+# api: Go under air (backend/Dockerfile.dev, backend/.air.toml), rebuilt and
+#      restarted on Go edits, http://localhost:8080.
+# web: the Vite dev server with HMR on http://localhost:5173. It proxies /api and
+#      /healthz to api (frontend/vite.config.ts) and starts once api is healthy.
+#
+# Both services poll for file changes instead of relying on inotify: bind-mount
+# file events are unreliable on some macOS Docker file-sharing backends, and both
+# trees are small, so polling is cheap and behaves the same on every host.
+#
+# Platform: Compose applies DOCKER_DEFAULT_PLATFORM to every service that sets no
+# platform. A shell exporting a foreign one (linux/amd64 on Apple silicon, say)
+# breaks plain `docker compose up`: with the classic builder (DOCKER_BUILDKIT=0)
+# the natively built api image is refused at container create. `make up` and
+# `make smoke` unset it so the stack runs native; by hand, prefix the command with
+# `env -u DOCKER_DEFAULT_PLATFORM`.
+#
+# The project name is fixed, so every command acts only on brillio-* containers,
+# the brillio_default network and brillio_* volumes.
+name: brillio
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    init: true
+    # Every SPEC section 11 variable, set explicitly.
+    environment:
+      PORT: "8080"
+      DB_PATH: /data/listings.db
+      LISTINGS_FILE: /data/sample_listings.json
+      LOG_LEVEL: info
+      CORS_ORIGINS: http://localhost:5173
+      SHUTDOWN_TIMEOUT: 10s
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+      - gomod:/go/pkg/mod
+      - gobuild:/root/.cache/go-build
+    ports:
+      - "8080:8080"
+    # During start_period, probes run every start_interval and failures do not
+    # count: api turns healthy about 2s after its first good build. 180s covers a
+    # cold first build (module download and compile).
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 180s
+      start_interval: 2s
+
+  web:
+    image: node:24-alpine
+    init: true
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - npm ci && exec npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8080
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "300"
+      NPM_CONFIG_AUDIT: "false"
+      NPM_CONFIG_FUND: "false"
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
+    # The anonymous node_modules volume shadows the host's macOS-native modules;
+    # npm ci installs the Linux (musl) builds into it.
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    # 127.0.0.1, not localhost: Vite binds IPv4 only, and busybox wget may resolve
+    # localhost to ::1. 180s covers a cold npm ci.
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5173/"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 180s
+      start_interval: 2s
+
+volumes:
+  gomod: {}
+  gobuild: {}
