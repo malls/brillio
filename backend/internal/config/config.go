@@ -8,7 +8,9 @@
 // duration such as 10s; PORT must be an integer from 1 to 65535; and
 // CORS_ORIGINS must hold at least one comma-separated entry, each a bare
 // http(s)://host[:port] origin with no path, trailing slash, query, fragment,
-// userinfo or "*" wildcard. DB_PATH and LISTINGS_FILE pass through unchecked.
+// userinfo, "*" wildcard or bare trailing colon (a colon with no port), and
+// each is stored with its scheme and host lowercased, as a browser sends them.
+// DB_PATH and LISTINGS_FILE pass through unchecked.
 package config
 
 import (
@@ -50,7 +52,8 @@ type Config struct {
 	ListingsFile string
 	// LogLevel is the minimum level logged (LOG_LEVEL).
 	LogLevel slog.Level
-	// CORSOrigins are the exact origins allowed cross-origin access (CORS_ORIGINS).
+	// CORSOrigins are the exact origins allowed cross-origin access, with
+	// scheme and host lowercased (CORS_ORIGINS).
 	CORSOrigins []string
 	// ShutdownTimeout bounds the graceful drain on SIGINT or SIGTERM (SHUTDOWN_TIMEOUT).
 	ShutdownTimeout time.Duration
@@ -130,7 +133,9 @@ func Load(getenv func(string) string) (Config, error) {
 // parseOrigins splits a comma-separated origin list, trims each entry and drops
 // empty ones. It returns a CORS_ORIGINS error for every entry that is not a
 // bare origin: a browser's Origin header is exactly scheme://host[:port], so
-// anything more (even a trailing slash) could never match.
+// anything more (even a trailing slash or a colon with no port) could never
+// match. Scheme and host are compared case-insensitively and stored lowercased,
+// because a browser always sends them lowercase.
 func parseOrigins(raw string) ([]string, []error) {
 	var (
 		origins []string
@@ -146,14 +151,21 @@ func parseOrigins(raw string) ([]string, []error) {
 			continue
 		}
 		u, err := url.Parse(entry)
+		// url.Parse lowercases the scheme but keeps the host as written, so the
+		// rebuilt origin matches the entry only up to case.
 		if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Hostname() == "" ||
-			u.Scheme+"://"+u.Host != entry {
+			!strings.EqualFold(u.Scheme+"://"+u.Host, entry) {
 			errs = append(errs, fmt.Errorf(
 				"CORS_ORIGINS: %q is not a bare http(s)://host[:port] origin "+
 					"(no path, trailing slash, query, fragment or userinfo)", entry))
 			continue
 		}
-		origins = append(origins, entry)
+		if strings.HasSuffix(u.Host, ":") {
+			errs = append(errs, fmt.Errorf(
+				"CORS_ORIGINS: %q ends in a colon with no port; remove the colon or add a port", entry))
+			continue
+		}
+		origins = append(origins, strings.ToLower(u.Scheme)+"://"+strings.ToLower(u.Host))
 	}
 	if len(origins) == 0 && len(errs) == 0 {
 		errs = append(errs, errors.New("CORS_ORIGINS: at least one origin is required"))
