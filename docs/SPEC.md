@@ -376,8 +376,8 @@ refetch; returning to a query whose result the hook already holds shows that res
 immediately and refetches without a loading state; the hook logs http and network failures
 with the request ID (§7.5), and callers do not log them again.
 
-`useCities()` loads once on mount. If it fails, the City select offers only "Any" and the
-console gets the error; the search still works.
+`useCities()` loads once on mount. If it fails, the City select offers only "Any" (plus the
+URL's city, §7.4) and the console gets the error; the search still works.
 
 ### 7.3 Types and client
 
@@ -442,7 +442,12 @@ typing never fires requests. It mirrors the server's cheap rules client-side (mi
 non-negative numbers, budget > 0) using the exact strings in BRANDING.md §7.2, marks fields
 per §5.2, and disables Search while invalid or loading. Enter in any field submits. Server
 field errors (§5.5) are mapped by `field` + `code` onto the same marks; `min_gt_max` marks
-both price fields and shows under Max price.
+both price fields and shows under Max price. A `value.city` that `cities` lacks (not loaded yet,
+failed, or no listings) is shown as an extra option so the select always shows the applied
+filter. A `value.status` with one status selects it; none or several show Any, and submitting
+then sends no status. Numeric fields are text inputs with a numeric `inputMode`; `type=number`
+cannot show the BRANDING.md §7.1 price format (`$400,000`). Step 1 is enforced as the
+whole-number rule.
 
 ListingCard: the keyword tokens come from the URL state; each case-insensitive match inside
 the one-line description is wrapped in weight 600 (BRANDING.md §5.4). Formatters in
