@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:21:34Z",
+  "created_by": "agent:opus-5.5-plan-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WDQP79JFKTS1PVSDWKGBMY",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WDQP79JFKTS1PVSDWKGBMY.md",
+    "size_bytes": 3482
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Plan review @0b24829 (reviewer: fable sub-agent, decision 04:02Z)",
+  "token_usage": null,
+  "type": "note"
+}

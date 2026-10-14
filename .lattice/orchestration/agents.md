@@ -8,10 +8,10 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 |---|---|---|---|---|---|---|---|---|
 | Orchestrator | all | panel:6 73809EE8-EE77-4F1E-8EE2-8E8B05308939 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | master | /Users/forrest/Code/brillio | dispatch | 2026-10-14T03:13Z | 2026-10-14T00:45Z |
 | Master Validator | all | panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | — | /Users/forrest/Code/brillio | audit loop | 2026-10-14T03:13Z | 2026-10-14T01:20Z |
-| Delegator | BC-12 | panel:29 C4B54149-6B16-46DE-87DF-9AE951C10B13 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-12-search-page | /Users/forrest/Code/brillio-worktrees.noindex/bc-12-search-page | boot | 2026-10-14T03:58Z | 2026-10-14T03:58Z |
 | Delegator | BC-14 | panel:37 7D3FCE66-1BFA-4B9C-942B-2E145C875007 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-14-branding-pass | /Users/forrest/Code/brillio-worktrees.noindex/bc-14-branding-pass | boot | 2026-10-14T04:40Z | 2026-10-14T04:40Z |
 | Delegator | BC-15 | panel:33 99BAECD2-FF68-4004-BAD1-16BFD3D8002B | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-15-readme | /Users/forrest/Code/brillio-worktrees.noindex/bc-15-readme | boot | 2026-10-14T04:40Z | 2026-10-14T04:40Z |
 | Delegator | BC-16 | panel:34 F7120790-4B51-404C-8E80-5E147875C427 | area:9 29806806-32FF-427B-A78B-FA87D1CB29FD | feat/BC-16-extensions-doc | /Users/forrest/Code/brillio-worktrees.noindex/bc-16-extensions-doc | boot | 2026-10-14T04:40Z | 2026-10-14T04:40Z |
+| Delegator | BC-17 | panel:38 8287B289-E303-41D5-B16F-682E5419EAE8 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-17-release-dist | /Users/forrest/Code/brillio-worktrees.noindex/bc-17-release-dist | boot | 2026-10-14T05:18Z | 2026-10-14T05:18Z |
 
 ### Archived (run history)
 
@@ -30,3 +30,4 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 | agent:opus-5.5-delegator (panel:25 93F19093-205B-4276-AD48-2ABEDE335616) | BC-9 | done 04:31Z | Merge 9de440a; landed head 1b8a2a3 = reviewed 13ae060 + orchestrator master merge; FilterBar 113 tests (382 FE total); headless reviews timed out twice (missed the 03:22Z skip-rule mail); created BC-21 (backlog). |
 | agent:opus-5.5-delegator (panel:28 0EE4218B-B323-4CD7-A39F-683C8E5C4D0B) | BC-6 | done 04:44Z | Merge 269f686; head 70518b5; +1360 backend lines (openapi.yaml + embed + sync test + yaml subset test); redocly 0 errors; one headless review started just before the 04:02Z routing mail (PASS, superseded by fable PASS). |
 | agent:opus-5.5-delegator (panel:32 C497296D-B8DC-4AF6-80D4-2131C2273BF6) | BC-14 | died ~04:45Z at in_planning | Its planner sub-agent ran positional `c11 close-panel panel:35`, which closed $C11_PANEL_ID = the delegator panel. Replaced by panel:37. |
+| agent:opus-5.5-delegator (panel:29 C4B54149-6B16-46DE-87DF-9AE951C10B13) | BC-12 | done 05:00Z | Merge b514f8e; head bb78854; +922 lines; 396 FE tests; browser e2e 7/7 with screenshots; 2 review cycles (fable); held for BC-9 as designed; one missed doorbell (nudged). |
