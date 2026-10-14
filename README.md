@@ -156,7 +156,7 @@ Why these choices:
 - **A 30-day half-life.** "A month old counts half" is easy to state and to check, and the curve is smooth: a listing loses a little each day instead of dropping out at a cut-off.
 - **No budget, newest first.** Without a budget the score is recency alone, which falls with age, so results run newest first, as the status line says.
 
-Ties: results sort by the unrounded score, descending, then `listedDate` descending, price ascending, source ascending and id ascending. `(source, id)` is unique, so the order is total and pages never shift between requests. Without a budget, two listings from the same day show the cheaper one first. The API rounds `score`, `budgetFit` and `recency` to four decimals and the UI shows the score to two. Sorting uses full precision, so two cards can show the same score at sequential ranks.
+Ties: results sort by the unrounded score, descending, then `listedDate` descending, price ascending, source ascending and id ascending. `(source, id)` is unique, so the order is total and pages do not shift between requests with the same `scoring.asOf`. Without a budget, two listings from the same day show the cheaper one first. The API rounds `score`, `budgetFit` and `recency` to four decimals and the UI shows the score to two. Sorting uses full precision, so two cards can show the same score at sequential ranks.
 
 The constants live in `backend/internal/domain/scoring.go`: `BudgetWeight = 0.6`, `RecencyWeight = 0.4` and `RecencyHalfLifeDays = 30`. They are code, not configuration, and every response echoes them in its `scoring` block (weights 0 and 1 without a budget). The over-budget factor 2 is a literal in `BudgetFit`, and `MaxPageSize = 100` is in `domain/paginate.go`. The comment at the top of `scoring.go`:
 
