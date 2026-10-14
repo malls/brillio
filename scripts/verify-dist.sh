@@ -184,7 +184,10 @@ reap_up() {
   up_pid=
 }
 
-# leftovers prints the ID of every brillio container, volume and network.
+# leftovers prints the ID of every brillio container, named volume and network,
+# the objects that carry the compose project label. The web container's
+# anonymous node_modules volume has no such label, so it is not listed; make
+# down -v removes it along with the container it is attached to.
 leftovers() {
   f=label=com.docker.compose.project=brillio
   docker ps -a -q --filter "$f"
@@ -400,9 +403,10 @@ fetch "$API/healthz"
 expect "README: $HEALTH_CMD prints $HEALTH_BODY" "$HEALTH_BODY" equals
 fetch "$API/api/cities"
 expect "README: $CITIES_CMD prints the six cities" "$CITIES_BODY" equals
-# Rank order is date-sensitive (recency), so only the count is asserted.
+# Rank order is date-sensitive (recency), so only the count is asserted. The
+# trailing comma makes it exact (not 42): totalPages always follows totalItems.
 fetch "$SEARCH_URL"
-expect 'README: the Springfield search returns four listings' '"totalItems":4' contains
+expect 'README: the Springfield search returns four listings' '"totalItems":4,' contains
 
 echo 'verify-dist: make down'
 if make down; then
