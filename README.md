@@ -16,7 +16,7 @@ Plain `docker compose up` also works. A shell that exports `DOCKER_DEFAULT_PLATF
 env -u DOCKER_DEFAULT_PLATFORM docker compose up
 ```
 
-On Linux with Docker Engine (no Docker Desktop or rootless uid mapping), the stack leaves a root-owned `frontend/node_modules` (an empty mount point) and `data/listings.db` in the checkout, so `make check`, `make dev-web` and `make dev-api` fail on the host. Run `make check` before `make up` and `node_modules` stays yours; after `make down`, `sudo chown -R "$(id -u):$(id -g)" frontend/node_modules data` hands both back.
+On Linux with Docker Engine (without the uid mapping that Docker Desktop and rootless mode provide), the stack leaves a root-owned `frontend/node_modules` (an empty mount point) and `data/listings.db` in the checkout, so `make check`, `make dev-web` and `make dev-api` fail on the host. Running `make check` before `make up` keeps `node_modules` owned by you; after `make down`, `sudo chown -R "$(id -u):$(id -g)" frontend/node_modules data` restores ownership of both.
 
 Without Docker, in two terminals:
 
