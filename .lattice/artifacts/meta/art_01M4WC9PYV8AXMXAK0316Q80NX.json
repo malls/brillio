@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:56:27Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WC9PYV8AXMXAK0316Q80NX",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WC9PYV8AXMXAK0316Q80NX.png",
+    "size_bytes": 114778
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation item 5 back-page1",
+  "token_usage": null,
+  "type": "file"
+}

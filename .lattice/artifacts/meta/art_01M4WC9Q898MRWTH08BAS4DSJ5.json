@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:56:28Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WC9Q898MRWTH08BAS4DSJ5",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WC9Q898MRWTH08BAS4DSJ5.png",
+    "size_bytes": 113387
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation item 6 recovered",
+  "token_usage": null,
+  "type": "file"
+}
