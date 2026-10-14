@@ -62,6 +62,7 @@ func NewRouter(deps Deps) http.Handler {
 	mux.HandleFunc("GET /healthz", a.healthz)
 	mux.HandleFunc("GET /api/cities", a.cities)
 	mux.HandleFunc("GET /api/listings/search", a.searchListings)
+	mux.HandleFunc("GET /api/openapi.yaml", a.openapi)
 
 	h := a.fallbacks(mux)
 	h = a.cors(h)
