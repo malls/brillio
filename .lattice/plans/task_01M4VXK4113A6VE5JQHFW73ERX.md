@@ -135,3 +135,28 @@ module download because `make down -v` drops the volumes, then native npm ci, li
 ## Open question (human, non-blocking; default applies)
 Ship CLAUDE.md and agents.md? Default yes (SPEC §3 and §12). They are Lattice agent instructions that say `.lattice/` exists,
 which the zip leaves out. Excluding them would be `SPEC edit: §12`.
+
+## Plan-Review Cycle 1 Resolutions (AUTHORITATIVE — overrides earlier text on conflict)
+Review: art_01M4WEMR2QYGFJGWXE9M1KYK3E (fable sub-agent), PASS-WITH-NITS. Every finding is obvious; all applied.
+1. Major, dist/ missing (make dist step 4): `mkdir -p dist` before `git archive -o dist/.$name.zip.tmp`.
+2. Minor, reaping `make up` under set -e (verify step 7 bullet 4, step 8): after `make down`, poll `kill -0 "$up_pid"` against a
+   60 s deadline (kill it if still alive), then `wait "$up_pid" || true`. Same reap in cleanup. Never a bare `wait` under errexit.
+3. Minor, body comparisons (step 7 bullet 3): bodies end with a newline (respond.go writeJSON). Compare after whitespace
+   compaction (`tr -d '[:space:]'`, the same `compact` idea as smoke.sh) on both sides; the Springfield check greps the compacted
+   body for `"totalItems":4`.
+4. Minor, bring-up deadline (step 7 bullet 2): one named variable `UP_DEADLINE=400` seconds (api 180 s start_period + web 180 s
+   start_period + margin). smoke.sh (BC-13's file) is not touched.
+5. Minor, dirty-tree warning (make dist step 3): run `git -c core.excludesFile=/dev/null status --porcelain -- . ':(exclude).lattice'`
+   so the always-moving board never triggers it. Evidence bar: clean outside `.lattice/`.
+6. Minor, Risks line 131: read "merge final master", never rebase.
+7. Nit, lsof under errexit (verify step 2): `out=$(lsof -nP -iTCP:8080 -sTCP:LISTEN 2>/dev/null || true)`; refuse when non-empty.
+8. Nit, Ctrl-C (step 8): correct the reasoning in the script comment: `sh`/`make` inherit SIG_IGN for INT in the background job,
+   but `docker compose` re-enables SIGINT, so on Ctrl-C compose may start its own graceful stop alongside the trap's `make down`.
+   Outcome unchanged (down is idempotent, exit 130). On the interrupt path a non-zero `make down` does not change the exit code;
+   N4 tolerates compose's stop output.
+9. Nit, TMPDIR trailing slash (step 4): `base=${TMPDIR:-/tmp}; base=${base%/}; work=$(mktemp -d "$base/brillio-verify.XXXXXX")`;
+   the rm -rf guard checks that `$work` starts with `$base/brillio-verify.`.
+Open question (complex, sent to the human via needs-human; non-blocking for implementation): ship CLAUDE.md and agents.md or
+exclude them with a SPEC §12 edit. Implement with the default (ship). Keep the exclusion pathspecs in one list in scripts/dist.sh
+so the answer is a one-line change plus the §12 sentence; if the answer is "exclude", also drop the arrows/text-symbol carve-outs
+only if the stricter scan then still passes on the shipped tree (otherwise keep them).

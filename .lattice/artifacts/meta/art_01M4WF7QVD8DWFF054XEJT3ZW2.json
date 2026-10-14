@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T05:47:48Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WF7QVD8DWFF054XEJT3ZW2",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WF7QVD8DWFF054XEJT3ZW2.png",
+    "size_bytes": 119248
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "BC-14-default-375.png",
+  "token_usage": null,
+  "type": "file"
+}
