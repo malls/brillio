@@ -164,3 +164,29 @@ only if the stricter scan then still passes on the shipped tree (otherwise keep 
 ## Operator ruling (human:Forrest, 05:40Z, AUTHORITATIVE)
 Ship both CLAUDE.md and agents.md in the zip (honest disclosure of the AI workflow). No SPEC §12 change. The emoji carve-outs
 (arrows block, ©/®/™ alone) stay, because CLAUDE.md:46 and agents.md:41 carry U+2195 in the Lattice status diagram.
+
+## Review Cycle 1 Findings (AUTHORITATIVE — overrides earlier text on conflict)
+Review: art_01M4WGH4SYSN488PZN5YADKS1M (fable sub-agent) at 12ba0df, FAIL implementation-level. Routing per finding:
+1. FIX (Major) Orphaned `docker compose up --build` on interrupt during a long image build (verify-dist.sh cleanup :174-196,
+   reap_up :145-157). `kill "$up_pid"` reaches make and its `sh -c`, but the compose client is a grandchild and is reparented
+   to PID 1, then creates containers/volumes/network after teardown. Fix: in reap_up, signal the background job's whole
+   descendant tree, deepest first (walk `ps -A -o pid= -o ppid=` from $up_pid; POSIX, works on macOS and Linux; no new
+   tool), so the compose client gets TERM; in cleanup call reap_up with a short deadline (10 s) BEFORE `make down`, then
+   `make down`, then a final check that no `com.docker.compose.project=brillio` containers remain (one more `make down` if
+   any), then rm -rf. The normal (non-interrupt) path keeps its current order: make down, then reap with the 60 s deadline.
+   Re-test: a scratch zip whose backend/Dockerfile.dev gains `RUN sleep 90`, TERM the script at +5 s, then 60 s later
+   `docker ps -a --filter label=com.docker.compose.project=brillio`, `docker volume ls --filter ...`, and
+   `pgrep -f 'docker compose up'` are all empty.
+2. FIX (Minor) Port checks are user-scoped with lsof on Linux (:79-82 preflight, :335-339 wait-for-free). Replace both with
+   the curl connect probe scripts/smoke.sh:41-45 already uses (curl exit 7 = nothing listening; user-agnostic), and drop
+   lsof from the required tools. Keep the "port 8080 is in use" refusal text and exit 2.
+3. FIX (Nit) dist.sh:78 excluded line: print per category, e.g. `excluded: .lattice/ (366 files), the two handout PDFs`.
+4. FIX (Nit) dist.sh:57-63: `trap 'rm -f "$tmp"' EXIT INT TERM HUP` (or equivalent) so an interrupted archive leaves no
+   hidden temp zip.
+5. SKIP (Nit) Native-tool refusal before the zip-only checks: plan-conformant deviation accepted at plan review; verify-dist
+   is a maintainer tool for this host, and splitting the exit semantics adds complexity. Comment records it.
+6. FIX the header exit-status list to include 141 (PIPE). SKIP the dingbat-mark observation (U+2713 is not Emoji in Unicode;
+   BRANDING §8 bans emoji, not dingbats; none shipped) and the once-per-descendant directory-name report (cosmetic).
+After the fix: lint (sh -n, dash -n, shellcheck), make check, make dist, and one full verify-dist run on the final tree.
+
+## Reset 2026-10-14 by agent:opus-5.5-delegator

@@ -1,0 +1,3 @@
+# BC-23: verify-dist on a Linux Docker host: root-owned bind-mount paths break native make check and temp cleanup
+
+Found by the BC-17 cycle-2 review (art_01M4WJJ802GNNSTN174BB1MX2R). On a Linux daemon without Docker Desktop's uid mapping, make up creates $root/frontend/node_modules (the web service's anonymous-volume mount point) and the api writes $root/data/listings.db as root inside the bind mounts. scripts/verify-dist.sh then runs npm ci natively (EACCES, make check fails) and cannot rm -rf the temp dir. Not reproduced on macOS (all runs clean). Root cause is compose.yaml (BC-13 design), not BC-17. Options: compose user: for the services, or a documented Linux caveat in the verify-dist header and README.

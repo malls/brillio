@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T07:02:58Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WKHBHY0RNZJE2VP57NWF1C",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WKHBHY0RNZJE2VP57NWF1C.md",
+    "size_bytes": 1215
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review aa2d63a cycle 5 PASS (reviewer: fable sub-agent (decision 04:02Z))",
+  "token_usage": null,
+  "type": "note"
+}
