@@ -1,0 +1,31 @@
+/* BRANDING.md section 5.1: 56px including the hairline below, wordmark left, scope right. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--header-height);
+  padding-inline: var(--inline-pad);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Section 3.2 Wordmark: Figtree 13/16, 600, +0.16em, uppercase. DOM text stays in words. */
+.wordmark {
+  margin: 0;
+  font-size: var(--text-wordmark);
+  line-height: var(--leading-wordmark);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wordmark);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Section 3.2 Label: Figtree 11/14, 500, +0.08em, uppercase, ink-2. */
+.scope {
+  font-size: var(--text-label);
+  line-height: var(--leading-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
