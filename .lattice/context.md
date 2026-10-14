@@ -17,7 +17,7 @@ None.
 ## Conventions
 
 - **Spec first.** Every task description cites docs/SPEC.md and BRANDING.md sections. Deviate only by updating SPEC.md in the same branch and commenting on the task.
-- **Git is local only.** No remote. `master` is the integration branch. One branch per task named `feat/BC-N-short-slug` (link it with `lattice branch-link`). Merge with `git merge --no-ff` only after validation. Conventional commit messages. No emoji in commits, code, docs or UI (BRANDING.md §8).
+- **Git remote.** `origin` is the private GitHub repo `malls/brillio` (added 2026-10-14 at the operator's request; the BC-1 to BC-25 run was local only). Push only when the operator asks. `master` is the integration branch. One branch per task named `feat/BC-N-short-slug` (link it with `lattice branch-link`). Merge with `git merge --no-ff` only after validation. Conventional commit messages. No emoji in commits, code, docs or UI (BRANDING.md §8).
 - **Lifecycle with no PRs.** Full pipeline is still used: in_planning → planned → in_progress → review → in_validation → pr_open → done. Here `pr_open` means "validated branch merged into local master": record validation evidence (`--role validation`) while in in_validation, transition to pr_open, merge `--no-ff` into master, then move to done once the review artifact exists. Never `--force` past a gate.
 - **Validation evidence.** Pure-library, documentation and component-only tasks (BC-3, BC-6, BC-8, BC-9, BC-10, BC-11, BC-15, BC-16) record a one-line N/A justification citing test output. BC-2, BC-4, BC-5, BC-12, BC-13, BC-14 and BC-17 require evidence from a running system (curl output, browser transcript or screenshots).
 - **`make check` must be green** (lint + tests, both halves) before any merge to master.
