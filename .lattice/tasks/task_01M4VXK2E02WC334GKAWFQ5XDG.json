@@ -11,17 +11,23 @@
   ],
   "c11_surface": "panel:24",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 3,
+  "comment_count": 4,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "The search endpoint end to end: strict query parsing, collected validation errors with field codes, the pipeline in one readable function, response mapping, plus the cities endpoint. Spec: docs/SPEC.md \u00a75.2, \u00a75.3, \u00a75.4, \u00a75.5, \u00a76, \u00a78 (httpapi list). Messages for field errors come from BRANDING.md \u00a77.2 where a string exists.\n\nWhy: this is where \"handle invalid input deliberately\" is demonstrated. Unknown params are rejected, all problems are returned together, a page past the end is a 200, and a city with no matches is a 200. The pipeline function is the thing the interviewer reads when adding a requirement, so it must show its stages plainly.\n\nScope (package internal/httpapi):\n- query.go: `ParseSearchQuery(url.Values) (SearchQuery, []FieldError)`. Allowlist of param names; anything else yields `unknown_param`. Empty value = absent. Numbers via strconv.ParseFloat; integers must be whole (`not_an_integer`). Rules and codes per \u00a75.3/\u00a75.5: negative, not_positive, out_of_range (pageSize 1..100, page >= 1), too_long (city 100, keyword 200), invalid_enum (status), min_gt_max reported once on maxPrice. Keyword split on whitespace into lowercase tokens. Status accepts repeats and comma-separated values; absent means all three. Defaults page 1, pageSize 10.\n- search.go: handler for GET /api/listings/search implementing \u00a76 in one function with a comment marking the dedupe slot. Dependencies: a Searcher interface (BC-4 store), a `Now func() time.Time` (main injects time.Now, tests inject a fixed clock). Maps domain output to the \u00a75.4 JSON: rank, relevance rounded to four decimals, budgetFit null without budget, scoring block (weights 0/1 without budget, asOf = now UTC YYYY-MM-DD), appliedFilters with nulls.\n- cities.go: GET /api/cities per \u00a75.2.\n- Tests per \u00a78 httpapi list with httptest and a seeded :memory: store: every rule returns 400 with the right code and all errors collected; unknown param; page past end is 200 with empty items and correct metadata; empty city is 200 with totalItems 0; happy path for targetBudget=450000&city=Springfield with a fixed clock asserts rank order and the exact relevance numbers computed from \u00a76.2; status filter; keyword with %; X-Request-ID present on every response.\n\nAcceptance:\n- Response bodies match \u00a75.4 and \u00a75.5 field for field (a test unmarshals into a struct with DisallowUnknownFields both ways).\n- `make check` green.\n- The pipeline function reads top to bottom as parse, search, [dedupe slot], rank, paginate, respond.\n\nValidation: against the running API, curl the \u00a710 smoke queries plus status=pending, keyword=%25 (encoded percent), pageSize=0, and minprice=1 (lowercase typo); paste the responses with --role validation.",
   "done_at": null,
-  "evidence_refs": [],
+  "evidence_refs": [
+    {
+      "id": "art_01M4W58G75R2QWP2A8RQZQAR1H",
+      "role": "plan-review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK2E02WC334GKAWFQ5XDG",
-  "last_event_id": "ev_01M4W46NQ21KQQFP9F24X9C1J9",
-  "last_status_changed_at": "2026-10-14T02:34:59Z",
+  "last_event_id": "ev_01M4W5AQ0TRVJJGHZD2F42002J",
+  "last_status_changed_at": "2026-10-14T02:44:50Z",
   "linked_files": [],
   "priority": "critical",
   "relationships_out": [
@@ -43,12 +49,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-5",
-  "status": "in_planning",
+  "status": "planned",
   "tags": [
     "backend"
   ],
   "title": "Search API: strict query parsing, validation with field codes, pipeline handler, cities endpoint",
   "type": "task",
-  "updated_at": "2026-10-14T02:34:59Z",
+  "updated_at": "2026-10-14T02:54:40Z",
   "urgency": null
 }

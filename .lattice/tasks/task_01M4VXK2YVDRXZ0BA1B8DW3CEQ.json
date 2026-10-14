@@ -1,7 +1,16 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-9-filterbar",
+      "linked_at": "2026-10-14T02:57:00Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:25",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
   "comment_count": 0,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
@@ -11,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK2YVDRXZ0BA1B8DW3CEQ",
-  "last_event_id": "ev_01M4VXK5F0RWWETM33GKA7HHKM",
-  "last_status_changed_at": "2026-10-14T00:39:26Z",
+  "last_event_id": "ev_01M4W5EZAWHWF4M8KRMVYPQQ6R",
+  "last_status_changed_at": "2026-10-14T02:57:00Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -27,12 +36,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-9",
-  "status": "backlog",
+  "status": "in_planning",
   "tags": [
     "frontend"
   ],
   "title": "FilterBar: seven fields, client-side validation with exact copy, server error mapping, Search and Clear",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:28Z",
+  "updated_at": "2026-10-14T02:57:00Z",
   "urgency": null
 }
