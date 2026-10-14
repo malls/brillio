@@ -65,6 +65,7 @@ trap cleanup EXIT
 trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
+trap 'exit 141' PIPE
 
 # --- 3. Bring-up.
 echo 'smoke: docker compose up -d --build --wait'
