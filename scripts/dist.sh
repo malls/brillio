@@ -54,12 +54,13 @@ if [ -n "$dirty" ]; then
 fi
 
 mkdir -p dist
-rm -f "$tmp"
-# Written beside the target and renamed, so a failure leaves no partial zip.
-if ! git archive --format=zip --prefix="$name/" -o "$tmp" HEAD -- . "$@"; then
-  rm -f "$tmp"
-  die 'git archive failed'
-fi
+# Written beside the target and renamed, so neither a failure nor an interrupt
+# leaves a partial zip.
+trap 'rm -f "$tmp"' EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+git archive --format=zip --prefix="$name/" -o "$tmp" HEAD -- . "$@" || die 'git archive failed'
 mv -f "$tmp" "$out"
 
 bytes=$(($(wc -c <"$out")))
@@ -71,9 +72,21 @@ per_top=$(printf '%s\n' "$files" |
   awk -F/ '{ k = (NF > 1) ? $1 "/" : ""; n[k]++ } END { for (k in n) print k, n[k] }' |
   sort | awk '{ s = s (NR > 1 ? ", " : "") (NF > 1 ? $2 " " $1 : $1 " root") } END { print s }')
 
+# Tracked files each plain exclusion drops: "366 .lattice/, 1 Instructions.pdf".
+# git ls-tree takes no pathspec magic, so the globs (nothing tracked) are left
+# to the total.
+dropped=
+for x in "$@"; do
+  p=${x#':(exclude)'}
+  [ "$p" != "$x" ] || continue
+  n=$(($(git ls-tree -r --name-only HEAD -- "$p" | wc -l)))
+  if [ -d "$p" ]; then p=$p/; fi
+  [ "$n" -eq 0 ] || dropped="$dropped${dropped:+, }$n $p"
+done
+
 echo "dist: source   HEAD $head"
 echo "dist: wrote    $out"
 echo "dist: size     $bytes bytes ($(((bytes + 1023) / 1024)) KiB)"
 echo "dist: files    $((count)) ($per_top)"
-echo "dist: excluded $((tracked - count)) tracked files (the exclusion list in scripts/dist.sh)"
+echo "dist: excluded $((tracked - count)) tracked files (${dropped:-none})"
 echo "dist: check it with: scripts/verify-dist.sh $out"

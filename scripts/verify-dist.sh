@@ -9,10 +9,10 @@
 #
 # Exit status: 0 pass; 1 a check failed; 2 refused (usage, a missing tool,
 # Docker not running, port 8080 or 5173 in use, a brillio stack exists);
-# 129, 130 or 143 on HUP, INT or TERM.
+# 129, 130, 143 or 141 on HUP, INT, TERM or PIPE.
 #
-# POSIX sh. Needs docker (with compose), curl, unzip, perl, make and lsof, and
-# for make check go, node, npm and golangci-lint (it runs natively, as the
+# POSIX sh. Needs docker (with compose), curl, unzip, perl and make, and for
+# make check go, node, npm and golangci-lint (it runs natively, as the
 # README says). Set TMPDIR to a directory Docker can bind-mount if the default
 # temporary directory is not shared with Docker.
 set -eu
@@ -58,6 +58,14 @@ bad() {
   printf 'FAIL  %s\n' "$1"
 }
 
+# port_free PORT: curl exit 7 is "connection refused": nothing listens there,
+# whichever user owns the listener.
+port_free() {
+  rc=0
+  curl -q --noproxy '*' -s -o /dev/null --max-time 2 "http://localhost:$1/" || rc=$?
+  [ "$rc" -eq 7 ]
+}
+
 # --- 1. Usage and preflight. No trap yet: nothing to clean up, and a stack this
 # script did not start is never torn down.
 [ "$#" -eq 1 ] || refuse 'usage: scripts/verify-dist.sh <zip>'
@@ -70,15 +78,14 @@ zip=$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")
 bytes=$(($(wc -c <"$zip")))
 
 missing=
-for t in docker curl unzip perl make lsof go node npm golangci-lint; do
+for t in docker curl unzip perl make go node npm golangci-lint; do
   command -v "$t" >/dev/null 2>&1 || missing="$missing $t"
 done
 [ -z "$missing" ] || refuse "not installed:$missing (make check runs natively; see the README's tool table)"
 docker info >/dev/null 2>&1 || refuse 'docker is not running (docker info failed)'
 docker compose version >/dev/null 2>&1 || refuse 'docker compose is not available'
 for p in 8080 5173; do
-  out=$(lsof -nP -iTCP:"$p" -sTCP:LISTEN 2>/dev/null || true)
-  [ -z "$out" ] || refuse "port $p is in use"
+  port_free "$p" || refuse "port $p is in use"
 done
 existing=$(docker ps -a -q --filter label=com.docker.compose.project=brillio) ||
   refuse 'docker ps failed'
@@ -140,20 +147,49 @@ root=$work/$top
 stack=0
 up_pid=
 
-# reap_up SECONDS: wait up to SECONDS for the background make up to exit, kill
-# it if it is still alive, then collect it. Never a bare wait under errexit.
+# proc_tree PID: PID and every process under it, deepest first.
+proc_tree() {
+  ps -A -o pid= -o ppid= | awk -v root="$1" '
+    { up[$1] = $2 }
+    END {
+      for (p in up) {
+        d = 0
+        for (q = p; q != root && (q in up) && d < 64; q = up[q]) d++
+        if (q == root) print d, p
+      }
+    }' | sort -rn | awk '{ print $2 }'
+}
+
+# reap_up SECONDS: give the background make up SECONDS to exit by itself, then
+# TERM it and every process under it, deepest first, and KILL what is left 10
+# seconds later. Killing make alone is not enough: the docker compose client is
+# its grandchild, would be reparented to PID 1 and go on building and starting
+# the stack after the teardown. Never a bare wait under errexit.
 reap_up() {
   [ -n "$up_pid" ] || return 0
   d=$(($(date +%s) + $1))
-  while kill -0 "$up_pid" 2>/dev/null; do
-    if [ "$(date +%s)" -ge "$d" ]; then
-      kill "$up_pid" 2>/dev/null || true
-      break
-    fi
+  while kill -0 "$up_pid" 2>/dev/null && [ "$(date +%s)" -lt "$d" ]; do
     sleep 1
   done
+  if kill -0 "$up_pid" 2>/dev/null; then
+    pids=$(proc_tree "$up_pid")
+    for p in $pids; do kill "$p" 2>/dev/null || true; done
+    d=$(($(date +%s) + 10))
+    for p in $pids; do
+      while kill -0 "$p" 2>/dev/null && [ "$(date +%s)" -lt "$d" ]; do sleep 1; done
+      kill -s KILL "$p" 2>/dev/null || true
+    done
+  fi
   wait "$up_pid" 2>/dev/null || true
   up_pid=
+}
+
+# leftovers prints the ID of every brillio container, volume and network.
+leftovers() {
+  f=label=com.docker.compose.project=brillio
+  docker ps -a -q --filter "$f"
+  docker volume ls -q --filter "$f"
+  docker network ls -q --filter "$f"
 }
 
 # diagnose prints the stack state, recent logs and the make up log, before the
@@ -169,8 +205,9 @@ diagnose() {
 
 # Ctrl-C reaches every process in the terminal's process group. The shell and
 # make in the background make up job inherit SIGINT ignored, but docker compose
-# re-enables it, so it may start its own graceful stop alongside the make down
-# below. Either way the stack goes: make down is idempotent.
+# re-enables it and starts its own stop, which reap_up gives 10 seconds. A TERM
+# or HUP reaches this script alone, so reap_up stops the compose client itself.
+# Either way it is gone before make down, so nothing builds the stack again.
 cleanup() {
   status=$?
   set +e # an echo into a dead stdout (EPIPE) must not skip the teardown
@@ -180,14 +217,20 @@ cleanup() {
     if [ "$status" -ne 0 ] || [ "$fail" -ne 0 ]; then
       diagnose
     fi
+    reap_up 10
     echo 'verify-dist: teardown: make down'
     if ! (cd "$root" && make down); then
       bad 'teardown: make down'
       # On a failure or interrupt path the first status stands.
       [ "$status" -ne 0 ] || status=1
     fi
+    # A last look: nothing of the stack may outlive the run.
+    [ -z "$(leftovers)" ] || (cd "$root" && make down)
+    if [ -n "$(leftovers)" ]; then
+      bad 'teardown: no brillio container, volume or network is left'
+      [ "$status" -ne 0 ] || status=1
+    fi
   fi
-  reap_up 60
   case $work in
     "$base"/brillio-verify.?*) rm -rf "$work" ;;
   esac
@@ -331,13 +374,6 @@ expect() {
   bad "$(printf '%s (HTTP %s: %s)' "$1" "$code" "$excerpt")"
 }
 
-# ports_free: nothing listens on 8080 or 5173.
-ports_free() {
-  for p in 8080 5173; do
-    [ -z "$(lsof -nP -iTCP:"$p" -sTCP:LISTEN 2>/dev/null || true)" ] || return 1
-  done
-}
-
 # make up runs in the foreground until Ctrl-C; this script stands in for the
 # user's terminal, so it runs in the background with its output in a log.
 echo "verify-dist: make up (background; log in $work/make-up.log)"
@@ -378,7 +414,7 @@ fi
 reap_up 60
 # make smoke refuses a port still held, so wait for Docker to release both.
 d=$(($(date +%s) + 30))
-until ports_free; do
+until port_free 8080 && port_free 5173; do
   if [ "$(date +%s)" -ge "$d" ]; then
     bad 'make down: ports 8080 and 5173 are free within 30s'
     exit 1
