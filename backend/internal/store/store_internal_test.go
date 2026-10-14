@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 	"testing/fstest"
+
+	"brillio/backend/internal/domain"
 )
 
 // openMemory opens a migrated ":memory:" store and closes it at cleanup.
@@ -193,4 +195,61 @@ CREATE TABLE t (v TEXT NOT NULL);`),
 		[]string{"0001_init.sql", "0002_insert.sql", "0003_bad.sql"}; !slices.Equal(got, want) {
 		t.Errorf("schema_migrations = %q, want %q", got, want)
 	}
+}
+
+func TestBuildSearch(t *testing.T) {
+	ptr := func(v float64) *float64 { return &v }
+	beds := 3
+
+	t.Run("all filters", func(t *testing.T) {
+		f := domain.SearchFilter{
+			MinPrice:      ptr(123456),
+			MaxPrice:      ptr(654321),
+			MinBedrooms:   &beds,
+			City:          "  Zzcity' OR 1=1 --  ",
+			Keyword:       "ZZTOKEN-ONE zztoken%two",
+			KeywordTokens: []string{"ZZTOKEN-ONE", " ", "zztoken%two"},
+			Statuses:      []domain.ListingStatus{domain.StatusActive, domain.StatusPending},
+		}
+		query, args := buildSearch(f)
+		wantQuery := "SELECT id, source, address, city, state, zip, price, bedrooms, bathrooms, sqft, " +
+			"latitude, longitude, listed_date, status, description FROM listings " +
+			"WHERE price >= ? AND price <= ? AND bedrooms >= ? AND city = ? COLLATE NOCASE " +
+			"AND instr(lower(description), ?) > 0 AND instr(lower(description), ?) > 0 " +
+			"AND status IN (?, ?) ORDER BY source, id"
+		if query != wantQuery {
+			t.Errorf("query =\n%s\nwant\n%s", query, wantQuery)
+		}
+		wantArgs := []any{123456.0, 654321.0, 3, "Zzcity' OR 1=1 --", "zztoken-one", "zztoken%two", "active", "pending"}
+		if !slices.Equal(args, wantArgs) {
+			t.Errorf("args = %#v, want %#v", args, wantArgs)
+		}
+		for _, v := range []string{"123456", "654321", "Zzcity", "zztoken", "ZZTOKEN", "active", "pending", "'", "%"} {
+			if strings.Contains(query, v) {
+				t.Errorf("query text contains the filter value %q: %s", v, query)
+			}
+		}
+	})
+
+	t.Run("no filters", func(t *testing.T) {
+		query, args := buildSearch(domain.SearchFilter{City: "   ", Keyword: "x", KeywordTokens: []string{"", " "}})
+		want := "SELECT id, source, address, city, state, zip, price, bedrooms, bathrooms, sqft, " +
+			"latitude, longitude, listed_date, status, description FROM listings ORDER BY source, id"
+		if query != want {
+			t.Errorf("query = %q, want %q", query, want)
+		}
+		if len(args) != 0 {
+			t.Errorf("args = %#v, want none", args)
+		}
+	})
+
+	t.Run("one status", func(t *testing.T) {
+		query, args := buildSearch(domain.SearchFilter{Statuses: []domain.ListingStatus{domain.StatusSold}})
+		if !strings.HasSuffix(query, " FROM listings WHERE status IN (?) ORDER BY source, id") {
+			t.Errorf("query = %q, want a single-placeholder status clause", query)
+		}
+		if !slices.Equal(args, []any{"sold"}) {
+			t.Errorf("args = %#v, want [sold]", args)
+		}
+	})
 }
