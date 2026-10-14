@@ -348,8 +348,9 @@ The query string is the state. Param names are identical to §5.3 so a search UR
 shareable and the API call is a direct translation. `useSearchParamsState()` reads
 `window.location.search` on mount, writes with `history.pushState`, and listens to
 `popstate`. Submitting the filter bar writes the new filters with `page` omitted (= 1).
-Changing page writes only `page`. Clear writes an empty query string. Absent params mean
-defaults. `pageSize` is never written by the UI but is preserved if present.
+Changing page writes only `page`. Clear writes an empty query string except for `pageSize`,
+which is preserved like everywhere else. Absent params mean defaults. `pageSize` is never
+written by the UI but is preserved if present.
 
 ### 7.2 Fetch lifecycle
 
@@ -362,11 +363,17 @@ loading so the list does not blank (BRANDING.md §5.9).
 type SearchState =
   | { status: 'idle' }
   | { status: 'loading'; previous?: SearchResponse }
-  | { status: 'success'; data: SearchResponse }        // data.items.length > 0
+  | { status: 'success'; data: SearchResponse }        // totalItems > 0; items may be empty on a page past the end
   | { status: 'empty'; data: SearchResponse }          // totalItems === 0
   | { status: 'invalid'; error: ValidationError; previous?: SearchResponse }
   | { status: 'error'; error: ApiError; previous?: SearchResponse };
 ```
+
+`useListingSearch` returns `{ state, retry }`; `retry()` re-runs the current params (Try
+again); params are compared by their serialized query, so an equal new object does not
+refetch; returning to a query whose result the hook already holds shows that result
+immediately and refetches without a loading state; the hook logs http and network failures
+with the request ID (§7.5), and callers do not log them again.
 
 `useCities()` loads once on mount. If it fails, the City select offers only "Any" and the
 console gets the error; the search still works.
