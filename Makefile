@@ -50,6 +50,8 @@ smoke:
 	sh scripts/smoke.sh
 
 # --- Release (BC-17) ---
+# dist writes dist/brillio-listings-YYYYMMDD.zip from the committed tree at HEAD;
+# scripts/verify-dist.sh <zip> checks it from a fresh directory (SPEC section 12).
 .PHONY: dist
 dist:
-	@echo 'not yet implemented: dist (lands in BC-17)' >&2; exit 1
+	sh scripts/dist.sh

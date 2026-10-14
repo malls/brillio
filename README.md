@@ -16,6 +16,8 @@ Plain `docker compose up` also works. A shell that exports `DOCKER_DEFAULT_PLATF
 env -u DOCKER_DEFAULT_PLATFORM docker compose up
 ```
 
+On Linux with Docker Engine (without the uid mapping that Docker Desktop and rootless mode provide), the stack leaves a root-owned `frontend/node_modules` (an empty mount point) and `data/listings.db` in the checkout, so `make check`, `make dev-web` and `make dev-api` fail on the host. Running `make check` before `make up` keeps `node_modules` owned by you; after `make down`, `sudo chown -R "$(id -u):$(id -g)" frontend/node_modules data` restores ownership of both.
+
 Without Docker, in two terminals:
 
 ```sh
@@ -49,13 +51,15 @@ Pinned versions: `modernc.org/sqlite` v1.60.1 is the only direct Go dependency. 
 
 ```
 compose.yaml               dev stack: api (Go under air), web (Vite)
-Makefile                   check, lint, test, dev-api, dev-web, up, down, smoke
+Makefile                   check, lint, test, dev-api, dev-web, up, down, smoke, dist
 BRANDING.md                design system: color, type, components, copy
 docs/SPEC.md               engineering contract
 docs/EXTENSIONS.md         extension playbook
 docs/branding-demo.html    reference rendering of BRANDING.md
 data/sample_listings.json  the 12 listings, feeds MLS_A and MLS_B
 scripts/smoke.sh           make smoke
+scripts/dist.sh            make dist: the release zip
+scripts/verify-dist.sh     checks a release zip from a fresh directory
 backend/
   go.mod, go.sum
   openapi.yaml, openapi.go   OpenAPI 3.1 document, embedded in the binary
