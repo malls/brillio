@@ -127,7 +127,8 @@ inside a transaction on open.
 
 On startup the API reads `LISTINGS_FILE`, validates every record, normalizes it, and upserts
 with `ON CONFLICT(source, id) DO UPDATE`. Validation: all fields present, `status` in the
-enum, `listedDate` parses as `YYYY-MM-DD`, `price >= 0`, `bedrooms >= 0`, `sqft >= 0`.
+enum, `listedDate` parses as `YYYY-MM-DD`, `price >= 0`, `bedrooms >= 0`, `sqft >= 0`,
+`id` and `source` non-empty after trimming, and `(source, id)` unique within the file.
 Normalization: trim every string, collapse internal whitespace in `city` and `state`,
 uppercase `state`. Any invalid record fails the whole seed and the process exits non-zero
 with a log line naming the record index and the problem. Log the count seeded at info level.

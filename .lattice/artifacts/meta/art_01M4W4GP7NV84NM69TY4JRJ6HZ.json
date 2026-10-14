@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T02:40:27Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4W4GP7NV84NM69TY4JRJ6HZ",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4W4GP7NV84NM69TY4JRJ6HZ.md",
+    "size_bytes": 9656
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "code-review (review)",
+  "token_usage": null,
+  "type": "file"
+}
