@@ -107,7 +107,14 @@ export function SearchPage() {
         <LoadingLine active={loading} />
       </div>
       <StatusLine state={holdError ? withoutPrevious(state) : state} />
-      <main className={shell.results} aria-label="Results" aria-live="polite" aria-busy={loading}>
+      <main
+        className={shell.results}
+        aria-label="Results"
+        aria-live="polite"
+        aria-busy={loading}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the results scroller must be keyboard-scrollable (SPEC section 7.6)
+        tabIndex={0}
+      >
         {results}
       </main>
       {shown !== undefined && (

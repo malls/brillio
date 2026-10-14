@@ -14,11 +14,12 @@ export interface ListingListProps {
 }
 
 // BRANDING.md section 5.4: the cards in rank order, a hairline above every card but the first.
-// The region is a polite live region (SPEC section 7.6) labelled by a heading that script can
-// focus. The heading is visually hidden: BRANDING and the demo show no heading above the cards.
+// The live region is SearchPage's <main> (SPEC section 7.6); this section is labelled by its
+// heading only. Script can focus the heading, which is visually hidden: BRANDING and the demo
+// show no heading above the cards.
 export function ListingList({ items, keywordTokens }: ListingListProps) {
   return (
-    <section className={styles.region} aria-labelledby={RESULTS_HEADING_ID} aria-live="polite">
+    <section className={styles.region} aria-labelledby={RESULTS_HEADING_ID}>
       <h2 id={RESULTS_HEADING_ID} className={styles.heading} tabIndex={-1}>
         Results
       </h2>

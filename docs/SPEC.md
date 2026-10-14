@@ -482,7 +482,8 @@ Rendered exactly as BRANDING.md §5.9. In engineering terms:
 Every input has a `<label>`; the results region is `aria-live="polite"` and `aria-busy`
 while loading; the pager uses real `<button>`s with `aria-current="page"` on the current
 page; disabled Previous/Next are not focusable (BRANDING.md §5.7). The loading line has
-`role="progressbar"` with an accessible name. Keyboard-only use must work end to end. Under
+`role="progressbar"` with an accessible name. Keyboard-only use must work end to end. The
+results region is focusable (`tabindex="0"`) so the keyboard can scroll it. Under
 `prefers-reduced-motion: reduce` the loading line is static (BRANDING.md §6).
 
 ## 8. Testing requirements
