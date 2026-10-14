@@ -68,6 +68,7 @@ no router, no msw, no icon set. Fewer dependencies means less to defend live.
   docs/EXTENSIONS.md      live-session extension playbook (BC-16)
   docs/branding-demo.html reference rendering of BRANDING.md (owned by branding)
   data/sample_listings.json
+  scripts/smoke.sh        make smoke: stack up, API and proxy assertions, teardown (§10)
   backend/
     go.mod, go.sum
     cmd/api/main.go                 wiring only: config, store, server, shutdown
@@ -89,7 +90,6 @@ no router, no msw, no icon set. Fewer dependencies means less to defend live.
     src/pages/          SearchPage.tsx
     src/styles/         tokens.css, global.css, shell.module.css
     src/test/           setup.ts, fixtures.ts
-    Dockerfile.dev
 ```
 
 ## 4. Data model
