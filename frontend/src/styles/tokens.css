@@ -1,0 +1,76 @@
+/*
+ * Design tokens. BRANDING.md is the source of truth; every value below is named there.
+ * BC-7 owns this file; later tickets fix values here rather than redefining them.
+ */
+
+/* BRANDING.md section 2.1, byte-for-byte. Light only (section 2.5). */
+/* prettier-ignore */
+:root {
+  --paper: #F6F5F1; --stone: #E8E7E1; --line: #D9D7D0;
+  --ink: #161616; --ink-2: #6E6C66; --ink-3: #A3A19A;
+  --oxblood: #7A1F2B; --oxblood-deep: #5E1620;
+  color-scheme: light;
+}
+
+:root {
+  /* Section 3.1 faces: Bodoni Moda for the property, Figtree for the tool. */
+  --font-display: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+  --font-ui: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Section 3.2 scale: --text-* font size, --leading-* line height, --tracking-* letter spacing. */
+  --text-price: 28px;
+  --leading-price: 31px;
+  --tracking-price: -0.01em;
+  /* Address; the state heading reuses it in italic. */
+  --text-address: 22px;
+  --leading-address: 26px;
+  --text-monogram: 26px;
+  --leading-monogram: 1;
+  --text-body: 15px;
+  --leading-body: 22px;
+  --text-description: 14px;
+  --leading-description: 20px;
+  /* Meta; also the status line, pager and score. */
+  --text-meta: 13px;
+  --leading-meta: 18px;
+  --text-button: 13px;
+  --leading-button: 1;
+  --tracking-button: 0.02em;
+  --text-wordmark: 13px;
+  --leading-wordmark: 16px;
+  --tracking-wordmark: 0.16em;
+  --text-label: 11px;
+  --leading-label: 14px;
+  --tracking-label: 0.08em;
+  --text-rank: 11px;
+  --leading-rank: 1.3;
+  --tracking-rank: 0.04em;
+  /* Page heading (24/29) is omitted: BRANDING.md says it is not used inside the app. */
+
+  /* Sections 4.1 grid, 4.2 shell, 5.1 header, 5.7 pager. */
+  --grid: 8px;
+  --gap-label: 4px;
+  --gutter: 24px;
+  --content-width: 1040px;
+  /*
+   * Rows stay full-bleed (hairlines span the viewport); content sits in a centered
+   * --content-width column with at least --gutter on each side. 100% resolves against the
+   * containing block of the element that uses it, which for shell rows is the viewport width.
+   */
+  --inline-pad: max(var(--gutter), calc((100% - var(--content-width)) / 2));
+  --card-padding-block: 20px;
+  --card-column-gap: 20px;
+  --monogram-width: 72px;
+  --header-height: 56px;
+  --pager-height: 48px;
+}
+
+/*
+ * Breakpoint 760px (BRANDING.md section 4.4). Media queries cannot read custom properties,
+ * so components write @media (max-width: 760px) literally.
+ */
+@media (max-width: 760px) {
+  :root {
+    --gutter: 16px;
+  }
+}
