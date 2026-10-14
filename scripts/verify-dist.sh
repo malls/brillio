@@ -187,7 +187,8 @@ reap_up() {
 # leftovers prints the ID of every brillio container, named volume and network,
 # the objects that carry the compose project label. The web container's
 # anonymous node_modules volume has no such label, so it is not listed; make
-# down -v removes it along with the container it is attached to.
+# down (docker compose down -v) removes it along with the container it is
+# attached to.
 leftovers() {
   f=label=com.docker.compose.project=brillio
   docker ps -a -q --filter "$f"
