@@ -6,19 +6,20 @@ TASK_UUID=task_01M4VXK2J03TXW4B4D9KGWQ145
 TITLE=OpenAPI 3.1 document, embedded and served at /api/openapi.yaml, with param sync test
 WORKTREE=/Users/forrest/Code/brillio-worktrees.noindex/bc-6-openapi
 BRANCH=feat/BC-6-openapi
-REVIEW_BASE=__REVIEW_BASE__
-ANCHOR=__ANCHOR__
+REVIEW_BASE=master   (review only after BC-5 has landed — note 1)
+ANCHOR=feat/BC-5-search-api @75530c0 (BC-5 in review) + master @0e6730f merged at creation
 PORTS=API 18006 (PORT=18006, DB_PATH=:memory:)
-AREA=__AREA__
+AREA=area:9
 ```
 
 Read `/Users/forrest/Code/brillio/.lattice/orchestration/prompts/delegator-brief.md` now and follow it.
 
 ## BC-6 notes (binding)
 
-1. **Anchor.** If `ANCHOR` names `feat/BC-5-search-api`, your branch was cut from BC-5's in-review branch. Review your own
-   diff against `REVIEW_BASE`; if BC-5 gains commits, `git merge feat/BC-5-search-api`; when it lands, `git merge master`
-   and review against `master`. Never rebase.
+1. **Anchor.** Your branch was cut from BC-5's in-review branch with current master merged in, so a diff against either
+   one alone shows foreign files. If BC-5 gains commits, `git merge feat/BC-5-search-api`. **Do not enter `review` until
+   BC-5 has landed on master** (`git log --oneline master | grep BC-5`); if you get there first, mail the Orchestrator
+   `HOLD BC-6 waiting for BC-5` and wait. Then `git merge master`, re-run the gate, and review against `master`. Never rebase.
 2. **Contract as BC-5 left it.** Read BC-5's SPEC §5.3/§5.5 edits: the field-error code enum includes the new
    `malformed_query` (pseudo-field `query`, run-state decision 03:00Z) and the §5.4 example score is the corrected
    value. The document's code enum and examples must match the SPEC text exactly.

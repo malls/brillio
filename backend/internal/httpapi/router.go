@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"slices"
+	"time"
 )
 
 // Pinger reports whether a backing dependency, such as the database, is
@@ -24,9 +25,16 @@ type Deps struct {
 	CORSOrigins []string
 	// Pinger is checked by GET /healthz. Nil means there is nothing to check.
 	Pinger Pinger
-
-	// Search dependencies (the searcher, the cities source and a
-	// Now func() time.Time clock) are added here as fields.
+	// Searcher runs the query behind GET /api/listings/search. It must be set
+	// when that route is served: nil is a wiring bug, and the route panics
+	// into the recovery middleware's 500.
+	Searcher Searcher
+	// Cities lists the names GET /api/cities returns. Like Searcher, it must
+	// be set when its route is served.
+	Cities CityLister
+	// Now is the request clock that search ages listings against. Nil means
+	// time.Now.
+	Now func() time.Time
 }
 
 // api holds the dependencies shared by every handler and middleware.
@@ -41,6 +49,9 @@ type api struct {
 // unsupported methods (405).
 func NewRouter(deps Deps) http.Handler {
 	deps.CORSOrigins = slices.Clone(deps.CORSOrigins)
+	if deps.Now == nil {
+		deps.Now = time.Now
+	}
 	log := deps.Logger
 	if log == nil {
 		log = slog.New(slog.DiscardHandler)
@@ -49,6 +60,8 @@ func NewRouter(deps Deps) http.Handler {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", a.healthz)
+	mux.HandleFunc("GET /api/cities", a.cities)
+	mux.HandleFunc("GET /api/listings/search", a.searchListings)
 
 	h := a.fallbacks(mux)
 	h = a.cors(h)
