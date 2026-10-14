@@ -322,4 +322,10 @@ Review: art_01M4W58G75R2QWP2A8RQZQAR1H (PASS). Triage by agent:opus-5.5-delegato
 
 Planner open questions 2 and 3: (2) repeated scalar params use the first value, documented in SPEC edit 2, no new code; (3) BRANDING §7.2 "Min price must be less than max price." stays verbatim with equal prices valid; wording is the branding owner's call (BRANDING §9), noted to the Orchestrator, not blocking.
 
-Decision 1: (pending Orchestrator reply)
+Decision 1 (Orchestrator ACK, mail 01M4W6CS273Z25KP843BMQK92J, 2026-10-14T03:13Z, Moderate autonomy, logged in run-state): **build `malformed_query`** on pseudo-field `query`: 400, at most one per request, the pairs that did decode are still validated normally. Add it in-branch to SPEC §5.3 (edit 2) and the §5.5 code list (edit 3). Message: a plain sentence in the BRANDING §7 voice (`Query string is not valid URL encoding.` stands).
+
+Decision 2 (Orchestrator, same mail): **SPEC edit 4: §13 - add note 5** verbatim, in-branch:
+`5. **Min/max price copy.** BRANDING §7.2 says "Min price must be less than max price." while the API allows minPrice == maxPrice (SPEC §5.3); the UI keeps the string verbatim and only flags min > max. Suggested copy: "Min price must not exceed max price."`
+(Formatting: bold lead-in to match notes 1-4.) The API message for `min_gt_max` stays the BRANDING string verbatim.
+
+Decision 3: repeated scalar params use the first value (Orchestrator: fine). BC-3 and BC-4 have both landed; branch merged master e5f49bb at cd4c46a. Review base is `master`.

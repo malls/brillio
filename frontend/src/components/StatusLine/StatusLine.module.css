@@ -1,0 +1,20 @@
+/*
+ * BRANDING.md section 5.3: Meta 13/18 in ink-2, tabular figures (section 3.3), left and right
+ * halves. Row gap 0 so a wrapped status reads as two Meta lines on narrow phones.
+ */
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 16px;
+  padding: 14px var(--inline-pad) 0;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keeps the row 32px tall (14 + 18) when both halves are empty, so the results do not jump. */
+.half {
+  min-height: var(--leading-meta);
+}
