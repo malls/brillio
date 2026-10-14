@@ -2,7 +2,7 @@
   "acceptance_criteria": [],
   "assigned_to": null,
   "branch_links": [],
-  "comment_count": 0,
+  "comment_count": 1,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -11,7 +11,7 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK222MWVR1FDJ20AS3NYR",
-  "last_event_id": "ev_01M4VXK4CFW97KHSMBK5EZXN93",
+  "last_event_id": "ev_01M4VZQ5BW2X0E814SD2PX3C1T",
   "last_status_changed_at": "2026-10-14T00:39:25Z",
   "linked_files": [],
   "priority": "high",
@@ -33,6 +33,6 @@
   ],
   "title": "Backend scaffold: Go 1.27 HTTP server with health, slog, request IDs, CORS, graceful shutdown, config, lint",
   "type": "task",
-  "updated_at": "2026-10-14T00:39:27Z",
+  "updated_at": "2026-10-14T01:16:37Z",
   "urgency": null
 }

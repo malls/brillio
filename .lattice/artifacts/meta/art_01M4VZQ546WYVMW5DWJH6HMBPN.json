@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T01:16:36Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4VZQ546WYVMW5DWJH6HMBPN",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4VZQ546WYVMW5DWJH6HMBPN.md",
+    "size_bytes": 5117
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review f4f8a0b",
+  "token_usage": null,
+  "type": "note"
+}
