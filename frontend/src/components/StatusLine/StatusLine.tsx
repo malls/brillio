@@ -17,19 +17,26 @@ function summarize(data: SearchResponse): [string, string] {
 }
 
 // BRANDING.md sections 5.3 and 5.9, SPEC section 7.5. The left half says what the list on screen
-// is (or Loading); the right half says where that list sits in the pages.
+// is (or Loading, while a search loads); the right half says where that list sits in the pages,
+// or, while a page loads, the page asked for.
 function describeState(state: SearchState): [string, string] {
   switch (state.status) {
     case 'idle':
       return ['', ''];
     case 'loading':
       // The previous list stays on screen while loading; a first load shows the status alone.
-      return [
-        LOADING,
-        state.previous === undefined
-          ? ''
-          : formatPageOf(state.previous.page.page, state.previous.page.totalPages),
-      ];
+      if (state.previous === undefined) {
+        return [LOADING, ''];
+      }
+      if (state.requestedPage !== undefined) {
+        // A page change (BRANDING.md sections 5.3 and 5.9): the count and order stand, and the
+        // page is the one asked for.
+        return [
+          formatResultSummary(state.previous),
+          formatPageOf(state.requestedPage, state.previous.page.totalPages),
+        ];
+      }
+      return [LOADING, formatPageOf(state.previous.page.page, state.previous.page.totalPages)];
     case 'success':
     case 'empty':
       return summarize(state.data);

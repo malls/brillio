@@ -7,6 +7,7 @@ import {
   internalErrorBody,
   jsonResponse,
   searchResponse,
+  searchResponsePage2,
   validationErrorBody,
 } from '../test/fixtures';
 import { useListingSearch } from './useListingSearch';
@@ -294,6 +295,111 @@ describe('useListingSearch', () => {
     expect(urlOf(2)).toBe('/api/listings/search?city=Vienna');
     await waitFor(() => {
       expect(result.current.state).toEqual({ status: 'success', data: refreshed });
+    });
+  });
+
+  it('marks a page-only change with the requested page and keeps the previous response', async () => {
+    const { result, rerender } = await renderSettled({ targetBudget: 450000 });
+    const page2 = deferred<Response>();
+    fetchMock.mockReturnValueOnce(page2.promise);
+
+    rerender({ p: { targetBudget: 450000, page: 2 } });
+
+    expect(result.current.state).toStrictEqual({
+      status: 'loading',
+      previous: searchResponse,
+      requestedPage: 2,
+    });
+    act(() => {
+      page2.resolve(jsonResponse(searchResponsePage2));
+    });
+    await waitFor(() => {
+      expect(result.current.state).toEqual({ status: 'success', data: searchResponsePage2 });
+    });
+    const page1 = deferred<Response>();
+    fetchMock.mockReturnValueOnce(page1.promise);
+
+    rerender({ p: { targetBudget: 450000 } });
+
+    expect(result.current.state).toStrictEqual({
+      status: 'loading',
+      previous: searchResponsePage2,
+      requestedPage: 1,
+    });
+    act(() => {
+      page1.resolve(jsonResponse(searchResponse));
+    });
+    await waitFor(() => {
+      expect(result.current.state).toEqual({ status: 'success', data: searchResponse });
+    });
+  });
+
+  it('does not mark a change of filters or pageSize as a page change', async () => {
+    const { result, rerender } = await renderSettled({ targetBudget: 450000 });
+    const filtered = deferred<Response>();
+    const resized = deferred<Response>();
+    fetchMock.mockReturnValueOnce(filtered.promise).mockReturnValueOnce(resized.promise);
+
+    rerender({ p: { targetBudget: 450000, city: 'Vienna', page: 2 } });
+
+    expect(result.current.state).toStrictEqual({ status: 'loading', previous: searchResponse });
+
+    rerender({ p: { targetBudget: 450000, pageSize: 5 } });
+
+    expect(result.current.state).toStrictEqual({ status: 'loading', previous: searchResponse });
+    expect(urlOf(2)).toBe('/api/listings/search?targetBudget=450000&pageSize=5');
+    act(() => {
+      resized.resolve(jsonResponse(searchResponse));
+    });
+    await waitFor(() => {
+      expect(result.current.state).toEqual({ status: 'success', data: searchResponse });
+    });
+  });
+
+  it('compares a page change with the response on screen, not with the params before', async () => {
+    // A search is in flight over A's list when only the page changes: the request still
+    // differs from A's by its filters, so it is no page change.
+    const { result, rerender } = await renderSettled({ targetBudget: 450000 });
+    const search = deferred<Response>();
+    const page2 = deferred<Response>();
+    fetchMock.mockReturnValueOnce(search.promise).mockReturnValueOnce(page2.promise);
+
+    rerender({ p: { city: 'Vienna' } });
+
+    expect(result.current.state).toStrictEqual({ status: 'loading', previous: searchResponse });
+
+    rerender({ p: { city: 'Vienna', page: 2 } });
+
+    expect(signalOf(1)?.aborted).toBe(true);
+    expect(result.current.state).toStrictEqual({ status: 'loading', previous: searchResponse });
+    act(() => {
+      page2.resolve(jsonResponse(searchResponsePage2));
+    });
+    await waitFor(() => {
+      expect(result.current.state).toEqual({ status: 'success', data: searchResponsePage2 });
+    });
+  });
+
+  it('does not mark a retry as a page change', async () => {
+    const { result, rerender } = await renderSettled({ targetBudget: 450000 });
+    fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+    rerender({ p: { targetBudget: 450000, page: 2 } });
+    await waitFor(() => {
+      expect(result.current.state.status).toBe('error');
+    });
+    const next = deferred<Response>();
+    fetchMock.mockReturnValueOnce(next.promise);
+
+    act(() => {
+      result.current.retry();
+    });
+
+    expect(result.current.state).toStrictEqual({ status: 'loading', previous: searchResponse });
+    act(() => {
+      next.resolve(jsonResponse(searchResponsePage2));
+    });
+    await waitFor(() => {
+      expect(result.current.state).toEqual({ status: 'success', data: searchResponsePage2 });
     });
   });
 

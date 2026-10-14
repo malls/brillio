@@ -1,7 +1,7 @@
 <title>Brillio Listings Demo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Figtree:wght@400..600&display=swap">
 <style>
-/* Layout: the brand's reference page. The app shell first, at working size with its own scroller; then the four states; then the tokens and type. Single theme by decision: Brillio Listings is light only (BRANDING.md §2). Every value here is a token named in BRANDING.md. */
+/* Layout: the brand's reference page. The app shell first, at working size with its own scroller; then the states; then the tokens and type. Single theme by decision: Brillio Listings is light only (BRANDING.md §2). Every value here is a token named in BRANDING.md. */
 :root{
   --paper:#F6F5F1; --stone:#E8E7E1; --line:#D9D7D0;
   --ink:#161616; --ink-2:#6E6C66; --ink-3:#A3A19A;
@@ -71,6 +71,7 @@ body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--ui)
 .state .mono{ width:56px; height:42px; font-size:20px }
 .state .addr{ font-size:19px }
 .state .price{ font-size:22px }
+.state .pager{ margin-top:auto; padding:0 16px; flex-shrink:0 }
 .bar{ height:2px; background:var(--line); position:relative; overflow:hidden }
 .bar::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:40%; background:var(--oxblood); animation:slide 1.2s linear infinite }
 @keyframes slide{ from{ transform:translateX(-100%) } to{ transform:translateX(250%) } }
@@ -114,7 +115,7 @@ body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--ui)
 <div class="page">
 <header class="top">
   <span class="wordmark">Brillio Listings</span>
-  <span class="lbl">Branding demo · v1 · 2026-10-13</span>
+  <span class="lbl">Branding demo · v1.1 · 2026-10-14</span>
 </header>
 
 <!-- ================= The app ================= -->
@@ -152,8 +153,8 @@ body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--ui)
 <!-- ================= States ================= -->
 <section class="sec">
   <span class="lbl">States</span>
-  <h2>The four states the brief names</h2>
-  <p class="note">Loading keeps the previous results on screen and shows one moving line. No results and error are set in the display italic. Invalid input is marked on the fields themselves, in the one color that means attention.</p>
+  <h2>The four states the brief names, and a page change</h2>
+  <p class="note">Loading a search keeps the previous results on screen and shows one moving line. A page change moves nothing but the results: the count stays, the page number moves at once, and the next page replaces the list when it arrives. No results and error are set in the display italic. Invalid input is marked on the fields themselves, in the one color that means attention.</p>
   <div class="states">
     <div class="state"><span class="lbl cap">Loading</span>
       <div class="filters"><div class="field"><span class="lbl">Min price</span><span class="val">$400,000</span></div><div class="field"><span class="lbl">Max price</span><span class="val">$550,000</span></div><div class="actions"><button class="btn" type="button" disabled>Search</button></div></div>
@@ -163,6 +164,14 @@ body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--ui)
         <div class="card"><div class="mono">Sp</div><div><div class="addr">123 Main St, Apt 4B</div><div class="meta">Springfield, VA 22150 · 2 bd · 1.5 ba · 980 sqft</div></div><div class="pricecol"><div class="price">$450,000</div><div class="score"><span class="rank">No. 1</span><span>0.94</span></div></div></div>
         <div class="card"><div class="mono">Vi</div><div><div class="addr">55 Elm Ct</div><div class="meta">Vienna, VA 22180 · 3 bd · 2 ba · 1,300 sqft</div></div><div class="pricecol"><div class="price">$470,000</div><div class="score"><span class="rank">No. 2</span><span>0.88</span></div></div></div>
       </div>
+    </div>
+    <div class="state"><span class="lbl cap">Page change</span>
+      <div class="filters"><div class="field"><span class="lbl">Min price</span><span class="val">$400,000</span></div><div class="field"><span class="lbl">Max price</span><span class="val">$550,000</span></div><div class="actions"><button class="btn" type="button">Search</button></div></div>
+      <div class="status"><span>12 results · ranked for $450,000</span><span>Page 2 of 2</span></div>
+      <div class="results">
+        <div class="card"><div class="mono">Sp</div><div><div class="addr">123 Main St, Apt 4B</div><div class="meta">Springfield, VA 22150 · 2 bd · 1.5 ba · 980 sqft</div></div><div class="pricecol"><div class="price">$450,000</div><div class="score"><span class="rank">No. 1</span><span>0.94</span></div></div></div>
+      </div>
+      <div class="pager"><span><button class="link" type="button">‹ Previous</button></span><span class="pages"><span class="link">1</span><span class="cur">2</span></span><span class="next"><span class="link dis">Next ›</span></span></div>
     </div>
     <div class="state"><span class="lbl cap">No results</span>
       <div class="filters"><div class="field"><span class="lbl">City</span><span class="val sel">Manassas</span></div><div class="field"><span class="lbl">Min bedrooms</span><span class="val">5</span></div><div class="actions"><button class="btn" type="button">Search</button></div></div>

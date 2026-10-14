@@ -370,12 +370,15 @@ written by the UI but is preserved if present.
 `useListingSearch(params)`: on every params change, abort the previous in-flight request
 (`AbortController`), set `loading`, call the client, then set `data` or `error`. Aborted
 requests never update state. The previous successful response stays available during
-loading so the list does not blank (BRANDING.md §5.9).
+loading so the list does not blank (BRANDING.md §5.9). When the request differs from that
+response's request only by `page` (same filters and `pageSize`, not a retry), `loading`
+also carries `requestedPage`, the page asked for: a page change, rendered quietly (§7.5).
+Like `loading` itself, `requestedPage` is derived, never stored.
 
 ```ts
 type SearchState =
   | { status: 'idle' }
-  | { status: 'loading'; previous?: SearchResponse }
+  | { status: 'loading'; previous?: SearchResponse; requestedPage?: number } // requestedPage only with previous
   | { status: 'success'; data: SearchResponse }        // totalItems > 0; items may be empty on a page past the end
   | { status: 'empty'; data: SearchResponse }          // totalItems === 0
   | { status: 'invalid'; error: ValidationError; previous?: SearchResponse }
@@ -452,14 +455,14 @@ the one addition beyond the brief, chosen in the engineering interview, and it f
 §5.2's "a new filter joins the grid as a seventh field" rule. The bar keeps a local draft so
 typing never fires requests. It mirrors the server's cheap rules client-side (min ≤ max,
 non-negative numbers, budget > 0) using the exact strings in BRANDING.md §7.2, marks fields
-per §5.2, and disables Search while invalid or loading. Enter in any field submits. Server
-field errors (§5.5) are mapped by `field` + `code` onto the same marks; `min_gt_max` marks
-both price fields and shows under Max price. A `value.city` that `cities` lacks (not loaded yet,
-failed, or no listings) is shown as an extra option so the select always shows the applied
-filter. A `value.status` with one status selects it; none or several show Any, and submitting
-then sends no status. Numeric fields are text inputs with a numeric `inputMode`; `type=number`
-cannot show the BRANDING.md §7.1 price format (`$400,000`). Step 1 is enforced as the
-whole-number rule.
+per §5.2, and disables Search while invalid or `loading` (SearchPage passes `false` during a
+page change, §7.5). Enter in any field submits. Server field errors (§5.5) are mapped by
+`field` + `code` onto the same marks; `min_gt_max` marks both price fields and shows under
+Max price. A `value.city` that `cities` lacks (not loaded yet, failed, or no listings) is
+shown as an extra option so the select always shows the applied filter. A `value.status` with
+one status selects it; none or several show Any, and submitting then sends no status. Numeric
+fields are text inputs with a numeric `inputMode`; `type=number` cannot show the BRANDING.md
+§7.1 price format (`$400,000`). Step 1 is enforced as the whole-number rule.
 
 ListingCard: the keyword tokens come from the URL state; each case-insensitive match inside
 the one-line description is wrapped in weight 600 (BRANDING.md §5.4). Formatters in
@@ -473,7 +476,8 @@ focus moves to the results region heading.
 
 Rendered exactly as BRANDING.md §5.9. In engineering terms:
 
-- `loading`: StatusLine reads `Loading`, LoadingLine active, Search disabled, previous list stays.
+- `loading`, a search (no `requestedPage`, or the error view is held): StatusLine reads `Loading`, LoadingLine active, Search disabled, previous list stays.
+- `loading`, a page change (`requestedPage` set and a list on screen): nothing outside the results changes. LoadingLine inactive, Search enabled, StatusLine keeps the previous count and order and shows `Page {requestedPage} of {totalPages}`, the Pager marks the requested page current, the previous list stays until the new page replaces it in place, and the results region is `aria-busy`.
 - `success`: list + StatusLine + Pager.
 - `empty`: NoResults in the results region; StatusLine `0 results`; Pager hidden.
 - `invalid`: fields marked from the server's `fields`; previous list stays; StatusLine unchanged.
@@ -482,11 +486,12 @@ Rendered exactly as BRANDING.md §5.9. In engineering terms:
 ### 7.6 Accessibility baseline
 
 Every input has a `<label>`; the results region is `aria-live="polite"` and `aria-busy`
-while loading; the pager uses real `<button>`s with `aria-current="page"` on the current
-page; disabled Previous/Next are not focusable (BRANDING.md §5.7). The loading line has
-`role="progressbar"` with an accessible name. Keyboard-only use must work end to end. The
-results region is focusable (`tabindex="0"`) so the keyboard can scroll it. Under
-`prefers-reduced-motion: reduce` the loading line is static (BRANDING.md §6).
+while loading, a page change included; the pager uses real `<button>`s with
+`aria-current="page"` on the current page; disabled Previous/Next are not focusable
+(BRANDING.md §5.7). The loading line has `role="progressbar"` with an accessible name.
+Keyboard-only use must work end to end. The results region is focusable (`tabindex="0"`) so
+the keyboard can scroll it. Under `prefers-reduced-motion: reduce` the loading line is
+static (BRANDING.md §6).
 
 ## 8. Testing requirements
 
@@ -501,7 +506,7 @@ results region is focusable (`tabindex="0"`) so the keyboard can scroll it. Unde
 - each component: renders from props, user interactions, correct roles/labels, BRANDING copy strings verbatim.
 - formatters: every row of BRANDING.md §7.1.
 - `useSearchParamsState`: round-trips every param, `popstate` handling, page reset on search, `pageSize` preserved.
-- `SearchPage`: loading → success, loading → empty, validation error mapped to the right field (including `min_gt_max` marking both), network error with Try again, page change issues a new request and aborts the old one, rank numbering continues across pages.
+- `SearchPage`: loading → success, loading → empty, validation error mapped to the right field (including `min_gt_max` marking both), network error with Try again, page change issues a new request and aborts the old one with no search loading treatment (§7.5), a filter search keeps it, rank numbering continues across pages.
 
 **Lint and checks:** `golangci-lint run` (default linters + `errcheck`, `govet`, `staticcheck`, `revive`), `eslint`, `tsc -b --noEmit` (plain `tsc --noEmit` on the solution tsconfig checks no files), `prettier --check`. `make check` runs lint + tests for both halves and must pass before any merge to `master`.
 

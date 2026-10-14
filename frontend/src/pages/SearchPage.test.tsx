@@ -157,6 +157,21 @@ function pageButton(n: number): HTMLElement {
   return screen.getByRole('button', { name: `Page ${n}` });
 }
 
+// A page change is quiet (BRANDING.md section 5.9): no loading line, Search stays enabled, and
+// only the results region is busy.
+function expectPageLoading() {
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Search' })).toBeEnabled();
+  expect(resultsRegion()).toHaveAttribute('aria-busy', 'true');
+}
+
+// A search gets the full loading treatment: the loading line runs and Search is disabled.
+function expectSearchLoading() {
+  expect(screen.getByRole('progressbar', { name: 'Loading' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Search' })).toBeDisabled();
+  expect(resultsRegion()).toHaveAttribute('aria-busy', 'true');
+}
+
 async function waitForStatus(left: string, right: string) {
   await waitFor(() => {
     expect(statusHalves()).toEqual([left, right]);
@@ -367,7 +382,7 @@ describe('SearchPage', () => {
   });
 
   // T6
-  it('changes page: aborts the old request, keeps the list while loading, focuses the heading, continues the ranks', async () => {
+  it('changes page quietly: aborts the old request, keeps the list and count while loading, focuses the heading, continues the ranks', async () => {
     const { user } = await renderBudgetSettled();
 
     const page2 = replyLater();
@@ -377,7 +392,10 @@ describe('SearchPage', () => {
     expect(searchUrls()[1]).toBe(`${SEARCH_PATH}?targetBudget=450000&page=2`);
     expect(searchSignal(0)?.aborted).toBe(true);
     expect(searchSignal(1)?.aborted).toBe(false);
-    expect(statusHalves()).toEqual(['Loading', 'Page 1 of 2']);
+    // Nothing outside the results moves: the count and order stand, and the page is the one
+    // asked for, at once.
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 2 of 2']);
+    expectPageLoading();
     expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
     // The Pager follows the URL at once.
     expect(pageButton(2)).toHaveAttribute('aria-current', 'page');
@@ -388,19 +406,26 @@ describe('SearchPage', () => {
     act(() => {
       page2.resolve(jsonResponse(searchResponsePage2));
     });
-    await waitForStatus('12 results · ranked for $450,000', 'Page 2 of 2');
-    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    await waitFor(() => {
+      expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    });
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 2 of 2']);
     expect(cardAddresses()).toEqual(['100 Maple Dr', '22 Birch Ln']);
+    expect(resultsRegion()).toHaveAttribute('aria-busy', 'false');
+    expect(screen.getByRole('button', { name: 'Search' })).toBeEnabled();
     expect(heading).toHaveFocus();
     expect(consoleError).not.toHaveBeenCalled();
   });
 
   // T7
-  it('restores page 1 on popstate', async () => {
+  it('restores page 1 quietly on popstate', async () => {
     const { user } = await renderBudgetSettled();
     reply(searchResponsePage2);
     await user.click(pageButton(2));
-    await waitForStatus('12 results · ranked for $450,000', 'Page 2 of 2');
+    // The status line reads page 2 at once, so wait for the page itself.
+    await waitFor(() => {
+      expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    });
 
     const page1 = replyLater();
     window.history.back();
@@ -412,13 +437,19 @@ describe('SearchPage', () => {
       expect(searchUrls()).toHaveLength(3);
     });
     expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?targetBudget=450000`);
-    expect(statusHalves()).toEqual(['Loading', 'Page 2 of 2']);
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 1 of 2']);
+    expectPageLoading();
+    expect(pageButton(1)).toHaveAttribute('aria-current', 'page');
+    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
 
     act(() => {
       page1.resolve(jsonResponse(searchResponse));
     });
-    await waitForStatus('12 results · ranked for $450,000', 'Page 1 of 2');
-    expect(cardRanks()[0]).toBe('No. 1');
+    await waitFor(() => {
+      expect(cardRanks()[0]).toBe('No. 1');
+    });
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 1 of 2']);
+    expect(resultsRegion()).toHaveAttribute('aria-busy', 'false');
     expect(pageButton(1)).toHaveAttribute('aria-current', 'page');
     expect(consoleError).not.toHaveBeenCalled();
   });
@@ -644,5 +675,227 @@ describe('SearchPage', () => {
     await user.tab();
     expect(pageButton(1)).toHaveFocus();
     expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  // T14
+  it('keeps the full loading treatment for a filter search from page 2', async () => {
+    const { user } = await renderBudgetSettled();
+    await screen.findByRole('option', { name: 'Vienna' });
+    reply(searchResponsePage2);
+    await user.click(pageButton(2));
+    await waitFor(() => {
+      expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    });
+
+    const search = replyLater();
+    await user.selectOptions(field('City'), 'Vienna');
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+
+    expect(currentUrl()).toBe('/?city=Vienna&targetBudget=450000');
+    expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?city=Vienna&targetBudget=450000`);
+    expect(statusHalves()).toEqual(['Loading', 'Page 2 of 2']);
+    expectSearchLoading();
+    // The page 2 list stays on screen while the search loads.
+    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+
+    act(() => {
+      search.resolve(jsonResponse(searchResponse));
+    });
+    await waitForStatus('12 results · ranked for $450,000', 'Page 1 of 2');
+    expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Search' })).toBeEnabled();
+    expect(resultsRegion()).toHaveAttribute('aria-busy', 'false');
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  // T15
+  it('shows the error view when a page change fails, and Try again loads as a search', async () => {
+    const { user } = await renderBudgetSettled();
+
+    reply(internalErrorBody, { status: 500 });
+    await user.click(pageButton(2));
+
+    expect(await screen.findByRole('heading', { name: ERROR_HEADING })).toBeInTheDocument();
+    expect(currentUrl()).toBe('/?targetBudget=450000&page=2');
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
+    expect(statusHalves()).toEqual(['', '']);
+    expect(screen.queryByRole('navigation', { name: 'Pagination' })).not.toBeInTheDocument();
+    expect(consoleError).toHaveBeenCalledTimes(1);
+
+    const retried = replyLater();
+    await user.click(screen.getByRole('button', { name: 'Try again' }));
+
+    // No list is on screen to keep, so the retry is a search.
+    expect(statusHalves()).toEqual(['Loading', '']);
+    expectSearchLoading();
+    expect(screen.getByRole('heading', { name: ERROR_HEADING })).toBeInTheDocument();
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
+
+    act(() => {
+      retried.resolve(jsonResponse(searchResponsePage2));
+    });
+    await waitForStatus('12 results · ranked for $450,000', 'Page 2 of 2');
+    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    expect(screen.queryByText(ERROR_HEADING)).not.toBeInTheDocument();
+    expect(pageButton(2)).toHaveAttribute('aria-current', 'page');
+    expect(searchUrls()).toEqual([
+      `${SEARCH_PATH}?targetBudget=450000`,
+      `${SEARCH_PATH}?targetBudget=450000&page=2`,
+      `${SEARCH_PATH}?targetBudget=450000&page=2`,
+    ]);
+    expect(consoleError).toHaveBeenCalledTimes(1);
+  });
+
+  // T16
+  it('lets a filter search interrupt a page change, with the full treatment', async () => {
+    const { user } = await renderBudgetSettled();
+    await screen.findByRole('option', { name: 'Vienna' });
+
+    const page2 = replyLater();
+    await user.click(pageButton(2));
+    expectPageLoading();
+
+    const search = replyLater();
+    await user.selectOptions(field('City'), 'Vienna');
+    // Search stayed enabled through the page change, so this press runs the search.
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+
+    expect(currentUrl()).toBe('/?city=Vienna&targetBudget=450000');
+    expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?city=Vienna&targetBudget=450000`);
+    expect(searchSignal(1)?.aborted).toBe(true);
+    expect(searchSignal(2)?.aborted).toBe(false);
+    expect(statusHalves()).toEqual(['Loading', 'Page 1 of 2']);
+    expectSearchLoading();
+    expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
+
+    // Page 2 arrives late and is read, and is ignored (as T8).
+    const late = jsonResponse(searchResponsePage2);
+    act(() => {
+      page2.resolve(late);
+    });
+    await waitFor(() => {
+      expect(late.bodyUsed).toBe(true);
+    });
+    await act(async () => {});
+    expect(screen.queryByText('No. 11')).not.toBeInTheDocument();
+    expect(statusHalves()).toEqual(['Loading', 'Page 1 of 2']);
+    expectSearchLoading();
+
+    act(() => {
+      search.resolve(jsonResponse(newestFirstResponse));
+    });
+    await waitForStatus('12 results · newest first', 'Page 1 of 2');
+    expect(cardAddresses()[0]).toBe('55 Elm Ct');
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Search' })).toBeEnabled();
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  // T17
+  it('treats Search with unchanged filters from page 2 as a page change', async () => {
+    // The URL it writes is the one Page 1 writes, so it loads the same way (BRANDING.md section
+    // 5.9).
+    const { user } = await renderBudgetSettled();
+    reply(searchResponsePage2);
+    await user.click(pageButton(2));
+    await waitFor(() => {
+      expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    });
+
+    const page1 = replyLater();
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+
+    expect(currentUrl()).toBe('/?targetBudget=450000');
+    expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?targetBudget=450000`);
+    expect(statusHalves()).toEqual(['12 results · ranked for $450,000', 'Page 1 of 2']);
+    expectPageLoading();
+    expect(pageButton(1)).toHaveAttribute('aria-current', 'page');
+    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+
+    act(() => {
+      page1.resolve(jsonResponse(searchResponse));
+    });
+    await waitFor(() => {
+      expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
+    });
+    expect(resultsRegion()).toHaveAttribute('aria-busy', 'false');
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  // T18
+  it('keeps the full treatment for a page click while a filter search loads', async () => {
+    // The request differs by more than page from the list on screen, so it is a search, though
+    // it differs from the URL before it only by page.
+    const { user } = await renderBudgetSettled();
+    await screen.findByRole('option', { name: 'Vienna' });
+
+    const search = replyLater();
+    await user.selectOptions(field('City'), 'Vienna');
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+    expectSearchLoading();
+
+    // The Pager stays over the previous list while the search loads.
+    const page2 = replyLater();
+    await user.click(pageButton(2));
+
+    expect(currentUrl()).toBe('/?city=Vienna&targetBudget=450000&page=2');
+    expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?city=Vienna&targetBudget=450000&page=2`);
+    expect(searchSignal(1)?.aborted).toBe(true);
+    expect(statusHalves()).toEqual(['Loading', 'Page 1 of 2']);
+    expectSearchLoading();
+    expect(pageButton(2)).toHaveAttribute('aria-current', 'page');
+    expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
+
+    // The aborted search arrives late and is ignored.
+    const late = jsonResponse(newestFirstResponse);
+    act(() => {
+      search.resolve(late);
+    });
+    await waitFor(() => {
+      expect(late.bodyUsed).toBe(true);
+    });
+    await act(async () => {});
+    expect(statusHalves()).toEqual(['Loading', 'Page 1 of 2']);
+    expectSearchLoading();
+
+    act(() => {
+      page2.resolve(jsonResponse(searchResponsePage2));
+    });
+    await waitForStatus('12 results · ranked for $450,000', 'Page 2 of 2');
+    expect(cardRanks()).toEqual(['No. 11', 'No. 12']);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Search' })).toBeEnabled();
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  // T19
+  it('loads as a search on back or forward between pages while the error view is held', async () => {
+    const { user } = await renderBudgetSettled();
+    reply(internalErrorBody, { status: 500 });
+    await user.click(pageButton(2));
+    await screen.findByRole('heading', { name: ERROR_HEADING });
+
+    // Only the page differs from the last list, but no list is on screen to keep.
+    const page1 = replyLater();
+    window.history.back();
+
+    await waitFor(() => {
+      expect(searchUrls()).toHaveLength(3);
+    });
+    expect(currentUrl()).toBe('/?targetBudget=450000');
+    expect(searchUrls()[2]).toBe(`${SEARCH_PATH}?targetBudget=450000`);
+    expect(statusHalves()).toEqual(['Loading', '']);
+    expectSearchLoading();
+    expect(screen.getByRole('heading', { name: ERROR_HEADING })).toBeInTheDocument();
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
+
+    act(() => {
+      page1.resolve(jsonResponse(searchResponse));
+    });
+    await waitForStatus('12 results · ranked for $450,000', 'Page 1 of 2');
+    expect(cardRanks()).toEqual(['No. 1', 'No. 4', 'No. 10']);
+    expect(screen.queryByText(ERROR_HEADING)).not.toBeInTheDocument();
+    expect(consoleError).toHaveBeenCalledTimes(1);
   });
 });

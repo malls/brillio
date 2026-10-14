@@ -27,6 +27,7 @@ export interface FilterBarProps {
   value: SearchParams;
   // The City select's options; [] until loaded and on failure.
   cities: string[];
+  // A search (not a page change) is loading: Search is disabled.
   loading: boolean;
   // The API's field errors for the applied filters (SPEC section 5.5).
   serverErrors?: FieldError[] | undefined;

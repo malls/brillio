@@ -53,7 +53,6 @@ export function SearchPage() {
   const { params, setSearch, setPage, clear } = useSearchParamsState();
   const { state, retry } = useListingSearch(params);
   const cities = useCities();
-  const loading = state.status === 'loading';
 
   // Once a search fails, the error view stays until a 2xx settles: a Try again (loading) or a
   // 400 (invalid) must not bring back the list from before the error (SPEC section 7.5). Stored
@@ -68,6 +67,13 @@ export function SearchPage() {
   if (holdError !== errorHeld) {
     setErrorHeld(holdError);
   }
+
+  // A page change is quiet (BRANDING.md section 5.9, SPEC section 7.5): only the results region
+  // knows it is loading. With the error view held there is no list to keep, so every load is a
+  // search, which gets the full treatment: the loading line and a disabled Search.
+  const busy = state.status === 'loading';
+  const paging = busy && !holdError && state.requestedPage !== undefined;
+  const loading = busy && !paging;
 
   const shown = holdError ? undefined : shownResponse(state);
   // Emphasis follows the URL's keyword (SPEC section 7.4).
@@ -111,7 +117,7 @@ export function SearchPage() {
         className={shell.results}
         aria-label="Results"
         aria-live="polite"
-        aria-busy={loading}
+        aria-busy={busy}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the results scroller must be keyboard-scrollable (SPEC section 7.6)
         tabIndex={0}
       >
