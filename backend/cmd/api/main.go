@@ -1,6 +1,8 @@
 // Command api serves the listing search HTTP API. It only wires things
-// together: configuration, logging, the router, the HTTP server and graceful
-// shutdown on SIGINT or SIGTERM. Startup failures exit with status 1.
+// together: configuration, logging, the store (opened, migrated and seeded
+// from LISTINGS_FILE at startup), the router, the HTTP server and graceful
+// shutdown on SIGINT or SIGTERM. Startup failures, including an invalid seed
+// record, exit with status 1.
 package main
 
 import (
@@ -17,6 +19,8 @@ import (
 
 	"brillio/backend/internal/config"
 	"brillio/backend/internal/httpapi"
+	"brillio/backend/internal/store"
+	"brillio/backend/internal/store/seed"
 )
 
 // HTTP server timeouts. Fixed protections, not deployment settings.
@@ -47,6 +51,31 @@ func run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	// Validate the seed file before opening the database, so a bad file
+	// never creates a database file.
+	listings, err := seed.Load(cfg.ListingsFile)
+	if err != nil {
+		return fmt.Errorf("seed: %w", err)
+	}
+	st, err := store.Open(ctx, cfg.DBPath)
+	if err != nil {
+		return fmt.Errorf("store: %w", err)
+	}
+	defer func() {
+		if err := st.Close(); err != nil {
+			logger.Error("store close failed", slog.String("err", err.Error()))
+		}
+	}()
+	n, err := st.Upsert(ctx, listings)
+	if err != nil {
+		return fmt.Errorf("seed: %w", err)
+	}
+	logger.Info(fmt.Sprintf("seeded %d listings", n),
+		slog.Int("count", n),
+		slog.String("listings_file", cfg.ListingsFile),
+		slog.String("db_path", cfg.DBPath),
+	)
+
 	ln, err := net.Listen("tcp", cfg.Addr())
 	if err != nil {
 		return fmt.Errorf("listen: %w", err)
@@ -56,6 +85,7 @@ func run() error {
 		Handler: httpapi.NewRouter(httpapi.Deps{
 			Logger:      logger,
 			CORSOrigins: cfg.CORSOrigins,
+			Pinger:      st,
 		}),
 		ReadHeaderTimeout: readHeaderTimeout,
 		ReadTimeout:       readTimeout,
