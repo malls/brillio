@@ -49,8 +49,9 @@ tmp=$(mktemp -d)
 
 cleanup() {
   status=$?
+  set +e # an echo into a dead stdout (EPIPE) must not skip the teardown
   trap - EXIT
-  trap '' INT TERM HUP
+  trap '' INT TERM HUP PIPE
   echo 'teardown: docker compose down -v'
   if ! docker compose down -v; then
     echo 'FAIL  teardown'
