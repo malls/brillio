@@ -49,13 +49,15 @@ Pinned versions: `modernc.org/sqlite` v1.60.1 is the only direct Go dependency. 
 
 ```
 compose.yaml               dev stack: api (Go under air), web (Vite)
-Makefile                   check, lint, test, dev-api, dev-web, up, down, smoke
+Makefile                   check, lint, test, dev-api, dev-web, up, down, smoke, dist
 BRANDING.md                design system: color, type, components, copy
 docs/SPEC.md               engineering contract
 docs/EXTENSIONS.md         extension playbook
 docs/branding-demo.html    reference rendering of BRANDING.md
 data/sample_listings.json  the 12 listings, feeds MLS_A and MLS_B
 scripts/smoke.sh           make smoke
+scripts/dist.sh            make dist: the release zip
+scripts/verify-dist.sh     checks a release zip from a fresh directory
 backend/
   go.mod, go.sum
   openapi.yaml, openapi.go   OpenAPI 3.1 document, embedded in the binary

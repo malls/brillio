@@ -69,6 +69,8 @@ no router, no msw, no icon set. Fewer dependencies means less to defend live.
   docs/branding-demo.html reference rendering of BRANDING.md (owned by branding)
   data/sample_listings.json
   scripts/smoke.sh        make smoke: stack up, API and proxy assertions, teardown (§10)
+  scripts/dist.sh         make dist: the release zip (§12)
+  scripts/verify-dist.sh  checks a release zip from a fresh directory (§12)
   backend/
     go.mod, go.sum
     cmd/api/main.go                 wiring only: config, store, server, shutdown
@@ -549,7 +551,7 @@ status, duration, request ID, remote addr. Panics recovered to 500 with the requ
 A zip (`make dist`) of the repo excluding `.git/`, `node_modules/`, `*.db`, `.lattice/`,
 and the two handout PDFs, containing a README that a stranger can follow to run
 `docker compose up` and `make check`. Verified by extracting into a fresh directory and
-running both. No emoji anywhere in the zip (BRANDING.md §8).
+running both (`scripts/verify-dist.sh <zip>`). No emoji anywhere in the zip (BRANDING.md §8).
 
 ## 13. Notes for the branding owner
 
