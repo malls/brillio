@@ -363,6 +363,22 @@ describe('FilterBar client rules', () => {
     expectMarked('Min bedrooms', 'Min bedrooms must be 0 or more.');
   });
 
+  it('reveals nothing while Clear is pressed, so Clear stays put until the click lands', async () => {
+    const { user, onClear } = setup();
+
+    await user.type(field('Min bedrooms'), '-1');
+    const clear = screen.getByRole('button', { name: 'Clear' });
+    await user.pointer({ keys: '[MouseLeft>]', target: clear });
+    expectUnmarked('Min bedrooms');
+    expect(field('Min bedrooms')).toHaveFocus();
+    expect(screen.queryByText('Min bedrooms must be 0 or more.')).not.toBeInTheDocument();
+
+    await user.pointer({ keys: '[/MouseLeft]', target: clear });
+    expect(onClear).toHaveBeenCalledTimes(1);
+    expect(field('Min bedrooms')).toHaveValue('');
+    expectUnmarked('Min bedrooms');
+  });
+
   it('removes the mark and enables Search once the value is corrected', async () => {
     const { user } = setup();
 
@@ -514,6 +530,17 @@ describe('FilterBar submit', () => {
     expect(onSearch.mock.calls[0]?.[0]).toStrictEqual(filledValue);
   });
 
+  it('ignores the Enter that ends an IME composition', () => {
+    const { onSearch } = setup({ value: filledValue });
+
+    // WebKit sends the committing Enter after compositionend, with isComposing false.
+    fireEvent.keyDown(field('Keyword'), { key: 'Enter', keyCode: 229 });
+    fireEvent.keyDown(field('Keyword'), { key: 'Enter', keyCode: 13, isComposing: true });
+    expect(onSearch).not.toHaveBeenCalled();
+    fireEvent.keyDown(field('Keyword'), { key: 'Enter', keyCode: 13 });
+    expect(onSearch).toHaveBeenCalledTimes(1);
+  });
+
   it('while loading disables Search, keeps fields enabled and sends nothing on Enter', async () => {
     const { user, onSearch } = setup({ value: filledValue, loading: true });
 
@@ -530,8 +557,8 @@ describe('FilterBar submit', () => {
 });
 
 describe('FilterBar Clear', () => {
-  it('calls onClear and empties drafts and marks at once', async () => {
-    const { user, onClear, onSearch } = setup({
+  it('calls onClear and empties drafts and field marks at once, keeping the unmapped line', async () => {
+    const { user, onClear, onSearch, rerender } = setup({
       value: filledValue,
       serverErrors: validationErrorBody.error.fields,
     });
@@ -540,7 +567,8 @@ describe('FilterBar Clear', () => {
     await user.type(field('Min price'), '-5');
     await user.tab();
     expectMarked('Min price', 'Min price must be 0 or more.');
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    const unmapped = 'Page size must be between 1 and 100. Unknown parameter.';
+    expect(screen.getByRole('alert')).toHaveTextContent(unmapped);
 
     await user.click(screen.getByRole('button', { name: 'Clear' }));
 
@@ -550,8 +578,16 @@ describe('FilterBar Clear', () => {
       expect(field(label)).toHaveValue('');
       expectUnmarked(label);
     }
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    // Clear keeps pageSize (SPEC section 7.1), so the 400 behind the line may still apply.
+    expect(screen.getByRole('alert')).toHaveTextContent(unmapped);
     expect(searchButton()).toBeEnabled();
+
+    rerender({ serverErrors: undefined });
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    rerender({
+      serverErrors: [{ field: 'page', code: 'out_of_range', message: 'Page is too large.' }],
+    });
+    expect(screen.getByRole('alert')).toHaveTextContent('Page is too large.');
   });
 
   it('empties typed drafts when value is already empty', async () => {

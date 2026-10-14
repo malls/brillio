@@ -46,8 +46,6 @@ interface Dismissals {
   // The serverErrors content these apply to; new content means nothing is dismissed.
   key: string;
   fields: ReadonlySet<FieldName>;
-  // Clear hides every server mark, the unmapped line included.
-  all: boolean;
 }
 
 const NONE: ReadonlySet<FieldName> = new Set();
@@ -59,9 +57,11 @@ function seed(key: string, value: SearchParams): Local {
 }
 
 function noDismissals(key: string): Dismissals {
-  return { key, fields: NONE, all: false };
+  return { key, fields: NONE };
 }
 
+// keyCode 229 is the Enter that commits an IME composition in WebKit, which arrives after
+// compositionend with isComposing already false.
 function isPlainEnter(event: KeyboardEvent): boolean {
   return (
     event.key === 'Enter' &&
@@ -69,7 +69,8 @@ function isPlainEnter(event: KeyboardEvent): boolean {
     !event.altKey &&
     !event.ctrlKey &&
     !event.metaKey &&
-    !event.nativeEvent.isComposing
+    !event.nativeEvent.isComposing &&
+    event.nativeEvent.keyCode !== 229
   );
 }
 
@@ -110,13 +111,10 @@ export function FilterBar({
   const invalid = hasClientErrors(client);
   const canSubmit = !loading && !invalid;
   const server = mapServerErrors(serverErrors);
-  const marks = resolveMarks(
-    client,
-    server,
-    local.revealed,
-    dismissals.all ? ALL : dismissals.fields,
-  );
-  const notice = dismissals.all ? '' : server.unmapped;
+  const marks = resolveMarks(client, server, local.revealed, dismissals.fields);
+  // Follows serverErrors alone: no field edits these params, and Clear keeps pageSize (SPEC
+  // section 7.1), so the 400 behind the line may still apply after Clear.
+  const notice = server.unmapped;
 
   // Every update starts from the drafts on screen and records the key they belong to.
   const updateLocal = (change: (current: Local) => Local) => {
@@ -163,7 +161,8 @@ export function FilterBar({
 
   const clear = () => {
     setLocal({ key, drafts: EMPTY_DRAFTS, revealed: NONE });
-    setDismissals({ key: serverKey, fields: NONE, all: true });
+    // Field marks only; the unmapped line stays until new serverErrors replace it.
+    setDismissals({ key: serverKey, fields: ALL });
     onClear();
   };
 
@@ -182,7 +181,7 @@ export function FilterBar({
   };
 
   // A press on a disabled Search explains itself (best effort: not every browser reports it).
-  const handleActionsPointerDown = () => {
+  const handleSearchPointerDown = () => {
     if (!loading && invalid) {
       revealAll();
     }
@@ -281,12 +280,23 @@ export function FilterBar({
           </div>
         );
       })}
-      {/* Pointer only: Enter and blur already reveal messages from the keyboard. */}
-      <div className={styles.actions} onPointerDown={handleActionsPointerDown}>
-        <button type="submit" className={styles.search} disabled={!canSubmit}>
-          {COPY.search}
-        </button>
-        <button type="button" className={styles.clear} onClick={clear}>
+      <div className={styles.actions}>
+        {/* Pointer only: Enter and blur already reveal messages from the keyboard. Search only:
+            a press on Clear must not reveal a message and move Clear before the click lands. */}
+        <span className={styles.searchSlot} onPointerDown={handleSearchPointerDown}>
+          <button type="submit" className={styles.search} disabled={!canSubmit}>
+            {COPY.search}
+          </button>
+        </span>
+        {/* Keeps focus in the field on press, so its blur cannot reveal a message either. */}
+        <button
+          type="button"
+          className={styles.clear}
+          onMouseDown={(event) => {
+            event.preventDefault();
+          }}
+          onClick={clear}
+        >
           {COPY.clear}
         </button>
       </div>

@@ -98,10 +98,19 @@ export function parseNumber(text: string): Parsed {
   return { kind: 'number', value: value === 0 ? 0 : value };
 }
 
-// A number as plain digits that parseNumber reads back (String(1e21) is '1e+21').
+// A number as plain digits that parseNumber reads back: String(1e21) is '1e+21' and String(1e-7)
+// is '1e-7', and the parser takes no exponent. A fraction that 20 decimals cannot write exactly
+// keeps its exponent, so it reads as not a number rather than as a different number.
 function numberText(n: number): string {
   const text = String(n);
-  return text.includes('e') && Number.isInteger(n) ? BigInt(n).toString() : text;
+  if (!text.includes('e')) {
+    return text;
+  }
+  if (Number.isInteger(n)) {
+    return BigInt(n).toString();
+  }
+  const digits = n.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 });
+  return Number(digits) === n ? digits : text;
 }
 
 // The drafts for a value: numbers as plain digits, text as is, and the status when exactly one
