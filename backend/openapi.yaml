@@ -1,0 +1,613 @@
+# OpenAPI 3.1 description of the listing search API (docs/SPEC.md section 5), served
+# at GET /api/openapi.yaml. Written in a strict YAML subset: block mappings and
+# sequences, plain, double-quoted and literal (|) scalars, and JSON flow values. No
+# anchors, aliases, tags, single-quoted or folded scalars, inline comments or tabs.
+# backend/internal/httpapi/yamlsubset_test.go enforces the subset.
+openapi: 3.1.1
+info:
+  title: Brillio listing search API
+  version: 1.0.0
+  description: |
+    A read-only API over the sample property listings. Filter the listings, rank them by how
+    well they fit a target budget and how recently they were listed, and page through the
+    results.
+
+    These conventions apply to every endpoint:
+
+    - Responses are JSON in UTF-8 (`application/json; charset=utf-8`) with camelCase field
+      names. The one exception is this document, which is YAML.
+    - Every response carries an `X-Request-ID` header. If the request sent one, it is echoed
+      back; otherwise the server generates a 32-character hex ID. The server logs it with the
+      request, so quote it when reporting a problem.
+    - CORS: an origin listed in the server's `CORS_ORIGINS` setting (by default
+      `http://localhost:5173`) gets `Access-Control-Allow-Origin` and
+      `Access-Control-Expose-Headers: X-Request-ID`. A preflight `OPTIONS` request is answered
+      with 204; for a listed origin it allows the methods `GET, OPTIONS` and the headers
+      `Content-Type, X-Request-ID`.
+    - An unknown path returns 404 with error code `not_found`. A known path called with the
+      wrong method returns 405 with error code `method_not_allowed` and an `Allow` header
+      (`GET, HEAD`). Both bodies are the error envelope (the `ErrorEnvelope` schema).
+    - An unexpected failure returns 500 with error code `internal_error` and a generic message.
+      The details go to the server log with the request ID, never to the client.
+servers:
+  - url: /
+    description: The server that serves this document.
+security: []
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Check service health
+      description: |
+        Reports whether the service can reach its database, for liveness and readiness checks.
+        It sits outside `/api` because it is about the service, not the listings.
+      responses:
+        "200":
+          description: The service and its database are up.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+              examples:
+                ok:
+                  summary: Healthy
+                  value: {"status": "ok"}
+        "503":
+          description: |-
+            The database ping failed or took longer than two seconds. The cause goes to the
+            server log, not to the client.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+              examples:
+                degraded:
+                  summary: Database unreachable
+                  value: {"status": "degraded", "error": "database unavailable"}
+  /api/cities:
+    get:
+      operationId: listCities
+      summary: List cities
+      description: |
+        Returns the distinct city names in the listings, for the city filter. Names are
+        distinct ignoring case and sorted A to Z, and each keeps the casing first seen in the
+        data. Query parameters are ignored: the rule that rejects unknown parameters applies
+        to search only.
+      responses:
+        "200":
+          description: The city names.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CitiesResponse"
+              examples:
+                # Equal to the docs/SPEC.md section 5.2 example (openapi_test.go).
+                spec:
+                  summary: The cities in the sample data
+                  value: {"cities": ["Chantilly", "Fairfax", "Manassas", "Reston", "Springfield", "Vienna"]}
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/listings/search:
+    get:
+      operationId: searchListings
+      summary: Search listings
+      description: |
+        Filters the listings, scores every match, and returns one page of the ranked results.
+
+        **Parsing rules**
+
+        - An empty value (`minPrice=`) counts as absent. A `city` or `keyword` that is only
+          whitespace is absent too, and absence is decided before the length limit: 201 spaces
+          in `keyword` is absent, not too long.
+        - A repeated parameter other than `status` uses its first value (`minPrice=1&minPrice=2`
+          means 1), and an empty first value is absent (`minPrice=&minPrice=5` is absent, not 5).
+        - Numbers use the syntax of Go's `strconv.ParseFloat`: decimal or hex float literals,
+          with underscores allowed. Values are not trimmed (`minPrice=%205` is `not_a_number`).
+          Only non-finite results are rejected: `NaN`, `Inf` and overflow such as `1e400` are
+          `not_a_number`. `-0` reads as 0.
+        - Integers must be whole: `minBedrooms=2.5` is `not_an_integer`, while `2.0` and `1e2`
+          are whole. An integer of 2^53 (9007199254740992) or more is `out_of_range`, because
+          from there on a float64 cannot hold every whole number, so the value cannot be read
+          exactly.
+        - `status` can be repeated (`status=active&status=sold`) or comma-separated
+          (`status=active,sold`). Pieces are trimmed, empty pieces are ignored, duplicates
+          collapse, and matching is case-sensitive. Any invalid piece gives one `invalid_enum`
+          error on `status`. The effective set is echoed in the order active, pending, sold.
+        - A query string that is not valid URL encoding (a bare `%`, `%zz`, or a `;` separator)
+          gets one `malformed_query` error, on the field `query`, because the decoder would
+          otherwise drop the bad pair and silently widen the results. The pairs that did decode
+          are still validated. A query with more than 10000 `&`-separated parameters (the limit
+          of Go's `url.ParseQuery`) gets the same error; then nothing decodes, so nothing else
+          is validated.
+        - An unknown parameter is a 400 `unknown_param` error naming it, whatever its value
+          (`minprice=` included). Names are case-sensitive. This is deliberate: a typo such as
+          `minprice=500000` must not silently widen the results.
+        - Every problem is reported in one response, not just the first. Field errors are
+          ordered `malformed_query` first, then at most one error per parameter in the order
+          the parameters are listed here (`min_gt_max` takes the place of `maxPrice`), then the
+          unknown parameters sorted by name.
+        - A page past the last page is not an error: it returns 200 with empty `items` and the
+          correct page metadata, so the client can recover. A city with no listings is not an
+          error either: it returns 200 with `totalItems` 0.
+
+        **Scoring and order**
+
+        - Budget fit, when `targetBudget` is given: `price / target` at or under the budget,
+          and `max(0, 1 - 2 * (price - target) / target)` over it. Going over the budget hurts
+          twice as much as coming in under it, and the fit reaches 0 at 50% over.
+        - Recency: `0.5 ^ (ageDays / 30)`, a 30-day half-life. `ageDays` counts whole calendar
+          days in UTC up to `scoring.asOf`; a listing date in the future counts as 0 days.
+        - Score: `0.6 * budgetFit + 0.4 * recency` with a target budget, and recency alone
+          without one, which orders the results newest first.
+        - Results are sorted by the unrounded score, highest first. Exact ties are broken by
+          `listedDate` (newest first), then `price` (lowest first), then `source` and `id`
+          (A to Z), so pages never shift between requests.
+        - `rank` counts from 1 across the whole ranked result set, so page 2 with a page size of
+          10 starts at rank 11. The score and its parts are rounded to four decimals.
+      parameters:
+        - name: minPrice
+          in: query
+          description: Lowest list price in USD, inclusive. Absent means no lower bound.
+          schema:
+            type: number
+            minimum: 0
+        - name: maxPrice
+          in: query
+          description: |-
+            Highest list price in USD, inclusive. When `minPrice` is also given, it must not be
+            more than `maxPrice` (a `min_gt_max` error, reported on `maxPrice`). Absent means no
+            upper bound.
+          schema:
+            type: number
+            minimum: 0
+        - name: minBedrooms
+          in: query
+          description: Fewest bedrooms, inclusive. Absent means no lower bound.
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        - name: city
+          in: query
+          description: |-
+            City name, matched exactly but ignoring case, after trimming surrounding whitespace.
+            At most 100 characters (Unicode code points) after trimming. Absent means any city.
+          schema:
+            type: string
+            maxLength: 100
+        - name: keyword
+          in: query
+          description: |-
+            Words that must all appear in the description. The value is split on whitespace, and
+            each word must appear in the description as a substring, ignoring case; `%` and `_`
+            are ordinary characters. At most 200 characters (Unicode code points), counted as
+            received. Absent means no keyword filter.
+          schema:
+            type: string
+            maxLength: 200
+        - name: targetBudget
+          in: query
+          description: |-
+            Budget in USD to rank by. Listings priced near it score higher, and going over it
+            costs twice as much as coming in under. Absent means the results are ranked by
+            recency alone.
+          schema:
+            type: number
+            exclusiveMinimum: 0
+        - name: status
+          in: query
+          description: |-
+            Listing statuses to include. Repeat the parameter (`status=active&status=sold`) or
+            separate the values with commas (`status=active,sold`). Absent means all three.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum: ["active", "pending", "sold"]
+            default: ["active", "pending", "sold"]
+        - name: page
+          in: query
+          description: |-
+            Page number, counting from 1. A page past the last one returns 200 with empty
+            `items`.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+            default: 1
+        - name: pageSize
+          in: query
+          description: Results per page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        "200":
+          description: One page of ranked listings.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+              examples:
+                # Equal to the docs/SPEC.md section 5.4 example (openapi_test.go).
+                spec:
+                  summary: targetBudget=450000 on 2026-10-13, first item only
+                  value: {
+                      "items": [
+                        {
+                          "rank": 1,
+                          "id": "A1", "source": "MLS_A",
+                          "address": "123 Main St, Apt 4B", "city": "Springfield", "state": "VA", "zip": "22150",
+                          "price": 450000, "bedrooms": 2, "bathrooms": 1.5, "sqft": 980,
+                          "latitude": 38.7893, "longitude": -77.1873,
+                          "listedDate": "2026-08-29", "status": "active",
+                          "description": "Bright top-floor condo near shops and transit. Pet friendly.",
+                          "relevance": {"score": 0.7414, "budgetFit": 1.0, "recency": 0.3536}
+                        }
+                      ],
+                      "page": {"page": 1, "pageSize": 10, "totalItems": 12, "totalPages": 2},
+                      "scoring": {
+                        "targetBudget": 450000,
+                        "budgetWeight": 0.6, "recencyWeight": 0.4,
+                        "recencyHalfLifeDays": 30,
+                        "asOf": "2026-10-13"
+                      },
+                      "appliedFilters": {
+                        "minPrice": null, "maxPrice": null, "minBedrooms": null,
+                        "city": null, "keyword": null, "status": ["active", "pending", "sold"]
+                      }
+                    }
+        "400":
+          description: The query is invalid. `fields` lists every problem.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+              examples:
+                # Equal to the docs/SPEC.md section 5.5 example (openapi_test.go).
+                spec:
+                  summary: Min price above max price, page size out of range, misspelled parameter
+                  value: {
+                      "error": {
+                        "code": "validation_error",
+                        "message": "Invalid search parameters.",
+                        "fields": [
+                          {"field": "maxPrice", "code": "min_gt_max", "message": "Min price must be less than max price."},
+                          {"field": "pageSize", "code": "out_of_range", "message": "Page size must be between 1 and 100."},
+                          {"field": "minprice", "code": "unknown_param", "message": "Unknown parameter."}
+                        ]
+                      }
+                    }
+                malformedQuery:
+                  summary: A query string that is not valid URL encoding
+                  value: {
+                      "error": {
+                        "code": "validation_error",
+                        "message": "Invalid search parameters.",
+                        "fields": [
+                          {"field": "query", "code": "malformed_query", "message": "Query string is not valid URL encoding."}
+                        ]
+                      }
+                    }
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/openapi.yaml:
+    get:
+      operationId: getOpenAPIDocument
+      summary: Get this OpenAPI document
+      description: Returns this document, byte for byte as it is embedded in the server.
+      responses:
+        "200":
+          description: The OpenAPI 3.1 document.
+          headers:
+            X-Request-ID:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/yaml:
+              schema:
+                type: string
+components:
+  headers:
+    RequestID:
+      description: |-
+        The request ID. It echoes the request's own `X-Request-ID`, or is a 32-character hex ID
+        the server generated. The server logs it with the request.
+      schema:
+        type: string
+  responses:
+    InternalError:
+      description: |-
+        An unexpected failure. The message is generic; the details go to the server log with
+        the request ID.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/RequestID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+          examples:
+            internal:
+              summary: Internal error
+              value: {"error": {"code": "internal_error", "message": "Internal server error."}}
+  schemas:
+    Listing:
+      type: object
+      description: |-
+        A property listing from one of the source feeds. A listing is identified by `source`
+        and `id` together, because an `id` is unique only within its source.
+      required: ["id", "source", "address", "city", "state", "zip", "price", "bedrooms",
+        "bathrooms", "sqft", "latitude", "longitude", "listedDate", "status", "description"]
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: The listing ID, unique within its source.
+        source:
+          type: string
+          minLength: 1
+          description: The feed the listing came from, such as MLS_A.
+        address:
+          type: string
+          description: Street address, free text as the feed wrote it.
+        city:
+          type: string
+        state:
+          type: string
+          description: State code, uppercased.
+        zip:
+          type: string
+        price:
+          type: number
+          minimum: 0
+          description: List price in USD.
+        bedrooms:
+          type: integer
+          minimum: 0
+        bathrooms:
+          type: number
+        sqft:
+          type: integer
+          minimum: 0
+          description: Interior area in square feet.
+        latitude:
+          type: number
+        longitude:
+          type: number
+        listedDate:
+          type: string
+          format: date
+          description: The date the property was listed.
+        status:
+          type: string
+          enum: ["active", "pending", "sold"]
+        description:
+          type: string
+          description: Free text. The keyword filter searches it.
+    ListingResult:
+      description: A listing with its place in the ranking.
+      allOf:
+        - $ref: "#/components/schemas/Listing"
+        - type: object
+          required: ["rank", "relevance"]
+          properties:
+            rank:
+              type: integer
+              minimum: 1
+              description: Position in the whole ranked result set, counting from 1 across pages.
+            relevance:
+              $ref: "#/components/schemas/Relevance"
+    Relevance:
+      type: object
+      description: How the listing scored. Each value is rounded to four decimals.
+      required: ["score", "budgetFit", "recency"]
+      properties:
+        score:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: The overall score. Results are ordered by it, unrounded.
+        budgetFit:
+          type: ["number", "null"]
+          minimum: 0
+          maximum: 1
+          description: How well the price fits the target budget. Null without a target budget.
+        recency:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: How recently the property was listed. It halves every 30 days.
+    PageMeta:
+      type: object
+      description: Where this page sits in the whole ranked result set.
+      required: ["page", "pageSize", "totalItems", "totalPages"]
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: The requested page, even when it is past the last page.
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalItems:
+          type: integer
+          minimum: 0
+          description: Number of listings that matched the filters, across all pages.
+        totalPages:
+          type: integer
+          minimum: 0
+          description: totalItems divided by pageSize, rounded up. 0 when nothing matched.
+    ScoringMeta:
+      type: object
+      description: How the items were scored.
+      required: ["targetBudget", "budgetWeight", "recencyWeight", "recencyHalfLifeDays", "asOf"]
+      properties:
+        targetBudget:
+          type: ["number", "null"]
+          exclusiveMinimum: 0
+          description: The target budget in USD. Null when none was given.
+        budgetWeight:
+          type: number
+          description: Weight of the budget fit in the score. 0.6 with a target budget, 0 without.
+        recencyWeight:
+          type: number
+          description: Weight of recency in the score. 0.4 with a target budget, 1 without.
+        recencyHalfLifeDays:
+          type: integer
+          description: Days it takes recency to halve. Always 30.
+        asOf:
+          type: string
+          format: date
+          description: The UTC date that listing ages are counted up to.
+    AppliedFilters:
+      type: object
+      description: |-
+        The filters the server applied after parsing, with null for each one that was absent,
+        so the client never has to guess what the server understood.
+      required: ["minPrice", "maxPrice", "minBedrooms", "city", "keyword", "status"]
+      properties:
+        minPrice:
+          type: ["number", "null"]
+          minimum: 0
+        maxPrice:
+          type: ["number", "null"]
+          minimum: 0
+        minBedrooms:
+          type: ["integer", "null"]
+          minimum: 0
+        city:
+          type: ["string", "null"]
+          description: The city after trimming.
+        keyword:
+          type: ["string", "null"]
+          description: The keyword exactly as received.
+        status:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            enum: ["active", "pending", "sold"]
+          description: Statuses included, in the order active, pending, sold. All three by default.
+    SearchResponse:
+      type: object
+      description: One page of ranked listings, with how they were found and scored.
+      required: ["items", "page", "scoring", "appliedFilters"]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/ListingResult"
+          description: This page's listings, best first; empty when nothing matched or past the end.
+        page:
+          $ref: "#/components/schemas/PageMeta"
+        scoring:
+          $ref: "#/components/schemas/ScoringMeta"
+        appliedFilters:
+          $ref: "#/components/schemas/AppliedFilters"
+    ErrorEnvelope:
+      type: object
+      description: The body of every error response.
+      required: ["error"]
+      properties:
+        error:
+          type: object
+          required: ["code", "message"]
+          properties:
+            code:
+              type: string
+              enum: ["validation_error", "not_found", "method_not_allowed", "internal_error"]
+              description: |-
+                Stable, machine-readable error code. The status is 400 for validation_error, 404
+                for not_found, 405 for method_not_allowed and 500 for internal_error.
+            message:
+              type: string
+              description: A plain sentence for people. Do not parse it.
+            fields:
+              type: array
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/FieldError"
+              description: Every invalid parameter. Present only when the code is validation_error.
+    FieldError:
+      type: object
+      description: One problem with the query.
+      required: ["field", "code", "message"]
+      properties:
+        field:
+          type: string
+          description: The parameter name exactly as sent, or `query` for malformed_query.
+        code:
+          type: string
+          description: |
+            Why the value was rejected.
+
+            - `not_a_number`: the value is not a finite number.
+            - `not_an_integer`: the value is a number but not a whole one.
+            - `negative`: the value is below 0.
+            - `not_positive`: the value is 0 or below (`targetBudget`).
+            - `out_of_range`: the value is outside the allowed range (`page`, `pageSize`), or an
+              integer of 2^53 or more.
+            - `too_long`: the value has more characters than allowed (`city`, `keyword`).
+            - `invalid_enum`: a `status` value is not active, pending or sold.
+            - `min_gt_max`: `minPrice` is more than `maxPrice`. Reported once, on `maxPrice`.
+            - `unknown_param`: the parameter name is not one the search accepts.
+            - `malformed_query`: the query string is not valid URL encoding, or has more than
+              10000 parameters. Reported on the field `query`.
+          enum:
+            - not_a_number
+            - not_an_integer
+            - negative
+            - not_positive
+            - out_of_range
+            - too_long
+            - invalid_enum
+            - min_gt_max
+            - unknown_param
+            - malformed_query
+        message:
+          type: string
+          description: A plain sentence that says what is wrong and what to do.
+    Health:
+      type: object
+      description: The service health.
+      required: ["status"]
+      properties:
+        status:
+          type: string
+          enum: ["ok", "degraded"]
+        error:
+          type: string
+          description: A short fixed reason, present only when the status is degraded.
+    CitiesResponse:
+      type: object
+      description: The distinct city names.
+      required: ["cities"]
+      properties:
+        cities:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+          description: City names, distinct ignoring case, sorted A to Z.
