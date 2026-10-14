@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:56:27Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WC9P46N4142PWSVQ1JMF0J",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WC9P46N4142PWSVQ1JMF0J.md",
+    "size_bytes": 11051
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation bb78854",
+  "token_usage": null,
+  "type": "file"
+}

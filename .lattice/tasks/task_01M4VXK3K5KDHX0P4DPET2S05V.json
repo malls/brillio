@@ -9,9 +9,9 @@
       "repo": null
     }
   ],
-  "c11_surface": "panel:32",
+  "c11_surface": "panel:37",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 2,
+  "comment_count": 4,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:27Z",
   "created_by": "agent:fable-planner",
@@ -20,7 +20,7 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK3K5KDHX0P4DPET2S05V",
-  "last_event_id": "ev_01M4WBAG1RE1ZHTJNSSGRR7R3T",
+  "last_event_id": "ev_01M4WCB2EF3QC0Y4Z2H85S1317",
   "last_status_changed_at": "2026-10-14T04:39:24Z",
   "linked_files": [],
   "priority": "medium",
@@ -43,6 +43,6 @@
   ],
   "title": "Branding conformance pass: audit UI against BRANDING.md and the demo, fix deviations",
   "type": "task",
-  "updated_at": "2026-10-14T04:39:24Z",
+  "updated_at": "2026-10-14T04:57:12Z",
   "urgency": null
 }

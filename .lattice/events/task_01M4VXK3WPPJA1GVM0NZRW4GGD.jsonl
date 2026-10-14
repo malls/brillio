@@ -4,3 +4,4 @@
 {"actor":"agent:opus-5.5-delegator","data":{"branch":"feat/BC-16-extensions-doc"},"id":"ev_01M4WBAEPFHFXBH02TG9YHEQHB","schema_version":1,"task_id":"task_01M4VXK3WPPJA1GVM0NZRW4GGD","ts":"2026-10-14T04:39:23Z","type":"branch_linked"}
 {"actor":"agent:opus-5.5-delegator","data":{"from":null,"to":"agent:opus-5.5-delegator"},"id":"ev_01M4WBAETAWVE51BAH9EC05TA4","schema_version":1,"task_id":"task_01M4VXK3WPPJA1GVM0NZRW4GGD","ts":"2026-10-14T04:39:23Z","type":"assignment_changed"}
 {"actor":"agent:opus-5.5-delegator","data":{"from":"backlog","to":"in_planning"},"id":"ev_01M4WBAETBF0Q9GCVYCKHGGN87","schema_version":1,"task_id":"task_01M4VXK3WPPJA1GVM0NZRW4GGD","ts":"2026-10-14T04:39:23Z","type":"status_changed"}
+{"actor":"agent:opus-5.5-delegator","data":{"from":"in_planning","to":"planned"},"id":"ev_01M4WC4SVCAVE54WHX5FZMA6CS","schema_version":1,"task_id":"task_01M4VXK3WPPJA1GVM0NZRW4GGD","ts":"2026-10-14T04:53:46Z","type":"status_changed"}

@@ -171,6 +171,10 @@ findings with file:line). Attach with `--role plan-review` / `--role review` and
 
 ## Standing rules
 
+- **`c11 close-panel` always takes `--panel <ref>`.** A positional ref (`c11 close-panel panel:35`) is ignored and the
+  command closes `$C11_PANEL_ID`, which your sub-agents inherit — i.e. your own delegator panel, killing the ticket session
+  (BC-14 died this way 04:45Z). Put this rule verbatim in every validator/sub-agent brief that opens a browser panel.
+
 - **Primary checkout is off limits.** Never `git checkout/commit/merge/reset/stash` in `/Users/forrest/Code/brillio`,
   never write files there except `PLAN_FILE`, files under `EVIDENCE_DIR`, and lattice CLI writes. Never
   `reset --hard` anything that contains the live board.

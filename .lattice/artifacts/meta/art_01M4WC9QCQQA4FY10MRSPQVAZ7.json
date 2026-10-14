@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:56:28Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WC9QCQQA4FY10MRSPQVAZ7",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WC9QCQQA4FY10MRSPQVAZ7.png",
+    "size_bytes": 126030
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation item 7 results-scroll",
+  "token_usage": null,
+  "type": "file"
+}

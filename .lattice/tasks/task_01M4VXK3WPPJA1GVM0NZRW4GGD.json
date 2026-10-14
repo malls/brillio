@@ -20,8 +20,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01M4VXK3WPPJA1GVM0NZRW4GGD",
-  "last_event_id": "ev_01M4WBAETBF0Q9GCVYCKHGGN87",
-  "last_status_changed_at": "2026-10-14T04:39:23Z",
+  "last_event_id": "ev_01M4WC4SVCAVE54WHX5FZMA6CS",
+  "last_status_changed_at": "2026-10-14T04:53:46Z",
   "linked_files": [],
   "priority": "low",
   "relationships_out": [
@@ -36,12 +36,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-16",
-  "status": "in_planning",
+  "status": "planned",
   "tags": [
     "docs"
   ],
   "title": "Extension playbook: how each likely live-session requirement lands (docs/EXTENSIONS.md)",
   "type": "spike",
-  "updated_at": "2026-10-14T04:39:23Z",
+  "updated_at": "2026-10-14T04:53:46Z",
   "urgency": null
 }
