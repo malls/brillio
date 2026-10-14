@@ -173,17 +173,19 @@ uses this to populate the City `<select>` (BRANDING.md §5.2), with "Any" first.
 
 Parsing rules:
 
-- An empty value (`minPrice=`) is treated as absent. A `city` or `keyword` that is only whitespace is absent too, and absence is decided before the length rule (201 spaces in `keyword` is absent, not `too_long`). Lengths count characters: `city` after trimming, `keyword` as received.
-- A repeated parameter other than `status` uses its first value (`minPrice=1&minPrice=2` means 1).
+- An empty value (`minPrice=`) is treated as absent. A `city` or `keyword` that is only whitespace is absent too, and absence is decided before the length rule (201 spaces in `keyword` is absent, not `too_long`). Lengths count Unicode code points (characters): `city` after trimming, `keyword` as received.
+- A repeated parameter other than `status` uses its first value (`minPrice=1&minPrice=2` means 1), and an empty first value is absent (`minPrice=&minPrice=5` is absent, not 5).
 - Numbers parse with `strconv.ParseFloat`; integers must be whole (`minBedrooms=2.5` is a field error). Number syntax is exactly Go's `strconv.ParseFloat` (decimal or hex float literals, underscores allowed); only non-finite results are rejected: `NaN`, `Inf` and overflow such as `1e400` are `not_a_number`. Values are not trimmed (`minPrice=%205` is `not_a_number`), `-0` reads as `0`, and `2.0` and `1e2` are whole. An integer of 2^53 or more is `out_of_range`: from there on a float64 cannot hold every whole number (`9007199254740993` parses as 2^53), so the value cannot be read exactly.
 - `status` pieces are trimmed, empty pieces ignored, duplicates collapsed, matched case-sensitively and echoed in the order active, pending, sold. Any invalid piece gives one `invalid_enum` error on `status`.
-- A query string that is not valid URL encoding (for example a bare `%`, `%zz` or a `;` separator) is a 400 with field `query` and code `malformed_query`, because the decoder would otherwise drop the pair and silently widen the results (the same reason unknown params are a 400). There is at most one `malformed_query` error per request, and the pairs that did decode are still validated normally.
+- A query string that is not valid URL encoding (for example a bare `%`, `%zz` or a `;` separator) is a 400 with field `query` and code `malformed_query`, because the decoder would otherwise drop the pair and silently widen the results (the same reason unknown params are a 400). There is at most one `malformed_query` error per request, and the pairs that did decode are still validated normally. The same error is returned when the query has more than 10000 `&`-separated parameters (Go's `url.ParseQuery` limit); then nothing decodes, so nothing else is validated.
 - **Unknown query parameters are a 400** with a field error naming the parameter, whatever its value (`minprice=` included). Rationale: a typo like `minprice=500000` must not silently widen the result set. Deliberate; say it out loud in the interview.
 - All validation problems are collected and returned together, not first-error-only. Field errors are ordered: `malformed_query` first, then at most one error per parameter in the table order above (`min_gt_max` takes `maxPrice`'s place), then unknown parameters sorted by name.
 - `page` past the last page is **not** an error: `200` with empty `items` and correct `page` metadata so the UI can recover.
 - A city with no listings is **not** an error: `200` with `totalItems: 0`. The UI renders the no-results state.
 
 ### 5.4 Success response
+
+<!-- asserted by backend/internal/httpapi/search_test.go (specExample): keep this block valid JSON and equal to the targetBudget=450000 response, first item only -->
 
 ```json
 {
@@ -221,6 +223,8 @@ The example is A1 for `targetBudget=450000` and no other filters at asOf 2026-10
 - `appliedFilters` echoes the effective filters after parsing, with `null` for absent ones, so the client never has to guess what the server understood.
 
 ### 5.5 Error response
+
+<!-- asserted by backend/internal/httpapi/search_test.go (specExample): compared byte-for-byte after json.Compact, so keep key order and values in sync with the API -->
 
 ```json
 {
