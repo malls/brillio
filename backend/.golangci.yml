@@ -1,0 +1,18 @@
+# golangci-lint v2 configuration (docs/SPEC.md section 8): the standard
+# linter set plus errcheck, govet, staticcheck and revive, listed explicitly
+# to mirror the spec, and the gofmt formatter. No exclusion presets: every
+# package carries a package comment, every exported identifier a doc comment,
+# and unused parameters are named _.
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - revive
+
+formatters:
+  enable:
+    - gofmt

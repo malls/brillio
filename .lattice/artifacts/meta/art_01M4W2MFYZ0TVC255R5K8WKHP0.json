@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T02:07:35Z",
+  "created_by": "agent:opus-5.5-plan-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4W2MFYZ0TVC255R5K8WKHP0",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4W2MFYZ0TVC255R5K8WKHP0.md",
+    "size_bytes": 8368
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "plan-review (plan-review)",
+  "token_usage": null,
+  "type": "file"
+}

@@ -14,12 +14,14 @@ test: test-api test-web
 
 # --- Backend (BC-2) ---
 .PHONY: dev-api lint-api test-api
+# dev-api runs the binary from the repo root so the ./data/... defaults resolve.
 dev-api:
-	@echo 'not yet implemented: dev-api (lands in BC-2)' >&2; exit 1
+	cd backend && go build -o bin/api ./cmd/api
+	./backend/bin/api
 lint-api:
-	@echo 'not yet implemented: lint-api (lands in BC-2)' >&2; exit 1
+	cd backend && golangci-lint run
 test-api:
-	@echo 'not yet implemented: test-api (lands in BC-2)' >&2; exit 1
+	cd backend && go test -race ./...
 
 # --- Frontend (BC-7) ---
 # Recipes run in frontend/. The sentinel frontend/node_modules/.package-lock.json (written

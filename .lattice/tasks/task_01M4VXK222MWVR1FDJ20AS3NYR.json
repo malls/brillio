@@ -1,18 +1,48 @@
 {
   "acceptance_criteria": [],
-  "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 1,
+  "assigned_to": "agent:opus-5.5-delegator",
+  "branch_links": [
+    {
+      "branch": "feat/BC-2-backend-scaffold",
+      "linked_at": "2026-10-14T01:19:22Z",
+      "linked_by": "agent:opus-5.5-delegator",
+      "repo": null
+    }
+  ],
+  "c11_surface": "panel:16",
+  "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
+  "comment_count": 6,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
   "custom_fields": {},
   "description": "Stand up the Go service skeleton that BC-3, BC-4 and BC-5 build inside. Spec: docs/SPEC.md \u00a72, \u00a73, \u00a75.1, \u00a75.5 (envelope), \u00a75.6, \u00a711.\n\nWhy: every backend task needs the module, the router, the middleware chain and the shared domain types to exist first. Defining the shared types here lets BC-3 (domain logic) and BC-4 (store) run in parallel.\n\nScope:\n- backend/go.mod, module path `brillio/backend`, `go 1.27`. Stdlib only.\n- cmd/api/main.go: load config, build router, http.Server with Read/Write/Idle timeouts, graceful shutdown on SIGINT/SIGTERM honoring SHUTDOWN_TIMEOUT, slog JSON logger to stdout at LOG_LEVEL.\n- internal/config: parse \u00a711 env vars with defaults; invalid LOG_LEVEL or SHUTDOWN_TIMEOUT is a startup error.\n- internal/domain: types only. `Listing` per \u00a74, `ListingStatus` with constants and `ParseStatus`, `SearchFilter{MinPrice, MaxPrice *float64; MinBedrooms *int; City, Keyword string; KeywordTokens []string; Statuses []ListingStatus}`. No logic.\n- internal/httpapi: `NewRouter(deps Deps) http.Handler` using Go 1.22 ServeMux patterns. Middleware in order: request ID (echo X-Request-ID or generate 16 random bytes hex), request log line (method, path, status, duration, request id, remote addr), panic recovery to a 500 envelope, CORS per \u00a75.6. JSON helpers `writeJSON` and `writeError` producing the \u00a75.5 envelope. 404 and 405 handlers that return the envelope. GET /healthz returning {\"status\":\"ok\"} (DB ping arrives with BC-4; leave a `Pinger` interface in Deps that may be nil).\n- backend/.golangci.yml: default linters plus errcheck, govet, staticcheck, revive.\n- Root Makefile: fill in dev-api (go run ./cmd/api), and the backend halves of test (go test -race ./...), lint (golangci-lint run), check.\n- Tests: config table; middleware (request id echoed and generated, panic becomes 500 envelope with no stack in body, CORS preflight 204 with the right headers, unknown route 404 envelope, wrong method 405 envelope).\n\nOut of scope: SQLite, the search handler, OpenAPI, Docker.\n\nAcceptance:\n- `go run ./cmd/api` serves GET /healthz 200 with Content-Type application/json and an X-Request-ID header.\n- `make lint` and `make test` pass for the backend.\n- SIGTERM produces a \"shutting down\" log line and exit code 0.\n- internal/domain compiles with the shared types and zero logic.\n\nValidation: run the binary, curl /healthz with and without an X-Request-ID header, send SIGTERM, paste the output as evidence with --role validation.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-10-14T02:08:40Z",
+  "evidence_refs": [
+    {
+      "id": "art_01M4W0VJ7731216A8G38XW3DTG",
+      "role": "plan-review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W1SKATQMGBTAQ2BWVXMEK5",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W2E06P2SMDVN8PGN8XWYVK",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W2M170ZQMTYVSWZDQZGD5A",
+      "role": "validation",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01M4VXK222MWVR1FDJ20AS3NYR",
-  "last_event_id": "ev_01M4VZQ5BW2X0E814SD2PX3C1T",
-  "last_status_changed_at": "2026-10-14T00:39:25Z",
+  "last_event_id": "ev_01M4W2PFSYE56T0P358E8P602W",
+  "last_status_changed_at": "2026-10-14T02:08:40Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -24,15 +54,15 @@
       "type": "depends_on"
     }
   ],
-  "reopened_count": 0,
+  "reopened_count": 1,
   "schema_version": 1,
   "short_id": "BC-2",
-  "status": "backlog",
+  "status": "done",
   "tags": [
     "backend"
   ],
   "title": "Backend scaffold: Go 1.27 HTTP server with health, slog, request IDs, CORS, graceful shutdown, config, lint",
   "type": "task",
-  "updated_at": "2026-10-14T01:16:37Z",
+  "updated_at": "2026-10-14T02:08:40Z",
   "urgency": null
 }

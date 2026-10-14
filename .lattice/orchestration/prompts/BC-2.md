@@ -9,7 +9,7 @@ BRANCH=feat/BC-2-backend-scaffold
 REVIEW_BASE=master
 ANCHOR=none (based on master after BC-1)
 PORTS=API 18002 (PORT=18002, DB not used yet)
-AREA=area:8
+AREA=area:11
 ```
 
 Read `/Users/forrest/Code/brillio/.lattice/orchestration/prompts/delegator-brief.md` now and follow it.
@@ -33,3 +33,9 @@ Read `/Users/forrest/Code/brillio/.lattice/orchestration/prompts/delegator-brief
 6. Validation needs the real binary: `PORT=18002 go run ./cmd/api` (or the built binary), curl `/healthz`
    with and without `X-Request-ID`, a 404 and a 405 envelope, a CORS preflight, then SIGTERM and capture the
    "shutting down" line and exit code 0. Kill the process afterwards.
+7. **Forwarded from BC-1 review (art_01M4VZQ546WYVMW5DWJH6HMBPN), two nits:** (a) a plain `go build ./cmd/api`
+   inside `backend/` writes an unignored `backend/api` binary; add an anchored `.gitignore` rule for wherever you
+   actually build (`/backend/bin/` is already covered — prefer `go build -o bin/api`). (b) repo `.gitignore`
+   covers only `coverage.out` and `*.coverprofile`; add whatever filename your `test-api` recipe writes
+   (`cover.out`, `coverage.html`) — the host's global `*.out` hides the gap locally but not in a fresh clone.
+   Edit only the backend lines of `.gitignore`.
