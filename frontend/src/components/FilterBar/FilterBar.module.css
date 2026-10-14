@@ -122,8 +122,8 @@
 
 /*
  * Search's bottom edge sits on the fields' underline, as in the demo's align-items: end, but the
- * offset is measured from the top, so a message under a field never moves the buttons. Clear is
- * centred on Search.
+ * offset is measured from the top, so a message under a field in the same row never moves the
+ * buttons. Clear is centred on Search.
  */
 .actions {
   display: flex;
@@ -133,6 +133,11 @@
     var(--leading-label) + var(--gap-label) + var(--control-height) - var(--button-height) - 1px
   );
   padding-bottom: 1px;
+}
+
+/* Wraps Search alone so a press on the disabled button can reveal the messages (FilterBar.tsx). */
+.searchSlot {
+  display: flex;
 }
 
 /* Section 5.8 primary button (section 2.2 job 1). */
@@ -219,6 +224,7 @@
     padding-top: 0;
   }
 
+  .searchSlot,
   .search {
     flex: 1;
   }

@@ -158,6 +158,17 @@ describe('draftsFrom', () => {
     });
   });
 
+  it('writes tiny fractions without an exponent, so they seed a valid draft', () => {
+    const seeded = draftsFrom({ minPrice: 1e-7, maxPrice: 1.5e-7, targetBudget: 2.5e-7 });
+    expect(seeded).toEqual(
+      drafts({ minPrice: '0.0000001', maxPrice: '0.00000015', targetBudget: '0.00000025' }),
+    );
+    expect(validate(seeded)).toEqual({ messages: {}, conflict: false });
+    expect(draftsFrom({ minPrice: -1e-7 }).minPrice).toBe('-0.0000001');
+    // Too many digits for 20 decimals: kept as is (and so marked) rather than rounded.
+    expect(draftsFrom({ minPrice: 1.2345678901234566e-7 }).minPrice).toBe('1.2345678901234566e-7');
+  });
+
   it('shows Any for several statuses and empties non-finite numbers', () => {
     expect(draftsFrom({ status: ['active', 'sold'], minPrice: NaN })).toEqual(EMPTY_DRAFTS);
     expect(draftsFrom({ status: ['sold', 'sold'] }).status).toBe('sold');
@@ -193,6 +204,10 @@ describe('displayValue and normalizeDraft', () => {
     expect(normalizeDraft('targetBudget', ' -0 ')).toBe('0');
     expect(normalizeDraft('maxPrice', '1' + '0'.repeat(21))).toBe('1' + '0'.repeat(21));
     expect(normalizeDraft('maxPrice', '0.0000001')).toBe('0.0000001');
+    expect(normalizeDraft('maxPrice', '$0.00000010')).toBe('0.0000001');
+    expect(normalizeDraft('maxPrice', '0.00000012345678901234567')).toBe(
+      '0.00000012345678901234567',
+    );
     expect(normalizeDraft('minPrice', 'abc')).toBe('abc');
     expect(normalizeDraft('keyword', ' 2.0 ')).toBe(' 2.0 ');
   });
