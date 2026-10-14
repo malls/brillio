@@ -8,7 +8,6 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 |---|---|---|---|---|---|---|---|---|
 | Orchestrator | all | panel:6 73809EE8-EE77-4F1E-8EE2-8E8B05308939 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | master | /Users/forrest/Code/brillio | dispatch | 2026-10-14T03:13Z | 2026-10-14T00:45Z |
 | Master Validator | all | panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7 | area:6 D887B46C-F2FA-4097-ABB0-B453319B8C6B | — | /Users/forrest/Code/brillio | audit loop | 2026-10-14T03:13Z | 2026-10-14T01:20Z |
-| Delegator | BC-17 | panel:38 8287B289-E303-41D5-B16F-682E5419EAE8 | area:11 C4DECFF8-1150-4E6E-9C17-277B9378CA7B | feat/BC-17-release-dist | /Users/forrest/Code/brillio-worktrees.noindex/bc-17-release-dist | boot | 2026-10-14T05:18Z | 2026-10-14T05:18Z |
 
 ### Archived (run history)
 
@@ -31,3 +30,6 @@ Active table is overwritten each dispatch tick (Lattice + `c11 tree` are ground 
 | agent:opus-5.5-delegator (panel:33 99BAECD2-FF68-4004-BAD1-16BFD3D8002B) | BC-15 | done 05:33Z | Merge f41fb8c; README 245 lines; native commands run, compose blocks cite BC-13 smoke (approved). |
 | agent:opus-5.5-delegator (panel:34 F7120790-4B51-404C-8E80-5E147875C427) | BC-16 | done 05:43Z | Merge 04214e9; EXTENSIONS.md 221 lines; every symbol grepped on master; 2 fable review cycles. |
 | agent:opus-5.5-delegator (panel:37 7D3FCE66-1BFA-4B9C-942B-2E145C875007) | BC-14 | done 05:55Z | Replacement delegator; merge e64d53c; fixes D1-D7; 15 branding-owner questions left on needs_human; screenshots at 1280/375 + keyboard pass; created BC-22. |
+| agent:opus-5.5-delegator (panel:38 8287B289-E303-41D5-B16F-682E5419EAE8) | BC-17 | done 07:10Z | Merge b5b275e; zip 329 KB / 135 files; verify-dist 13/13; 1 substantive review cycle (interrupt orphan fix) + nit/doc deltas; README Linux note (BC-23 mitigation); created BC-23, BC-24. |
+| Result Validator (panel:40 49DCCF5B-9BD0-4E94-8BE3-D92892A8B0A7) | Phase 2 audit | done 07:25Z (GREEN 52/52) | Audited master 61228c7 + zip against validation-plan.md (56 rows); writes validation-report.md; mails --to-parent. |
+| Master Validator (panel:13 AFD95ABD-DC58-4303-BEBE-8591321113A7) | in-flight audit | stopped 07:11Z | FINAL entry in master-validator-log.md; surfaced BC-23 (Linux host) and the cycle-cap clarification. |
