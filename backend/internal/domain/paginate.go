@@ -29,8 +29,9 @@ type RankedItem struct {
 // Page is one page of a ranked result set and the metadata to page through
 // the rest of it (docs/SPEC.md section 6.4).
 type Page struct {
-	// Items are the page's listings in rank order. It is never nil: a page
-	// past the end, or a page of an empty result set, has no items.
+	// Items are the page's listings in rank order. When Paginate returns no
+	// error it is never nil: a page past the end, or a page of an empty
+	// result set, has no items.
 	Items []RankedItem
 	// Page is the requested 1-based page number, echoed even past the end.
 	Page int
