@@ -1,7 +1,7 @@
 import styles from './Pager.module.css';
 
 export interface PagerProps {
-  /** The page on screen, 1-based. May exceed totalPages on a hand-edited URL. */
+  /** The page asked for (the URL's), 1-based. May exceed totalPages on a hand-edited URL. */
   page: number;
   totalPages: number;
   /**

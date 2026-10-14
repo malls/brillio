@@ -58,10 +58,38 @@ describe('StatusLine', () => {
     expect(halves({ status: 'loading' })).toEqual(['Loading', '']);
   });
 
-  it('reads Loading and keeps the previous page while loading over a list', () => {
+  it('reads Loading and keeps the previous page while a search loads over a list', () => {
     expect(halves({ status: 'loading', previous: searchResponse })).toEqual([
       'Loading',
       'Page 1 of 2',
+    ]);
+  });
+
+  it('keeps the count and order and shows the requested page during a page change', () => {
+    expect(halves({ status: 'loading', previous: searchResponse, requestedPage: 2 })).toEqual([
+      '12 results · ranked for $450,000',
+      'Page 2 of 2',
+    ]);
+  });
+
+  it('keeps newest first during a page change without a target budget', () => {
+    expect(halves({ status: 'loading', previous: noBudgetResponse, requestedPage: 2 })).toEqual([
+      '12 results · newest first',
+      'Page 2 of 2',
+    ]);
+  });
+
+  it('shows a requested page past the end', () => {
+    expect(halves({ status: 'loading', previous: searchResponse, requestedPage: 3 })).toEqual([
+      '12 results · ranked for $450,000',
+      'Page 3 of 2',
+    ]);
+  });
+
+  it('keeps 0 results during a page change over an empty list', () => {
+    expect(halves({ status: 'loading', previous: emptySearchResponse, requestedPage: 2 })).toEqual([
+      '0 results',
+      '',
     ]);
   });
 

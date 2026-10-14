@@ -6,7 +6,9 @@ import type { ApiError, SearchParams, SearchResponse, ValidationError } from '..
 // The fetch lifecycle (docs/SPEC.md section 7.2).
 export type SearchState =
   | { status: 'idle' }
-  | { status: 'loading'; previous?: SearchResponse }
+  // requestedPage is set only with previous, when the request differs from previous's only by
+  // page: a page change, the page asked for (SPEC section 7.2).
+  | { status: 'loading'; previous?: SearchResponse; requestedPage?: number }
   | { status: 'success'; data: SearchResponse } // totalItems > 0; items may be empty on a page past the end
   | { status: 'empty'; data: SearchResponse } // totalItems === 0
   | { status: 'invalid'; error: ValidationError; previous?: SearchResponse }
@@ -24,18 +26,35 @@ type Outcome = { kind: 'data'; data: SearchResponse } | { kind: 'error'; error: 
 interface FetchState {
   // The outcome of the last request that completed, keyed by its request key.
   settled: { key: string; outcome: Outcome } | null;
-  // The latest 2xx response, success or empty: the list kept on screen while loading.
-  lastGood: SearchResponse | null;
+  // The latest 2xx response, success or empty (the list kept on screen while loading), and the
+  // search key it was fetched with.
+  lastGood: { searchKey: string; data: SearchResponse } | null;
 }
 
 const INITIAL: FetchState = { settled: null, lastGood: null };
 
+// Identifies a request apart from its page: the attempt and the query without page. Two requests
+// with the same search key differ only by page, so a retry or a pageSize change is never a page
+// change.
+function toSearchKey(attempt: number, params: SearchParams): string {
+  const rest: SearchParams = { ...params };
+  delete rest.page;
+  return `${attempt}|${buildSearchQuery(rest)}`;
+}
+
 // Loading is derived, never set: the state is loading until the request for the current key has
-// settled. Returning to a key whose result is held shows that result while it refetches.
-function deriveState({ settled, lastGood }: FetchState, requestKey: string): SearchState {
-  const previous = lastGood === null ? {} : { previous: lastGood };
+// settled. Returning to a key whose result is held shows that result while it refetches. A load
+// whose search key matches the list on screen is a page change and carries the page asked for.
+function deriveState(
+  { settled, lastGood }: FetchState,
+  requestKey: string,
+  searchKey: string,
+  page: number,
+): SearchState {
+  const previous = lastGood === null ? {} : { previous: lastGood.data };
   if (settled?.key !== requestKey) {
-    return { status: 'loading', ...previous };
+    const paging = lastGood?.searchKey === searchKey ? { requestedPage: page } : {};
+    return { status: 'loading', ...previous, ...paging };
   }
   const { outcome } = settled;
   if (outcome.kind === 'data') {
@@ -51,13 +70,16 @@ function deriveState({ settled, lastGood }: FetchState, requestKey: string): Sea
 
 // Fetches listings for params, aborting the previous request whenever params change, on retry
 // and on unmount; an aborted request never updates state. Params are compared by their
-// serialized query, so an equal new object does not refetch. http and network failures are
-// logged here with the request ID (SPEC section 7.5); callers must not log them again.
+// serialized query, so an equal new object does not refetch. A request that differs from the
+// list on screen only by page loads as a page change. http and network failures are logged here
+// with the request ID (SPEC section 7.5); callers must not log them again.
 export function useListingSearch(params: SearchParams): ListingSearch {
   const query = buildSearchQuery(params);
   const [attempt, setAttempt] = useState(0);
   const [fetchState, setFetchState] = useState(INITIAL);
   const requestKey = `${attempt}|${query}`;
+  const searchKey = toSearchKey(attempt, params);
+  const page = params.page ?? 1;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -68,7 +90,7 @@ export function useListingSearch(params: SearchParams): ListingSearch {
         }
         setFetchState({
           settled: { key: requestKey, outcome: { kind: 'data', data } },
-          lastGood: data,
+          lastGood: { searchKey, data },
         });
       },
       (err: unknown) => {
@@ -89,12 +111,15 @@ export function useListingSearch(params: SearchParams): ListingSearch {
     return () => {
       controller.abort();
     };
-  }, [query, requestKey]);
+  }, [query, requestKey, searchKey]);
 
   const retry = useCallback(() => {
     setAttempt((n) => n + 1);
   }, []);
 
-  const state = useMemo(() => deriveState(fetchState, requestKey), [fetchState, requestKey]);
+  const state = useMemo(
+    () => deriveState(fetchState, requestKey, searchKey, page),
+    [fetchState, requestKey, searchKey, page],
+  );
   return useMemo(() => ({ state, retry }), [state, retry]);
 }
