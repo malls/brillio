@@ -262,3 +262,11 @@ Review: art_01M4W9XKQPJ88MBHYFZT8JNEVX (PASS, six minors, all triaged obvious; n
    dropping `aria-live` from ListingList's `section` now that SearchPage owns the region.
 
 Size estimate after resolutions: about 700 LOC added (T12 + guard).
+
+## Review Cycle 1 Findings (art_01M4WBDHN5ZS9CS97WXRSXYEQ0, PASS-WITH-NITS @5ac2397)
+
+- Minor, fix: `frontend/src/pages/SearchPage.test.tsx` T8 (~446-465). After the late page-2 response resolves, flush
+  (`await act(async () => {})`) and assert, BEFORE resolving the page-1 refetch, that the first card is still `No. 1`,
+  the status line is unchanged, and `No. 11` is absent; only then resolve the refetch.
+- Nit, fix: `SearchPage.test.tsx` T11 first reply (~509-512): page meta says page 2 of size 5 but item ranks are 1-3;
+  make ranks consistent with SPEC §6.4 (page 2, size 5 starts at rank 6) or use page 1 meta.

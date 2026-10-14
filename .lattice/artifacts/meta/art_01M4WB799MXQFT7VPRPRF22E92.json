@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:37:39Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WB799MXQFT7VPRPRF22E92",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WB799MXQFT7VPRPRF22E92.md",
+    "size_bytes": 11062
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review 70518b5 (reviewer: fable sub-agent, decision 04:02Z)",
+  "token_usage": null,
+  "type": "note"
+}
