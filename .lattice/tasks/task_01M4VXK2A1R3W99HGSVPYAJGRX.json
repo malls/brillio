@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:19",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 3,
+  "comment_count": 5,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:25Z",
   "created_by": "agent:fable-planner",
@@ -23,11 +23,26 @@
       "id": "art_01M4W2MFYZ0TVC255R5K8WKHP0",
       "role": "plan-review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W3X92E3R58R3C7QHCR8TXJ",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W46HFFNKS31ZVRFVYQSMYJ",
+      "role": "validation",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4W4NDVFNAECWP264KDJVVYN",
+      "role": "review",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2A1R3W99HGSVPYAJGRX",
-  "last_event_id": "ev_01M4W3H4G3DRV97K5166VR9726",
-  "last_status_changed_at": "2026-10-14T02:23:11Z",
+  "last_event_id": "ev_01M4W4NDVJ6H1T0E07ZZJZ4X0R",
+  "last_status_changed_at": "2026-10-14T02:30:20Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -42,12 +57,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-4",
-  "status": "review",
+  "status": "in_validation",
   "tags": [
     "backend"
   ],
   "title": "SQLite store: schema migrations, JSON seed loader, filtered search query, cities query",
   "type": "task",
-  "updated_at": "2026-10-14T02:23:13Z",
+  "updated_at": "2026-10-14T02:43:03Z",
   "urgency": null
 }
