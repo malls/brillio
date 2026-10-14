@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:05:31Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W9CDTYQ3YAFHA6QT9VP6D4",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4W9CDTYQ3YAFHA6QT9VP6D4.md",
+    "size_bytes": 14489
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Validation fa7c08d",
+  "token_usage": null,
+  "type": "file"
+}

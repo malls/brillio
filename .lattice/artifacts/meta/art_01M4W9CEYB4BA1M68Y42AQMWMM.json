@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:05:32Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4W9CEYB4BA1M68Y42AQMWMM",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4W9CEYB4BA1M68Y42AQMWMM.png",
+    "size_bytes": 86332
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "375px ours vs demo ErrorState",
+  "token_usage": null,
+  "type": "file"
+}
