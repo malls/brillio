@@ -13,6 +13,13 @@ export interface ListingCardProps {
   keywordTokens: string[];
 }
 
+// A meta item never breaks inside itself (`980 / sqft` at 375px): spaces within an item are
+// no-break, and the separator's first space is too, so the dot stays with the item before it
+// and the line breaks only after a dot.
+const NBSP = '\u00a0';
+const ITEM_SEPARATOR = META_SEPARATOR.replace(' ', NBSP);
+const keepWhole = (t: string) => t.replaceAll(' ', NBSP);
+
 // BRANDING.md section 5.4: monogram, text column, price block. A pure renderer over one
 // ListingResult: no link, no button, no hover state (cards are inert in v1, section 10).
 //
@@ -31,10 +38,10 @@ export function ListingCard({ item, keywordTokens }: ListingCardProps) {
         {statusLabel !== null && (
           <>
             <span className={styles.statusLabel}>{statusLabel}</span>
-            {META_SEPARATOR}
+            {ITEM_SEPARATOR}
           </>
         )}
-        {formatListingMeta(item).join(META_SEPARATOR)}
+        {formatListingMeta(item).map(keepWhole).join(ITEM_SEPARATOR)}
       </p>
       <div className={styles.priceBlock}>
         <p className={styles.price}>{formatPrice(item.price)}</p>

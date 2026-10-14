@@ -42,16 +42,34 @@ describe('ListingCard', () => {
     unmount();
 
     render(<ListingCard item={listingB7} keywordTokens={[]} />);
-    expect(screen.getByText(/ · Listed Aug 27 · MLS B$/).textContent).toBe(
-      'Springfield, VA 22150 · 2 bd · 1.5 ba · 980 sqft · Listed Aug 27 · MLS B',
+    // The card's no-break spaces (see 'keeps each meta item whole') read as plain spaces here.
+    expect(
+      screen.getByText(/ · Listed Aug 27 · MLS B$/).textContent?.replaceAll('\u00a0', ' '),
+    ).toBe('Springfield, VA 22150 · 2 bd · 1.5 ba · 980 sqft · Listed Aug 27 · MLS B');
+  });
+
+  it('keeps each meta item whole', () => {
+    // No line break inside an item (`980 / sqft` at 375px): the spaces inside each item are
+    // no-break, and so is the space before each dot, so a line breaks only after a dot.
+    const { unmount } = render(<ListingCard item={listingA1} keywordTokens={[]} />);
+    const noBreak = (text: string) => text.replaceAll(' ', '\u00a0');
+    expect(screen.getByText(/^Springfield, VA 22150/).textContent).toBe(
+      ['Springfield, VA 22150', '2 bd', '1.5 ba', '980 sqft', 'Listed Aug 29', 'MLS A']
+        .map(noBreak)
+        .join('\u00a0· '),
     );
+    unmount();
+
+    // The status label keeps its dot too.
+    render(<ListingCard item={listingA7} keywordTokens={[]} />);
+    expect(screen.getByText('PENDING').nextSibling?.textContent).toBe('\u00a0· ');
   });
 
   it('shows PENDING first for A7', () => {
     render(<ListingCard item={listingA7} keywordTokens={[]} />);
 
     const label = screen.getByText('PENDING');
-    expect(label.parentElement?.textContent).toBe(
+    expect(label.parentElement?.textContent?.replaceAll('\u00a0', ' ')).toBe(
       'PENDING · Chantilly, VA 20151 · 4 bd · 2.5 ba · 1,950 sqft · Listed Jul 28 · MLS A',
     );
     expect(label.previousSibling).toBeNull();
