@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:25:00Z",
+  "created_by": "agent:opus-5.5-validator",
+  "custom_fields": {},
+  "id": "art_01M4WAG48YMTTVFCS7PJ6T5YDT",
+  "model": null,
+  "payload": {
+    "content_type": "image/png",
+    "file": "art_01M4WAG48YMTTVFCS7PJ6T5YDT.png",
+    "size_bytes": 35773
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "TSX HMR screenshot 21cd239",
+  "token_usage": null,
+  "type": "file"
+}

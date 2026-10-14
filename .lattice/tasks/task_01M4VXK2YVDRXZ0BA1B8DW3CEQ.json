@@ -11,7 +11,7 @@
   ],
   "c11_surface": "panel:25",
   "c11_workspace": "B95A86DC-BFF6-4582-91A2-0749194ECB26",
-  "comment_count": 6,
+  "comment_count": 9,
   "complexity": "medium",
   "created_at": "2026-10-14T00:39:26Z",
   "created_by": "agent:fable-planner",
@@ -28,11 +28,21 @@
       "id": "art_01M4W8RJEX9PZGNYXK1279SVG3",
       "role": "review",
       "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WADP7WCHKFV2AKQQBQJFVG",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "art_01M4WAK2F08QGNZX8DJEBEAGSY",
+      "role": "validation",
+      "source_type": "artifact"
     }
   ],
   "id": "task_01M4VXK2YVDRXZ0BA1B8DW3CEQ",
-  "last_event_id": "ev_01M4W957JD0CW9XV311S9WR0EK",
-  "last_status_changed_at": "2026-10-14T03:34:29Z",
+  "last_event_id": "ev_01M4WAK2F3NMB9C4DDMG63NTDF",
+  "last_status_changed_at": "2026-10-14T04:23:52Z",
   "linked_files": [],
   "priority": "high",
   "relationships_out": [
@@ -47,12 +57,12 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "BC-9",
-  "status": "review",
+  "status": "in_validation",
   "tags": [
     "frontend"
   ],
   "title": "FilterBar: seven fields, client-side validation with exact copy, server error mapping, Search and Clear",
   "type": "task",
-  "updated_at": "2026-10-14T04:01:35Z",
+  "updated_at": "2026-10-14T04:26:37Z",
   "urgency": null
 }

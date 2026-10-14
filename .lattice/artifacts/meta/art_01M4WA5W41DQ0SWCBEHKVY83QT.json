@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-14T04:19:24Z",
+  "created_by": "agent:opus-5.5-reviewer",
+  "custom_fields": {},
+  "id": "art_01M4WA5W41DQ0SWCBEHKVY83QT",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01M4WA5W41DQ0SWCBEHKVY83QT.md",
+    "size_bytes": 2846
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": null,
+  "tags": [],
+  "title": "Code review 21cd239 (cycle 3, final) - reviewer: fable sub-agent (decision 04:02Z)",
+  "token_usage": null,
+  "type": "note"
+}
